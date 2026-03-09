@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { queryClient, apiRequest } from "@/lib/queryClient";
@@ -16,7 +16,7 @@ import { Label } from "@/components/ui/label";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { User, CreditCard, Crown, ExternalLink } from "lucide-react";
+import { User, CreditCard, Crown, ExternalLink, Camera } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 interface SettingsDialogProps {
@@ -28,8 +28,12 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
     const { t } = useTranslation();
     const { user } = useAuth();
     const { toast } = useToast();
+    const fileInputRef = useRef<HTMLInputElement>(null);
     const [firstName, setFirstName] = useState(user?.firstName || "");
     const [lastName, setLastName] = useState(user?.lastName || "");
+    const [department, setDepartment] = useState((user as any)?.department || "");
+    const [jobTitle, setJobTitle] = useState((user as any)?.jobTitle || "");
+    const [phone, setPhone] = useState((user as any)?.phone || "");
 
     const { data: subscriptionData } = useQuery<{
         subscription: { plan: string; stripeStatus: string | null };
@@ -41,7 +45,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
     });
 
     const updateProfileMutation = useMutation({
-        mutationFn: async (data: { firstName: string; lastName: string }) => {
+        mutationFn: async (data: { firstName: string; lastName: string; department: string; jobTitle: string; phone: string }) => {
             const res = await apiRequest("PATCH", "/api/auth/profile", data);
             return res.json();
         },
@@ -51,6 +55,27 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
         },
         onError: () => {
             toast({ title: t("settings.profile.saveFailed"), variant: "destructive" });
+        },
+    });
+
+    const uploadImageMutation = useMutation({
+        mutationFn: async (file: File) => {
+            const formData = new FormData();
+            formData.append("file", file);
+            const res = await fetch("/api/auth/profile/image", {
+                method: "POST",
+                body: formData,
+                credentials: "include",
+            });
+            if (!res.ok) throw new Error("Upload failed");
+            return res.json();
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["/api/auth/user"] });
+            toast({ title: t("settings.profile.imageUploaded") });
+        },
+        onError: () => {
+            toast({ title: t("settings.profile.imageUploadFailed"), variant: "destructive" });
         },
     });
 
@@ -85,9 +110,16 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
         return "?";
     };
 
+    const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (file) {
+            uploadImageMutation.mutate(file);
+        }
+    };
+
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent className="sm:max-w-[500px]">
+            <DialogContent className="sm:max-w-[500px] max-h-[85vh] overflow-y-auto">
                 <DialogHeader>
                     <DialogTitle>{t("settings.title")}</DialogTitle>
                 </DialogHeader>
@@ -106,18 +138,40 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
 
                     {/* Profile Tab */}
                     <TabsContent value="profile" className="space-y-4 mt-4">
+                        {/* Avatar with upload */}
                         <div className="flex items-center gap-4">
-                            <Avatar className="h-16 w-16">
-                                <AvatarImage src={user?.profileImageUrl || undefined} />
-                                <AvatarFallback className="text-lg">{getUserInitials()}</AvatarFallback>
-                            </Avatar>
+                            <div className="relative group">
+                                <Avatar className="h-16 w-16">
+                                    <AvatarImage src={user?.profileImageUrl || undefined} />
+                                    <AvatarFallback className="text-lg">{getUserInitials()}</AvatarFallback>
+                                </Avatar>
+                                <button
+                                    type="button"
+                                    onClick={() => fileInputRef.current?.click()}
+                                    className="absolute inset-0 flex items-center justify-center bg-black/50 rounded-full opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+                                    disabled={uploadImageMutation.isPending}
+                                >
+                                    <Camera className="h-5 w-5 text-white" />
+                                </button>
+                                <input
+                                    ref={fileInputRef}
+                                    type="file"
+                                    accept="image/*"
+                                    className="hidden"
+                                    onChange={handleImageSelect}
+                                />
+                            </div>
                             <div className="flex-1 min-w-0">
                                 <p className="text-sm font-medium truncate">{user?.email}</p>
                                 <p className="text-xs text-muted-foreground">{user?.authProvider || "email"}</p>
+                                {uploadImageMutation.isPending && (
+                                    <p className="text-xs text-primary">{t("common.loading")}</p>
+                                )}
                             </div>
                         </div>
 
-                        <div className="space-y-3">
+                        {/* Name fields */}
+                        <div className="grid grid-cols-2 gap-3">
                             <div className="space-y-1.5">
                                 <Label htmlFor="firstName">{t("settings.profile.firstName")}</Label>
                                 <Input
@@ -138,8 +192,40 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                             </div>
                         </div>
 
+                        {/* Additional fields */}
+                        <div className="grid grid-cols-2 gap-3">
+                            <div className="space-y-1.5">
+                                <Label htmlFor="department">{t("settings.profile.department")}</Label>
+                                <Input
+                                    id="department"
+                                    value={department}
+                                    onChange={(e) => setDepartment(e.target.value)}
+                                    placeholder={t("settings.profile.departmentPlaceholder")}
+                                />
+                            </div>
+                            <div className="space-y-1.5">
+                                <Label htmlFor="jobTitle">{t("settings.profile.jobTitle")}</Label>
+                                <Input
+                                    id="jobTitle"
+                                    value={jobTitle}
+                                    onChange={(e) => setJobTitle(e.target.value)}
+                                    placeholder={t("settings.profile.jobTitlePlaceholder")}
+                                />
+                            </div>
+                        </div>
+
+                        <div className="space-y-1.5">
+                            <Label htmlFor="phone">{t("settings.profile.phone")}</Label>
+                            <Input
+                                id="phone"
+                                value={phone}
+                                onChange={(e) => setPhone(e.target.value)}
+                                placeholder={t("settings.profile.phonePlaceholder")}
+                            />
+                        </div>
+
                         <Button
-                            onClick={() => updateProfileMutation.mutate({ firstName, lastName })}
+                            onClick={() => updateProfileMutation.mutate({ firstName, lastName, department, jobTitle, phone })}
                             disabled={updateProfileMutation.isPending}
                             className="w-full"
                         >

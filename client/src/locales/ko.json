@@ -1635,8 +1635,16 @@
       "lastName": "성",
       "firstNamePlaceholder": "이름을 입력하세요",
       "lastNamePlaceholder": "성을 입력하세요",
+      "department": "부서",
+      "departmentPlaceholder": "부서를 입력하세요",
+      "jobTitle": "직함",
+      "jobTitlePlaceholder": "직함을 입력하세요",
+      "phone": "연락처",
+      "phonePlaceholder": "연락처를 입력하세요",
       "saved": "프로필이 저장되었습니다",
-      "saveFailed": "프로필 저장에 실패했습니다"
+      "saveFailed": "프로필 저장에 실패했습니다",
+      "imageUploaded": "프로필 사진이 변경되었습니다",
+      "imageUploadFailed": "프로필 사진 업로드에 실패했습니다"
     },
     "membership": {
       "tab": "멤버십",

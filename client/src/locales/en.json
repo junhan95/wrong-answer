@@ -1635,8 +1635,16 @@
       "lastName": "Last Name",
       "firstNamePlaceholder": "Enter first name",
       "lastNamePlaceholder": "Enter last name",
+      "department": "Department",
+      "departmentPlaceholder": "Enter department",
+      "jobTitle": "Job Title",
+      "jobTitlePlaceholder": "Enter job title",
+      "phone": "Phone",
+      "phonePlaceholder": "Enter phone number",
       "saved": "Profile saved",
-      "saveFailed": "Failed to save profile"
+      "saveFailed": "Failed to save profile",
+      "imageUploaded": "Profile image updated",
+      "imageUploadFailed": "Failed to upload profile image"
     },
     "membership": {
       "tab": "Membership",
