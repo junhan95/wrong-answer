@@ -32,6 +32,7 @@ const CreateDialog = lazy(() => import("@/components/create-dialog").then(m => (
 const CreateConversationDialog = lazy(() => import("@/components/create-conversation-dialog").then(m => ({ default: m.CreateConversationDialog })));
 const EditConversationDialog = lazy(() => import("@/components/edit-conversation-dialog").then(m => ({ default: m.EditConversationDialog })));
 const UpgradeLimitDialog = lazy(() => import("@/components/upgrade-limit-dialog").then(m => ({ default: m.UpgradeLimitDialog })));
+const OnboardingTutorial = lazy(() => import("@/components/onboarding-tutorial").then(m => ({ default: m.OnboardingTutorial })));
 
 function SidebarSkeleton() {
   return (
@@ -148,6 +149,7 @@ export default function Home() {
   const [fileViewerFolderId, setFileViewerFolderId] = useState<string | null>(null);
   const [upgradeLimitOpen, setUpgradeLimitOpen] = useState(false);
   const [upgradeLimitType, setUpgradeLimitType] = useState<"projects" | "conversations" | "aiQueries" | "storage">("projects");
+  const [showTutorial, setShowTutorial] = useState(false);
   const [taggedFiles, setTaggedFiles] = useState<Array<{
     id: string;
     originalName: string;
@@ -195,7 +197,7 @@ export default function Home() {
     queryKey: ["/api/folders"],
     staleTime: 30 * 1000,
   });
-  
+
   const isDataLoading = projectsLoading || conversationsLoading || foldersLoading;
 
   // 폴더를 order로 정렬
@@ -308,25 +310,25 @@ export default function Home() {
   });
 
   const createConversationMutation = useMutation({
-    mutationFn: async ({ 
-      projectId, 
-      name, 
-      description, 
-      instructions, 
+    mutationFn: async ({
+      projectId,
+      name,
+      description,
+      instructions,
       files,
-      folderId 
-    }: { 
-      projectId: string; 
-      name: string; 
-      description?: string; 
-      instructions?: string; 
+      folderId
+    }: {
+      projectId: string;
+      name: string;
+      description?: string;
+      instructions?: string;
       files?: File[];
       folderId?: string;
     }) => {
-      const conversation = await apiRequest("POST", "/api/conversations", { 
-        projectId, 
-        name, 
-        description, 
+      const conversation = await apiRequest("POST", "/api/conversations", {
+        projectId,
+        name,
+        description,
         instructions,
         folderId
       }) as unknown as Conversation;
@@ -337,7 +339,7 @@ export default function Home() {
           files.map(async (file) => {
             const formData = new FormData();
             formData.append("file", file);
-            
+
             const res = await fetch(`/api/conversations/${conversation.id}/files`, {
               method: "POST",
               body: formData,
@@ -357,10 +359,10 @@ export default function Home() {
         const failedFiles = uploadResults
           .filter(r => r.status === "rejected")
           .map((f) => f.status === "rejected" ? f.reason.message : "");
-        
+
         if (failedFiles.length > 0) {
-          toast({ 
-            title: t('home.conversationCreated'), 
+          toast({
+            title: t('home.conversationCreated'),
             description: t('home.uploadWarning', { files: failedFiles.join(", ") }),
             variant: "default"
           });
@@ -390,26 +392,26 @@ export default function Home() {
   });
 
   const updateConversationSettingsMutation = useMutation({
-    mutationFn: async ({ 
-      id, 
-      name, 
-      description, 
-      instructions, 
+    mutationFn: async ({
+      id,
+      name,
+      description,
+      instructions,
       newFiles,
-      deleteFileIds 
-    }: { 
-      id: string; 
-      name: string; 
-      description?: string; 
-      instructions?: string; 
+      deleteFileIds
+    }: {
+      id: string;
+      name: string;
+      description?: string;
+      instructions?: string;
       newFiles?: File[];
       deleteFileIds?: string[];
     }) => {
       // Update conversation metadata
-      await apiRequest("PATCH", `/api/conversations/${id}`, { 
-        name, 
-        description, 
-        instructions 
+      await apiRequest("PATCH", `/api/conversations/${id}`, {
+        name,
+        description,
+        instructions
       });
 
       // Delete files if any
@@ -439,7 +441,7 @@ export default function Home() {
           newFiles.map(async (file) => {
             const formData = new FormData();
             formData.append("file", file);
-            
+
             const res = await fetch(`/api/conversations/${id}/files`, {
               method: "POST",
               body: formData,
@@ -458,10 +460,10 @@ export default function Home() {
         const failedFiles = uploadResults
           .filter(r => r.status === "rejected")
           .map((f) => f.status === "rejected" ? f.reason.message : "");
-        
+
         if (failedFiles.length > 0) {
-          toast({ 
-            title: t('home.conversationUpdated'), 
+          toast({
+            title: t('home.conversationUpdated'),
             description: t('home.uploadWarning', { files: failedFiles.join(", ") }),
             variant: "default"
           });
@@ -477,10 +479,10 @@ export default function Home() {
       queryClient.invalidateQueries({ queryKey: ["/api/conversations", variables.id, "files"] });
     },
     onError: (error) => {
-      toast({ 
-        title: t('home.conversationUpdateFailed'), 
+      toast({
+        title: t('home.conversationUpdateFailed'),
         description: error instanceof Error ? error.message : t('home.unknownError'),
-        variant: "destructive" 
+        variant: "destructive"
       });
     },
   });
@@ -515,7 +517,7 @@ export default function Home() {
       );
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ 
+      queryClient.invalidateQueries({
         queryKey: ["/api/projects"],
         refetchType: 'active'
       });
@@ -557,7 +559,7 @@ export default function Home() {
   useEffect(() => {
     currentConversationIdRef.current = selectedConversationId;
   }, [selectedConversationId]);
-  
+
   // Update ref when fileViewerProjectId changes
   useEffect(() => {
     fileViewerProjectIdRef.current = fileViewerProjectId;
@@ -569,7 +571,7 @@ export default function Home() {
 
     const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
     const wsUrl = `${protocol}//${window.location.host}/ws/chat`;
-    
+
     const connectWS = () => {
       if (!mountedRef.current) return;
 
@@ -639,7 +641,7 @@ export default function Home() {
               isConverting: true,
               currentFile: data.filename,
             }));
-            toast({ 
+            toast({
               title: t("chat.conversion.started"),
               description: data.filename,
             });
@@ -652,7 +654,7 @@ export default function Home() {
                 currentFile: null,
                 results: [...prev.results, result],
               }));
-              toast({ 
+              toast({
                 title: t("chat.conversion.completed"),
                 description: result.convertedFile.name,
               });
@@ -671,7 +673,7 @@ export default function Home() {
               isConverting: false,
               currentFile: null,
             }));
-            toast({ 
+            toast({
               title: t("chat.conversion.error"),
               description: data.filename,
               variant: "destructive",
@@ -693,14 +695,14 @@ export default function Home() {
       ws.onclose = (event) => {
         console.log(`[WebSocket] Closed: code=${event.code}, reason=${event.reason}`);
         wsRef.current = null; // Clear the reference to ensure proper reconnection check
-        
+
         if (mountedRef.current && document.visibilityState === "visible") {
           reconnectAttemptsRef.current += 1;
-          
+
           // Exponential backoff: double the delay each time, up to max
           const currentDelay = reconnectDelayRef.current;
           reconnectTimeoutRef.current = setTimeout(connectWS, currentDelay);
-          
+
           reconnectDelayRef.current = Math.min(currentDelay * 2, maxReconnectDelay);
         }
       };
@@ -745,35 +747,35 @@ export default function Home() {
       toast({ title: "연결 오류", description: "서버에 연결되지 않았습니다", variant: "destructive" });
       return;
     }
-    
+
     // Check AI query limit for non-unlimited plans
     const plan = subscriptionData?.subscription?.plan || "free";
     const aiQueryLimit = subscriptionData?.limits?.aiQueries ?? 30;
     const currentAiQueries = subscriptionData?.usage?.aiQueries ?? 0;
-    
+
     // Free plan has limited AI queries, basic and pro are unlimited (limit = -1 or very high)
     if (plan === "free" && aiQueryLimit > 0 && currentAiQueries >= aiQueryLimit) {
       setUpgradeLimitType("aiQueries");
       setUpgradeLimitOpen(true);
       return;
     }
-    
+
     setIsStreaming(true);
     setContextSources(undefined);
-    
+
     // 태그된 파일이 있으면 메시지 앞에 파일 정보 추가 (백엔드 파싱용 @{} 형식 유지)
     let fullMessage = message;
     if (taggedFilesParam && taggedFilesParam.length > 0) {
       const fileRefs = taggedFilesParam.map((f) => `@{${f.originalName}}`).join(" ");
       fullMessage = `${fileRefs}\n\n${message}`;
     }
-    
+
     // 사용자 메시지를 즉시 화면에 표시
     setOptimisticUserMessage({
       content: fullMessage,
       timestamp: new Date(),
     });
-    
+
     setStreamingMessage({ role: "assistant", content: "" });
 
     try {
@@ -847,24 +849,24 @@ export default function Home() {
       highlightTimeoutRef.current = null;
     }
     highlightPendingRef.current = false;
-    
+
     // Navigate to conversation
     handleConversationSelect(conversationId);
-    
+
     // Set highlight with incremented key to force re-render even for same messageId
     setHighlightedMessageId(messageId);
     setHighlightKey(prev => prev + 1);
-    
+
     // Mark as pending to prevent conversation change effect from clearing
     highlightPendingRef.current = true;
-    
+
     // Clear highlight and all state after 3 seconds
     highlightTimeoutRef.current = setTimeout(() => {
       setHighlightedMessageId(null);
       highlightTimeoutRef.current = null;
       highlightPendingRef.current = false;
     }, 3000);
-    
+
     // Close search dialog
     setSearchOpen(false);
   };
@@ -1016,7 +1018,7 @@ export default function Home() {
         `날짜: ${new Date(currentConversation.createdAt).toLocaleString("ko-KR")}`,
         `메시지 수: ${messages.length}`,
         "",
-        "=" .repeat(60),
+        "=".repeat(60),
         "",
       ];
 
@@ -1059,6 +1061,9 @@ export default function Home() {
 
   return (
     <div className="h-screen overflow-hidden bg-background">
+      <Suspense fallback={null}>
+        <OnboardingTutorial forceShow={showTutorial} onClose={() => setShowTutorial(false)} />
+      </Suspense>
       <PanelGroup direction="horizontal">
         <Panel defaultSize={18} minSize={12} maxSize={30}>
           <Suspense fallback={<SidebarSkeleton />}>
@@ -1066,64 +1071,64 @@ export default function Home() {
               <SidebarSkeleton />
             ) : (
               <ExplorerSidebar
-            projects={projects}
-            conversations={conversations}
-            folders={folders}
-            selectedConversationId={selectedConversationId}
-            selectedProjectId={fileViewerProjectId}
-            selectedFolderId={fileViewerFolderId}
-            expandedProjects={expandedProjects}
-            expandedFolderIds={expandedFolderIds}
-            onProjectToggle={(projectId) => {
-              handleProjectToggle(projectId);
-            }}
-            onProjectSelect={(projectId) => {
-              setFileViewerProjectId(projectId);
-              setFileViewerFolderId(null);
-              setSelectedConversationId(null);
-            }}
-            onConversationSelect={(conversationId) => {
-              handleConversationSelect(conversationId);
-              const conv = conversations.find((c) => c.id === conversationId);
-              if (conv) {
-                setFileViewerProjectId(conv.projectId);
-                setFileViewerFolderId(conv.folderId || null);
-              }
-            }}
-            onFolderSelect={(folderId, projectId) => {
-              setFileViewerProjectId(projectId);
-              setFileViewerFolderId(folderId);
-              setSelectedConversationId(null);
-            }}
-            onFolderToggle={(folderId) => {
-              setExpandedFolderIds((prev) => {
-                const newSet = new Set(prev);
-                if (newSet.has(folderId)) {
-                  newSet.delete(folderId);
-                } else {
-                  newSet.add(folderId);
+                projects={projects}
+                conversations={conversations}
+                folders={folders}
+                selectedConversationId={selectedConversationId}
+                selectedProjectId={fileViewerProjectId}
+                selectedFolderId={fileViewerFolderId}
+                expandedProjects={expandedProjects}
+                expandedFolderIds={expandedFolderIds}
+                onProjectToggle={(projectId) => {
+                  handleProjectToggle(projectId);
+                }}
+                onProjectSelect={(projectId) => {
+                  setFileViewerProjectId(projectId);
+                  setFileViewerFolderId(null);
+                  setSelectedConversationId(null);
+                }}
+                onConversationSelect={(conversationId) => {
+                  handleConversationSelect(conversationId);
+                  const conv = conversations.find((c) => c.id === conversationId);
+                  if (conv) {
+                    setFileViewerProjectId(conv.projectId);
+                    setFileViewerFolderId(conv.folderId || null);
+                  }
+                }}
+                onFolderSelect={(folderId, projectId) => {
+                  setFileViewerProjectId(projectId);
+                  setFileViewerFolderId(folderId);
+                  setSelectedConversationId(null);
+                }}
+                onFolderToggle={(folderId) => {
+                  setExpandedFolderIds((prev) => {
+                    const newSet = new Set(prev);
+                    if (newSet.has(folderId)) {
+                      newSet.delete(folderId);
+                    } else {
+                      newSet.add(folderId);
+                    }
+                    return newSet;
+                  });
+                }}
+                onCreateProject={handleCreateProject}
+                onCreateFolder={handleCreateFolder}
+                onCreateConversation={handleCreateConversation}
+                onRenameProject={handleRenameProject}
+                onDeleteProject={handleDeleteProject}
+                onRenameFolder={handleRenameFolder}
+                onDeleteFolder={handleDeleteFolder}
+                onEditConversation={handleEditConversation}
+                onRenameConversation={handleRenameConversation}
+                onDeleteConversation={handleDeleteConversation}
+                onMoveConversation={(conversationId, projectId, folderId) =>
+                  moveConversationMutation.mutate({ id: conversationId, projectId, folderId })
                 }
-                return newSet;
-              });
-            }}
-            onCreateProject={handleCreateProject}
-            onCreateFolder={handleCreateFolder}
-            onCreateConversation={handleCreateConversation}
-            onRenameProject={handleRenameProject}
-            onDeleteProject={handleDeleteProject}
-            onRenameFolder={handleRenameFolder}
-            onDeleteFolder={handleDeleteFolder}
-            onEditConversation={handleEditConversation}
-            onRenameConversation={handleRenameConversation}
-            onDeleteConversation={handleDeleteConversation}
-            onMoveConversation={(conversationId, projectId, folderId) =>
-              moveConversationMutation.mutate({ id: conversationId, projectId, folderId })
-            }
-            onMoveFolder={(folderId, projectId, parentFolderId) =>
-              moveFolderMutation.mutate({ id: folderId, projectId, parentFolderId })
-            }
-            onReorderProjects={handleReorderProjects}
-          />
+                onMoveFolder={(folderId, projectId, parentFolderId) =>
+                  moveFolderMutation.mutate({ id: folderId, projectId, parentFolderId })
+                }
+                onReorderProjects={handleReorderProjects}
+              />
             )}
           </Suspense>
         </Panel>
@@ -1144,14 +1149,14 @@ export default function Home() {
               onFolderNavigate={(folderId, projectId) => {
                 setFileViewerProjectId(projectId);
                 setFileViewerFolderId(folderId);
-                
+
                 // 프로젝트 확장
                 setExpandedProjects((prev) => {
                   const newSet = new Set(prev);
                   newSet.add(projectId);
                   return newSet;
                 });
-                
+
                 // 현재 폴더 및 상위 폴더들 모두 확장
                 if (folderId) {
                   const parentIds = getParentFolderIds(folderId);
@@ -1213,70 +1218,71 @@ export default function Home() {
                 onExport={handleExport}
                 canGoBack={historyIndex > 0}
                 canGoForward={historyIndex < navigationHistory.length - 1}
+                onStartTutorial={() => setShowTutorial(true)}
               />
             </Suspense>
 
-        {selectedConversationId ? (
-          <Suspense fallback={<ChatSkeleton />}>
-            <>
-              <ChatInterface
-                messages={messages}
-                streamingMessage={streamingMessage}
-                contextSources={contextSources}
-                isLoading={messagesLoading}
-                optimisticUserMessage={optimisticUserMessage}
-                highlightedMessageId={highlightedMessageId}
-                highlightKey={highlightKey}
-              />
-              <ChatInput 
-                onSend={(message, attachments, taggedFilesParam) => {
-                  sendMessage(message, attachments, taggedFilesParam);
-                  setTaggedFiles([]);
-                }} 
-                disabled={isStreaming}
-                isStreaming={isStreaming}
-                onStopGeneration={async () => {
-                  // Close WebSocket to stop streaming
-                  if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
-                    wsRef.current.close();
-                  }
-                  // Clear streaming state but keep partial response
-                  if (streamingMessage && streamingMessage.content) {
-                    toast({ 
-                      title: t('chat.input.generationStopped', { defaultValue: '응답이 중지되었습니다' }) 
-                    });
-                  }
-                  setStreamingMessage(null);
-                  setOptimisticUserMessage(null);
-                  setIsStreaming(false);
-                  
-                  // Refresh messages to show user's question that was already saved to DB
-                  const activeConversationId = currentConversationIdRef.current;
-                  if (activeConversationId) {
-                    await queryClient.invalidateQueries({
-                      queryKey: ["/api/messages", activeConversationId],
-                    });
-                  }
-                }}
-                taggedFiles={taggedFiles}
-                onRemoveTaggedFile={(fileId) => {
-                  setTaggedFiles((prev) => prev.filter((f) => f.id !== fileId));
-                }}
-              />
-            </>
-          </Suspense>
-        ) : (
-          <div className="flex-1 flex items-center justify-center">
-            <div className="text-center space-y-4 max-w-md">
-              <h2 className="text-2xl font-semibold text-foreground">
-                {isAuthenticated && user ? t('home.greeting', { name: user.firstName || user.email }) : t('home.guestGreeting')}
-              </h2>
-              <p className="text-muted-foreground">
-                {t('home.instructions')}
-              </p>
-            </div>
-          </div>
-        )}
+            {selectedConversationId ? (
+              <Suspense fallback={<ChatSkeleton />}>
+                <>
+                  <ChatInterface
+                    messages={messages}
+                    streamingMessage={streamingMessage}
+                    contextSources={contextSources}
+                    isLoading={messagesLoading}
+                    optimisticUserMessage={optimisticUserMessage}
+                    highlightedMessageId={highlightedMessageId}
+                    highlightKey={highlightKey}
+                  />
+                  <ChatInput
+                    onSend={(message, attachments, taggedFilesParam) => {
+                      sendMessage(message, attachments, taggedFilesParam);
+                      setTaggedFiles([]);
+                    }}
+                    disabled={isStreaming}
+                    isStreaming={isStreaming}
+                    onStopGeneration={async () => {
+                      // Close WebSocket to stop streaming
+                      if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
+                        wsRef.current.close();
+                      }
+                      // Clear streaming state but keep partial response
+                      if (streamingMessage && streamingMessage.content) {
+                        toast({
+                          title: t('chat.input.generationStopped', { defaultValue: '응답이 중지되었습니다' })
+                        });
+                      }
+                      setStreamingMessage(null);
+                      setOptimisticUserMessage(null);
+                      setIsStreaming(false);
+
+                      // Refresh messages to show user's question that was already saved to DB
+                      const activeConversationId = currentConversationIdRef.current;
+                      if (activeConversationId) {
+                        await queryClient.invalidateQueries({
+                          queryKey: ["/api/messages", activeConversationId],
+                        });
+                      }
+                    }}
+                    taggedFiles={taggedFiles}
+                    onRemoveTaggedFile={(fileId) => {
+                      setTaggedFiles((prev) => prev.filter((f) => f.id !== fileId));
+                    }}
+                  />
+                </>
+              </Suspense>
+            ) : (
+              <div className="flex-1 flex items-center justify-center">
+                <div className="text-center space-y-4 max-w-md">
+                  <h2 className="text-2xl font-semibold text-foreground">
+                    {isAuthenticated && user ? t('home.greeting', { name: user.firstName || user.email }) : t('home.guestGreeting')}
+                  </h2>
+                  <p className="text-muted-foreground">
+                    {t('home.instructions')}
+                  </p>
+                </div>
+              </div>
+            )}
           </div>
         </Panel>
       </PanelGroup>
@@ -1314,8 +1320,8 @@ export default function Home() {
           placeholder={t('dialogs.createFolder.namePlaceholder')}
           onCreate={(name) => {
             if (createFolderProjectId) {
-              createFolderMutation.mutate({ 
-                projectId: createFolderProjectId, 
+              createFolderMutation.mutate({
+                projectId: createFolderProjectId,
                 name,
                 parentFolderId: createFolderParentId || undefined
               });
@@ -1457,23 +1463,23 @@ export default function Home() {
             upgradeLimitType === "projects"
               ? (subscriptionData?.usage?.projects ?? projects.length)
               : upgradeLimitType === "conversations"
-              ? (subscriptionData?.usage?.conversations ?? conversations.length)
-              : upgradeLimitType === "aiQueries"
-              ? (subscriptionData?.usage?.aiQueries ?? 0)
-              : upgradeLimitType === "storage"
-              ? (subscriptionData?.usage?.storageGB ?? 0) + " GB"
-              : 0
+                ? (subscriptionData?.usage?.conversations ?? conversations.length)
+                : upgradeLimitType === "aiQueries"
+                  ? (subscriptionData?.usage?.aiQueries ?? 0)
+                  : upgradeLimitType === "storage"
+                    ? (subscriptionData?.usage?.storageGB ?? 0) + " GB"
+                    : 0
           }
           maxLimit={
             upgradeLimitType === "projects"
               ? (subscriptionData?.limits?.projects ?? 3)
               : upgradeLimitType === "conversations"
-              ? (subscriptionData?.limits?.conversations ?? 50)
-              : upgradeLimitType === "aiQueries"
-              ? (subscriptionData?.limits?.aiQueries ?? 30)
-              : upgradeLimitType === "storage"
-              ? (subscriptionData?.limits?.storageGB ?? 10) + " GB"
-              : 0
+                ? (subscriptionData?.limits?.conversations ?? 50)
+                : upgradeLimitType === "aiQueries"
+                  ? (subscriptionData?.limits?.aiQueries ?? 30)
+                  : upgradeLimitType === "storage"
+                    ? (subscriptionData?.limits?.storageGB ?? 10) + " GB"
+                    : 0
           }
           currentPlan={subscriptionData?.subscription?.plan}
         />

@@ -22,6 +22,7 @@ interface ExplorerToolbarProps {
   onExport?: (format: "json" | "txt") => void;
   canGoBack: boolean;
   canGoForward: boolean;
+  onStartTutorial?: () => void;
 }
 
 export function ExplorerToolbar({
@@ -34,6 +35,7 @@ export function ExplorerToolbar({
   onExport,
   canGoBack,
   canGoForward,
+  onStartTutorial,
 }: ExplorerToolbarProps) {
   const { t } = useTranslation();
 
@@ -134,7 +136,7 @@ export function ExplorerToolbar({
 
       <LanguageToggle />
       <ThemeToggle />
-      <HelpDialog />
+      <HelpDialog onStartTutorial={onStartTutorial} />
     </div>
   );
 }

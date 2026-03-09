@@ -1,5 +1,5 @@
 import { useState, type ReactNode } from "react";
-import { HelpCircle, Keyboard, MousePointer, Folder, MessageSquare, Search, FileText } from "lucide-react";
+import { HelpCircle, Keyboard, MousePointer, Folder, MessageSquare, Search, FileText, PlayCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -55,7 +55,7 @@ function FeatureItem({ icon, title, description }: FeatureItemProps) {
   );
 }
 
-export function HelpDialog() {
+export function HelpDialog({ onStartTutorial }: { onStartTutorial?: () => void }) {
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
 
@@ -155,6 +155,22 @@ export function HelpDialog() {
             </ScrollArea>
           </TabsContent>
         </Tabs>
+        {onStartTutorial && (
+          <div className="mt-4 pt-4 border-t">
+            <Button
+              variant="outline"
+              className="w-full"
+              onClick={() => {
+                setOpen(false);
+                onStartTutorial();
+              }}
+              data-testid="button-restart-tutorial"
+            >
+              <PlayCircle className="h-4 w-4 mr-2" />
+              {t('help.restartTutorial')}
+            </Button>
+          </div>
+        )}
       </DialogContent>
     </Dialog>
   );

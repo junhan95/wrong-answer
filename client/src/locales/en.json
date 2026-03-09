@@ -1597,6 +1597,34 @@
         "title": "File Management",
         "description": "Upload, preview, and edit files. Supports documents, images, and more."
       }
-    }
+    },
+    "restartTutorial": "Restart Tutorial"
+  },
+  "tutorial": {
+    "steps": {
+      "welcome": {
+        "title": "Welcome to WiseQuery! 👋",
+        "description": "Upload documents, ask AI questions, and organize knowledge by project on our AI-powered knowledge management platform. Let's get started with a quick tour."
+      },
+      "sidebar": {
+        "title": "Project Sidebar 📁",
+        "description": "Create and manage projects in the left sidebar. Click the '+' button to create a new project, then add folders and conversations inside."
+      },
+      "files": {
+        "title": "File Management Panel 📄",
+        "description": "Upload and manage files in the center panel. Supports PDF, Word, Excel, and more — AI automatically analyzes your documents."
+      },
+      "chat": {
+        "title": "AI Chat 💬",
+        "description": "Chat with AI in the right panel. Ask questions about your uploaded documents and get accurate answers with source citations. Tag files to reference specific documents."
+      },
+      "done": {
+        "title": "You're All Set! 🎉",
+        "description": "Start by creating a project and uploading documents. You can restart this tutorial anytime from the Help (?) button."
+      }
+    },
+    "next": "Next",
+    "skip": "Skip",
+    "start": "Get Started"
   }
 }
