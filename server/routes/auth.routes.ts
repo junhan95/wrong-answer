@@ -16,6 +16,27 @@ router.get("/auth/user", isAuthenticated, async (req, res) => {
     }
 });
 
+// Update profile
+router.patch("/auth/profile", isAuthenticated, async (req, res) => {
+    try {
+        const user = req.user as any;
+        const userId = user.id;
+        const { firstName, lastName } = req.body;
+
+        const updated = await storage.updateUser(userId, {
+            ...(firstName !== undefined && { firstName }),
+            ...(lastName !== undefined && { lastName }),
+        });
+
+        if (!updated) {
+            return res.status(404).json({ error: "User not found" });
+        }
+        res.json(updated);
+    } catch (error) {
+        res.status(500).json({ error: "Failed to update profile" });
+    }
+});
+
 // Logout
 router.get("/logout", (req, res) => {
     req.logout((err) => {

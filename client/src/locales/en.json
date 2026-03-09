@@ -1626,5 +1626,28 @@
     "next": "Next",
     "skip": "Skip",
     "start": "Get Started"
+  },
+  "settings": {
+    "title": "Settings",
+    "profile": {
+      "tab": "Profile",
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "firstNamePlaceholder": "Enter first name",
+      "lastNamePlaceholder": "Enter last name",
+      "saved": "Profile saved",
+      "saveFailed": "Failed to save profile"
+    },
+    "membership": {
+      "tab": "Membership",
+      "currentPlan": "Current Plan",
+      "status": "Status",
+      "usage": "Usage",
+      "projects": "Projects",
+      "conversations": "Conversations",
+      "storage": "Storage",
+      "upgrade": "Upgrade Plan",
+      "manageSubscription": "Manage Subscription"
+    }
   }
 }

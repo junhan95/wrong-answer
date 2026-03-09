@@ -1626,5 +1626,28 @@
     "next": "다음",
     "skip": "건너뛰기",
     "start": "시작하기"
+  },
+  "settings": {
+    "title": "설정",
+    "profile": {
+      "tab": "프로필",
+      "firstName": "이름",
+      "lastName": "성",
+      "firstNamePlaceholder": "이름을 입력하세요",
+      "lastNamePlaceholder": "성을 입력하세요",
+      "saved": "프로필이 저장되었습니다",
+      "saveFailed": "프로필 저장에 실패했습니다"
+    },
+    "membership": {
+      "tab": "멤버십",
+      "currentPlan": "현재 플랜",
+      "status": "상태",
+      "usage": "사용량",
+      "projects": "프로젝트",
+      "conversations": "대화",
+      "storage": "저장공간",
+      "upgrade": "플랜 업그레이드",
+      "manageSubscription": "구독 관리"
+    }
   }
 }

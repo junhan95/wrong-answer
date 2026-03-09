@@ -1,5 +1,5 @@
 import { useState, useCallback, useMemo } from "react";
-import { ChevronRight, ChevronDown, Folder as FolderIcon, FolderOpen, MessageSquare, Plus, MoreHorizontal, LogIn, LogOut, GripVertical } from "lucide-react";
+import { ChevronRight, ChevronDown, Folder as FolderIcon, FolderOpen, MessageSquare, Plus, MoreHorizontal, LogIn, LogOut, GripVertical, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Progress } from "@/components/ui/progress";
@@ -17,6 +17,7 @@ import { useQuery } from "@tanstack/react-query";
 import type { Project, Conversation, Folder } from "@shared/schema";
 import { useAuth } from "@/hooks/useAuth";
 import { TrashView } from "@/components/trash-view";
+import { SettingsDialog } from "@/components/settings-dialog";
 
 interface ExplorerSidebarProps {
   projects: Project[];
@@ -511,6 +512,7 @@ export function ExplorerSidebar({
 
   const [activeId, setActiveId] = useState<string | null>(null);
   const [overId, setOverId] = useState<string | null>(null);
+  const [settingsOpen, setSettingsOpen] = useState(false);
 
   // 드래그 활성화 조건: 10px 이상 이동해야 드래그 시작
   const pointerSensor = useSensor(PointerSensor, {
@@ -745,29 +747,39 @@ export function ExplorerSidebar({
               </div>
             </div>
           ) : isAuthenticated && user ? (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <div
-                  className="flex items-center gap-2 px-2 py-1.5 rounded-sm hover-elevate active-elevate-2 cursor-pointer"
-                  data-testid="button-user-menu"
-                >
-                  <Avatar className="h-8 w-8">
-                    <AvatarImage src={user.profileImageUrl || undefined} alt={getUserDisplayName()} />
-                    <AvatarFallback className="text-xs">{getUserInitials()}</AvatarFallback>
-                  </Avatar>
-                  <span className="text-sm flex-1 truncate text-sidebar-foreground">{getUserDisplayName()}</span>
-                </div>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-48">
-                <DropdownMenuItem
-                  onClick={() => window.location.href = "/api/logout"}
-                  data-testid="menu-logout"
-                >
-                  <LogOut className="h-4 w-4 mr-2" />
-                  {t('chat.sidebar.logout')}
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <div
+                    className="flex items-center gap-2 px-2 py-1.5 rounded-sm hover-elevate active-elevate-2 cursor-pointer"
+                    data-testid="button-user-menu"
+                  >
+                    <Avatar className="h-8 w-8">
+                      <AvatarImage src={user.profileImageUrl || undefined} alt={getUserDisplayName()} />
+                      <AvatarFallback className="text-xs">{getUserInitials()}</AvatarFallback>
+                    </Avatar>
+                    <span className="text-sm flex-1 truncate text-sidebar-foreground">{getUserDisplayName()}</span>
+                  </div>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-48">
+                  <DropdownMenuItem
+                    onClick={() => setSettingsOpen(true)}
+                    data-testid="menu-settings"
+                  >
+                    <Settings className="h-4 w-4 mr-2" />
+                    {t('settings.title')}
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() => window.location.href = "/api/logout"}
+                    data-testid="menu-logout"
+                  >
+                    <LogOut className="h-4 w-4 mr-2" />
+                    {t('chat.sidebar.logout')}
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+              <SettingsDialog open={settingsOpen} onOpenChange={setSettingsOpen} />
+            </>
           ) : (
             <Button
               variant="default"
