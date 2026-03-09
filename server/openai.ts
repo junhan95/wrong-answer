@@ -1,6 +1,6 @@
 import OpenAI from "openai";
 
-// Use gpt-4o-mini for fast responses with low cost
+// Use gpt-5.2-instant for fast responses with low cost
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 // Simple LRU cache for embeddings (max 100 entries)
@@ -22,7 +22,7 @@ export async function* generateChatCompletionStream(
   messages: { role: string; content: MessageContent }[]
 ): AsyncGenerator<string, void, unknown> {
   const stream = await openai.chat.completions.create({
-    model: "gpt-4o-mini",
+    model: "gpt-5.2-instant",
     messages: messages as OpenAI.Chat.ChatCompletionMessageParam[],
     max_completion_tokens: 4096,
     stream: true,
@@ -88,7 +88,7 @@ export async function rewriteQueryForSearch(originalQuery: string): Promise<{
 }> {
   try {
     const response = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
+      model: "gpt-5.2-instant",
       messages: [
         {
           role: "system",

@@ -53,7 +53,7 @@ export function ChatInput({
   const handleSubmit = () => {
     if ((message.trim() || attachments.length > 0 || taggedFiles.length > 0) && !disabled) {
       onSend(
-        message.trim(), 
+        message.trim(),
         attachments.length > 0 ? attachments : undefined,
         taggedFiles.length > 0 ? taggedFiles : undefined
       );
@@ -115,6 +115,50 @@ export function ChatInput({
     }
   };
 
+  const handlePaste = async (e: React.ClipboardEvent<HTMLTextAreaElement>) => {
+    const items = e.clipboardData?.items;
+    if (!items) return;
+
+    for (const item of Array.from(items)) {
+      if (item.type.startsWith("image/")) {
+        e.preventDefault();
+        const file = item.getAsFile();
+        if (!file) continue;
+
+        setUploading(true);
+        try {
+          const formData = new FormData();
+          const ext = file.type.split("/")[1] || "png";
+          const namedFile = new File([file], `clipboard_${Date.now()}.${ext}`, { type: file.type });
+          formData.append("file", namedFile);
+
+          const response = await fetch("/api/upload", {
+            method: "POST",
+            body: formData,
+          });
+
+          if (!response.ok) throw new Error("Upload failed");
+
+          const fileInfo: FileAttachment = await response.json();
+          setAttachments((prev) => [...prev, fileInfo]);
+          toast({
+            title: t('chat.input.uploadSuccess'),
+            description: fileInfo.originalName,
+          });
+        } catch (error) {
+          console.error("Clipboard image upload error:", error);
+          toast({
+            variant: "destructive",
+            title: t('chat.input.uploadError'),
+          });
+        } finally {
+          setUploading(false);
+        }
+        break;
+      }
+    }
+  };
+
   useEffect(() => {
     if (textareaRef.current) {
       textareaRef.current.style.height = "auto";
@@ -132,7 +176,7 @@ export function ChatInput({
         accept="image/*,.pdf,.txt,.csv,.json"
         data-testid="input-file"
       />
-      
+
       {taggedFiles.length > 0 && (
         <div className="mb-2 flex flex-wrap gap-2">
           {taggedFiles.map((file) => (
@@ -226,6 +270,7 @@ export function ChatInput({
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           onKeyDown={handleKeyDown}
+          onPaste={handlePaste}
           placeholder={placeholder || t('chat.input.placeholder')}
           disabled={disabled}
           data-testid="input-message"
