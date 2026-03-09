@@ -4,11 +4,11 @@
 
 /* LIGHT MODE */
 :root {
-  --button-outline: rgba(0,0,0, .10);
-  --badge-outline: rgba(0,0,0, .05);
+  --button-outline: rgba(0, 0, 0, .10);
+  --badge-outline: rgba(0, 0, 0, .05);
   --opaque-button-border-intensity: -8;
-  --elevate-1: rgba(0,0,0, .03);
-  --elevate-2: rgba(0,0,0, .08);
+  --elevate-1: rgba(0, 0, 0, .03);
+  --elevate-2: rgba(0, 0, 0, .08);
   --background: 0 0% 100%;
   --foreground: 0 0% 0%;
   --border: 0 0% 0%;
@@ -58,7 +58,7 @@
   --tracking-normal: 0em;
   --spacing: 0.25rem;
 
-/* Fallback for older browsers */
+  /* Fallback for older browsers */
   --sidebar-primary-border: hsl(var(--sidebar-primary));
   --sidebar-primary-border: hsl(from hsl(var(--sidebar-primary)) h s calc(l + var(--opaque-button-border-intensity)) / alpha);
 
@@ -88,45 +88,45 @@
 }
 
 .dark {
-  --button-outline: rgba(255,255,255, .10);
-  --badge-outline: rgba(255,255,255, .05);
+  --button-outline: rgba(255, 255, 255, .10);
+  --badge-outline: rgba(255, 255, 255, .05);
   --opaque-button-border-intensity: 9;
-  --elevate-1: rgba(255,255,255, .04);
-  --elevate-2: rgba(255,255,255, .09);
-  --background: 0 0% 0%;
+  --elevate-1: rgba(255, 255, 255, .04);
+  --elevate-2: rgba(255, 255, 255, .09);
+  --background: 263 70% 4%;
   --foreground: 0 0% 100%;
-  --border: 0 0% 100%;
-  --card: 0 0% 20%;
+  --border: 265 30% 30%;
+  --card: 263 40% 12%;
   --card-foreground: 0 0% 100%;
-  --card-border: 0 0% 100%;
-  --sidebar: 0 0% 0%;
+  --card-border: 265 30% 30%;
+  --sidebar: 263 70% 4%;
   --sidebar-foreground: 0 0% 100%;
-  --sidebar-border: 0 0% 100%;
-  --sidebar-primary: 0 100% 70%;
-  --sidebar-primary-foreground: 0 0% 0%;
-  --sidebar-accent: 213 100% 60%;
-  --sidebar-accent-foreground: 0 0% 0%;
-  --sidebar-ring: 0 100% 70%;
-  --popover: 0 0% 20%;
+  --sidebar-border: 265 30% 30%;
+  --sidebar-primary: 265 90% 65%;
+  --sidebar-primary-foreground: 0 0% 100%;
+  --sidebar-accent: 280 80% 55%;
+  --sidebar-accent-foreground: 0 0% 100%;
+  --sidebar-ring: 265 90% 65%;
+  --popover: 263 40% 12%;
   --popover-foreground: 0 0% 100%;
-  --popover-border: 0 0% 100%;
-  --primary: 0 100% 70%;
-  --primary-foreground: 0 0% 0%;
-  --secondary: 60 100% 60%;
+  --popover-border: 265 30% 30%;
+  --primary: 265 90% 65%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 265 60% 75%;
   --secondary-foreground: 0 0% 0%;
-  --muted: 0 0% 20%;
-  --muted-foreground: 0 0% 80%;
-  --accent: 213 100% 60%;
-  --accent-foreground: 0 0% 0%;
+  --muted: 263 30% 14%;
+  --muted-foreground: 265 20% 75%;
+  --accent: 280 80% 55%;
+  --accent-foreground: 0 0% 100%;
   --destructive: 0 0% 100%;
   --destructive-foreground: 0 0% 0%;
-  --input: 0 0% 100%;
-  --ring: 0 100% 70%;
-  --chart-1: 0 100% 70%;
-  --chart-2: 60 100% 60%;
-  --chart-3: 213 100% 60%;
-  --chart-4: 120 60% 50%;
-  --chart-5: 300 60% 50%;
+  --input: 265 30% 30%;
+  --ring: 265 90% 65%;
+  --chart-1: 265 90% 65%;
+  --chart-2: 280 80% 55%;
+  --chart-3: 250 70% 60%;
+  --chart-4: 300 60% 50%;
+  --chart-5: 230 70% 55%;
   --shadow-2xs: 0px 2px 0px 0px hsl(0 0% 0% / 0.00);
   --shadow-xs: 0px 2px 0px 0px hsl(0 0% 0% / 0.00);
   --shadow-sm: 0px 2px 0px 0px hsl(0 0% 0% / 0.00), 0px 1px 2px -1px hsl(0 0% 0% / 0.00);
@@ -136,7 +136,7 @@
   --shadow-xl: 0px 2px 0px 0px hsl(0 0% 0% / 0.00), 0px 8px 10px -1px hsl(0 0% 0% / 0.00);
   --shadow-2xl: 0px 2px 0px 0px hsl(0 0% 0% / 0.00);
 
-/* Fallback for older browsers */
+  /* Fallback for older browsers */
   --sidebar-primary-border: hsl(var(--sidebar-primary));
   --sidebar-primary-border: hsl(from hsl(var(--sidebar-primary)) h s calc(l + var(--opaque-button-border-intensity)) / alpha);
 
@@ -288,10 +288,14 @@
 
   /* Custom cursor blink animation for typing effect */
   @keyframes blink {
-    0%, 49% {
+
+    0%,
+    49% {
       opacity: 1;
     }
-    50%, 100% {
+
+    50%,
+    100% {
       opacity: 0;
     }
   }
@@ -317,12 +321,21 @@
     @apply mb-0;
   }
 
-  .prose h1, .prose h2, .prose h3, .prose h4, .prose h5, .prose h6 {
+  .prose h1,
+  .prose h2,
+  .prose h3,
+  .prose h4,
+  .prose h5,
+  .prose h6 {
     @apply font-semibold mt-4 mb-2;
   }
 
-  .prose h1:first-child, .prose h2:first-child, .prose h3:first-child,
-  .prose h4:first-child, .prose h5:first-child, .prose h6:first-child {
+  .prose h1:first-child,
+  .prose h2:first-child,
+  .prose h3:first-child,
+  .prose h4:first-child,
+  .prose h5:first-child,
+  .prose h6:first-child {
     @apply mt-0;
   }
 
@@ -338,7 +351,8 @@
     @apply text-base;
   }
 
-  .prose ul, .prose ol {
+  .prose ul,
+  .prose ol {
     @apply my-2 pl-5;
   }
 
@@ -425,6 +439,39 @@
   .prose img {
     @apply rounded-md max-w-full my-3;
   }
+
+  /* Landing page styles */
+  .landing-section {
+    position: relative;
+  }
+
+  .landing-section-alt {
+    position: relative;
+    background: hsl(var(--muted) / 0.15);
+  }
+
+  .landing-card {
+    background: hsl(var(--card) / 0.6);
+    backdrop-filter: blur(12px);
+    border: 1px solid hsl(var(--border) / 0.15);
+    border-radius: 1rem;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+  }
+
+  .landing-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px hsl(var(--primary) / 0.08);
+    border-color: hsl(var(--primary) / 0.25);
+  }
+
+  .landing-glow {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(120px);
+    opacity: 0.15;
+    pointer-events: none;
+    z-index: 0;
+  }
 }
 
 /* File thumbnail error fallback */
@@ -441,11 +488,11 @@
   @apply text-sm leading-relaxed;
 }
 
-.markdown-content > *:first-child {
+.markdown-content>*:first-child {
   @apply mt-0;
 }
 
-.markdown-content > *:last-child {
+.markdown-content>*:last-child {
   @apply mb-0;
 }
 
@@ -456,13 +503,13 @@
   padding-left: 0;
 }
 
-.markdown-content .markdown-ol > .markdown-li {
+.markdown-content .markdown-ol>.markdown-li {
   counter-increment: markdown-counter;
   position: relative;
   padding-left: 2rem;
 }
 
-.markdown-content .markdown-ol > .markdown-li::before {
+.markdown-content .markdown-ol>.markdown-li::before {
   content: counter(markdown-counter) ".";
   position: absolute;
   left: 0;
@@ -478,12 +525,12 @@
   padding-left: 0;
 }
 
-.markdown-content .markdown-ul > .markdown-li {
+.markdown-content .markdown-ul>.markdown-li {
   position: relative;
   padding-left: 1.5rem;
 }
 
-.markdown-content .markdown-ul > .markdown-li::before {
+.markdown-content .markdown-ul>.markdown-li::before {
   content: "";
   position: absolute;
   left: 0.25rem;
@@ -504,7 +551,7 @@
 }
 
 /* Second level bullets - hollow circles */
-.markdown-content .markdown-ul .markdown-ul > .markdown-li::before {
+.markdown-content .markdown-ul .markdown-ul>.markdown-li::before {
   background-color: transparent;
   border: 2px solid hsl(var(--primary));
 }
@@ -514,10 +561,10 @@
   counter-reset: markdown-counter-nested;
 }
 
-.markdown-content .markdown-ol .markdown-ol > .markdown-li {
+.markdown-content .markdown-ol .markdown-ol>.markdown-li {
   counter-increment: markdown-counter-nested;
 }
 
-.markdown-content .markdown-ol .markdown-ol > .markdown-li::before {
+.markdown-content .markdown-ol .markdown-ol>.markdown-li::before {
   content: counter(markdown-counter-nested) ".";
 }
