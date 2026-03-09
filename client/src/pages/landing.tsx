@@ -1,7 +1,9 @@
-import { lazy, Suspense, useEffect } from "react";
+import { lazy, Suspense, useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
+import { SEO } from "@/components/seo";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Switch } from "@/components/ui/switch";
 import {
   Check,
   FolderTree,
@@ -24,17 +26,12 @@ import {
   Users,
   Sparkles,
   ArrowRight,
-  Zap,
-  FileSpreadsheetIcon,
-  Presentation,
-  Languages,
-  FolderKanban,
-  TrendingUp,
-  Filter,
-  Layers,
-  RefreshCw
+  Menu,
+  X,
+  Github,
+  Twitter,
+  Linkedin,
 } from "lucide-react";
-import { SiGoogledocs } from "react-icons/si";
 import { LanguageToggle } from "@/components/language-toggle";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { useTranslation } from "react-i18next";
@@ -48,6 +45,8 @@ export default function Landing() {
   const { t } = useTranslation();
   const searchString = useSearch();
   const [, setLocation] = useLocation();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isYearly, setIsYearly] = useState(false);
 
   useEffect(() => {
     const params = new URLSearchParams(searchString);
@@ -61,6 +60,7 @@ export default function Landing() {
 
   return (
     <div className="min-h-screen">
+      <SEO path="/" />
       {/* Navigation Header */}
       <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container mx-auto flex h-16 items-center justify-between px-6 lg:px-12">
@@ -95,7 +95,39 @@ export default function Landing() {
               <Button data-testid="button-get-started">{t('landing.nav.getStarted')}</Button>
             </PrefetchLink>
           </nav>
+          <button
+            className="md:hidden p-2 rounded-md hover:bg-muted"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            data-testid="button-mobile-menu"
+          >
+            {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+          </button>
         </div>
+        {mobileMenuOpen && (
+          <div className="md:hidden border-t bg-background px-6 py-4 space-y-3">
+            <a href="#features" className="block text-sm font-medium py-2" onClick={() => setMobileMenuOpen(false)}>
+              {t('landing.nav.features')}
+            </a>
+            <a href="#how-it-works" className="block text-sm font-medium py-2" onClick={() => setMobileMenuOpen(false)}>
+              {t('landing.nav.howItWorks')}
+            </a>
+            <a href="#pricing" className="block text-sm font-medium py-2" onClick={() => setMobileMenuOpen(false)}>
+              {t('landing.nav.pricing')}
+            </a>
+            <div className="flex items-center gap-3 py-2">
+              <ThemeToggle />
+              <LanguageToggle />
+            </div>
+            <div className="flex flex-col gap-2 pt-2 border-t">
+              <PrefetchLink href="/login">
+                <Button variant="ghost" className="w-full justify-start">{t('landing.nav.signIn')}</Button>
+              </PrefetchLink>
+              <PrefetchLink href="/login">
+                <Button className="w-full">{t('landing.nav.getStarted')}</Button>
+              </PrefetchLink>
+            </div>
+          </div>
+        )}
       </header>
 
       {/* Hero Section */}
@@ -199,156 +231,10 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* What's New Section */}
-      <section className="py-20 lg:py-32 bg-gradient-to-b from-primary/5 to-transparent" data-testid="section-whats-new">
-        <div className="container mx-auto px-6 lg:px-12">
-          <div className="text-center space-y-4 mb-16">
-            <Badge variant="secondary" className="px-4 py-1 text-sm" data-testid="badge-whats-new">
-              <Sparkles className="h-3 w-3 mr-1" />
-              {t('landing.whatsNew.badge')}
-            </Badge>
-            <h2 className="text-4xl font-semibold" data-testid="text-whats-new-title">
-              {t('landing.whatsNew.title')}
-            </h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              {t('landing.whatsNew.subtitle')}
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <Card className="hover-elevate relative overflow-visible" data-testid="card-google-docs">
-              <Badge className="absolute -top-3 left-4">{t('landing.whatsNew.googleDocs.badge')}</Badge>
-              <CardHeader>
-                <SiGoogledocs className="h-10 w-10 mb-4 text-blue-500" />
-                <CardTitle className="text-lg">{t('landing.whatsNew.googleDocs.title')}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CardDescription className="text-sm">
-                  {t('landing.whatsNew.googleDocs.description')}
-                </CardDescription>
-              </CardContent>
-            </Card>
-
-            <Card className="hover-elevate" data-testid="card-office-support">
-              <CardHeader>
-                <FileSpreadsheet className="h-10 w-10 mb-4 text-green-600" />
-                <CardTitle className="text-lg">{t('landing.whatsNew.officeSupport.title')}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CardDescription className="text-sm">
-                  {t('landing.whatsNew.officeSupport.description')}
-                </CardDescription>
-              </CardContent>
-            </Card>
-
-            <Card className="hover-elevate" data-testid="card-multilingual">
-              <CardHeader>
-                <Languages className="h-10 w-10 mb-4 text-purple-500" />
-                <CardTitle className="text-lg">{t('landing.whatsNew.multilingual.title')}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CardDescription className="text-sm">
-                  {t('landing.whatsNew.multilingual.description')}
-                </CardDescription>
-              </CardContent>
-            </Card>
-
-            <Card className="hover-elevate" data-testid="card-folder-system">
-              <CardHeader>
-                <FolderKanban className="h-10 w-10 mb-4 text-orange-500" />
-                <CardTitle className="text-lg">{t('landing.whatsNew.folderSystem.title')}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CardDescription className="text-sm">
-                  {t('landing.whatsNew.folderSystem.description')}
-                </CardDescription>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-      </section>
-
-      {/* Document Upload Highlight Section */}
-      <section className="py-20 lg:py-32" data-testid="section-document-highlight">
-        <div className="container mx-auto px-6 lg:px-12">
-          <div className="text-center space-y-4 mb-16">
-            <h2 className="text-4xl font-semibold" data-testid="text-document-title">
-              {t('landing.documents.title')}
-            </h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              {t('landing.documents.subtitle')}
-            </p>
-          </div>
-
-          {/* Supported File Formats */}
-          <div className="flex flex-wrap justify-center gap-4 mb-16">
-            <Badge variant="secondary" className="px-4 py-2 text-sm">
-              <FileText className="h-4 w-4 mr-2" />
-              PDF
-            </Badge>
-            <Badge variant="secondary" className="px-4 py-2 text-sm">
-              <FileText className="h-4 w-4 mr-2" />
-              Word (.docx)
-            </Badge>
-            <Badge variant="secondary" className="px-4 py-2 text-sm">
-              <FileSpreadsheet className="h-4 w-4 mr-2" />
-              Excel (.xlsx)
-            </Badge>
-            <Badge variant="secondary" className="px-4 py-2 text-sm">
-              <Table2 className="h-4 w-4 mr-2" />
-              CSV
-            </Badge>
-            <Badge variant="secondary" className="px-4 py-2 text-sm">
-              <FileText className="h-4 w-4 mr-2" />
-              Text (.txt)
-            </Badge>
-          </div>
-
-          {/* Feature Cards */}
-          <div className="grid md:grid-cols-3 gap-8">
-            <Card className="hover-elevate text-center" data-testid="card-upload-feature">
-              <CardHeader>
-                <Upload className="h-12 w-12 mx-auto mb-4 text-primary" />
-                <CardTitle className="text-xl">{t('landing.documents.upload.title')}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CardDescription className="text-base">
-                  {t('landing.documents.upload.description')}
-                </CardDescription>
-              </CardContent>
-            </Card>
-
-            <Card className="hover-elevate text-center" data-testid="card-chunk-feature">
-              <CardHeader>
-                <Zap className="h-12 w-12 mx-auto mb-4 text-primary" />
-                <CardTitle className="text-xl">{t('landing.documents.chunk.title')}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CardDescription className="text-base">
-                  {t('landing.documents.chunk.description')}
-                </CardDescription>
-              </CardContent>
-            </Card>
-
-            <Card className="hover-elevate text-center" data-testid="card-search-feature">
-              <CardHeader>
-                <Search className="h-12 w-12 mx-auto mb-4 text-primary" />
-                <CardTitle className="text-xl">{t('landing.documents.search.title')}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CardDescription className="text-base">
-                  {t('landing.documents.search.description')}
-                </CardDescription>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-      </section>
-
-      {/* How It Works Section */}
+      {/* How It Works Section (with file format badges) */}
       <section id="how-it-works" className="py-20 lg:py-32 bg-muted/30" data-testid="section-how-it-works">
         <div className="container mx-auto px-6 lg:px-12">
-          <div className="text-center space-y-4 mb-16">
+          <div className="text-center space-y-4 mb-12">
             <h2 className="text-4xl font-semibold" data-testid="text-how-it-works-title">
               {t('landing.howItWorks.title')}
             </h2>
@@ -357,8 +243,26 @@ export default function Landing() {
             </p>
           </div>
 
+          {/* Supported File Formats */}
+          <div className="flex flex-wrap justify-center gap-3 mb-16">
+            <Badge variant="secondary" className="px-4 py-2 text-sm">
+              <FileText className="h-4 w-4 mr-2" /> PDF
+            </Badge>
+            <Badge variant="secondary" className="px-4 py-2 text-sm">
+              <FileText className="h-4 w-4 mr-2" /> Word (.docx)
+            </Badge>
+            <Badge variant="secondary" className="px-4 py-2 text-sm">
+              <FileSpreadsheet className="h-4 w-4 mr-2" /> Excel (.xlsx)
+            </Badge>
+            <Badge variant="secondary" className="px-4 py-2 text-sm">
+              <Table2 className="h-4 w-4 mr-2" /> CSV
+            </Badge>
+            <Badge variant="secondary" className="px-4 py-2 text-sm">
+              <FileText className="h-4 w-4 mr-2" /> Text (.txt)
+            </Badge>
+          </div>
+
           <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-            {/* Step 1 */}
             <div className="text-center space-y-4" data-testid="step-1">
               <div className="w-16 h-16 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-2xl font-bold mx-auto">
                 1
@@ -366,13 +270,9 @@ export default function Landing() {
               <h3 className="text-xl font-semibold">{t('landing.howItWorks.step1.title')}</h3>
               <p className="text-muted-foreground">{t('landing.howItWorks.step1.description')}</p>
             </div>
-
-            {/* Arrow */}
             <div className="hidden md:flex items-center justify-center">
               <ArrowRight className="h-8 w-8 text-muted-foreground" />
             </div>
-
-            {/* Step 2 */}
             <div className="text-center space-y-4" data-testid="step-2">
               <div className="w-16 h-16 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-2xl font-bold mx-auto">
                 2
@@ -387,7 +287,6 @@ export default function Landing() {
           </div>
 
           <div className="max-w-md mx-auto mt-8">
-            {/* Step 3 */}
             <div className="text-center space-y-4" data-testid="step-3">
               <div className="w-16 h-16 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-2xl font-bold mx-auto">
                 3
@@ -419,19 +318,9 @@ export default function Landing() {
               {t('landing.features.subtitle')}
             </p>
           </div>
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <Card className="hover-elevate" data-testid="card-feature-organization">
-              <CardHeader>
-                <FolderTree className="h-12 w-12 mb-4 text-primary" />
-                <CardTitle className="text-xl">{t('landing.features.explorer.title')}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CardDescription className="text-base">
-                  {t('landing.features.explorer.description')}
-                </CardDescription>
-              </CardContent>
-            </Card>
 
+          {/* Core Features (4 large cards) */}
+          <div className="grid md:grid-cols-2 gap-8 mb-12">
             <Card className="hover-elevate" data-testid="card-feature-rag">
               <CardHeader>
                 <Brain className="h-12 w-12 mb-4 text-primary" />
@@ -440,6 +329,18 @@ export default function Landing() {
               <CardContent>
                 <CardDescription className="text-base">
                   {t('landing.features.rag.description')}
+                </CardDescription>
+              </CardContent>
+            </Card>
+
+            <Card className="hover-elevate" data-testid="card-feature-organization">
+              <CardHeader>
+                <FolderTree className="h-12 w-12 mb-4 text-primary" />
+                <CardTitle className="text-xl">{t('landing.features.explorer.title')}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <CardDescription className="text-base">
+                  {t('landing.features.explorer.description')}
                 </CardDescription>
               </CardContent>
             </Card>
@@ -456,30 +357,6 @@ export default function Landing() {
               </CardContent>
             </Card>
 
-            <Card className="hover-elevate" data-testid="card-feature-speed">
-              <CardHeader>
-                <Bolt className="h-12 w-12 mb-4 text-primary" />
-                <CardTitle className="text-xl">{t('landing.features.streaming.title')}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CardDescription className="text-base">
-                  {t('landing.features.streaming.description')}
-                </CardDescription>
-              </CardContent>
-            </Card>
-
-            <Card className="hover-elevate" data-testid="card-feature-security">
-              <CardHeader>
-                <Shield className="h-12 w-12 mb-4 text-primary" />
-                <CardTitle className="text-xl">{t('landing.features.security.title')}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CardDescription className="text-base">
-                  {t('landing.features.security.description')}
-                </CardDescription>
-              </CardContent>
-            </Card>
-
             <Card className="hover-elevate" data-testid="card-feature-multimodal">
               <CardHeader>
                 <GitBranch className="h-12 w-12 mb-4 text-primary" />
@@ -491,30 +368,24 @@ export default function Landing() {
                 </CardDescription>
               </CardContent>
             </Card>
+          </div>
 
-            <Card className="hover-elevate" data-testid="card-feature-multilingual">
-              <CardHeader>
-                <Globe className="h-12 w-12 mb-4 text-primary" />
-                <CardTitle className="text-xl">{t('landing.features.multilingual.title')}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CardDescription className="text-base">
-                  {t('landing.features.multilingual.description')}
-                </CardDescription>
-              </CardContent>
-            </Card>
-
-            <Card className="hover-elevate" data-testid="card-feature-dragdrop">
-              <CardHeader>
-                <Upload className="h-12 w-12 mb-4 text-primary" />
-                <CardTitle className="text-xl">{t('landing.features.dragdrop.title')}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CardDescription className="text-base">
-                  {t('landing.features.dragdrop.description')}
-                </CardDescription>
-              </CardContent>
-            </Card>
+          {/* Secondary Features (compact) */}
+          <h3 className="text-center text-lg font-medium text-muted-foreground mb-6">
+            {t('landing.features.moreTitle')}
+          </h3>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {[
+              { icon: Bolt, key: 'streaming' },
+              { icon: Shield, key: 'security' },
+              { icon: Globe, key: 'multilingual' },
+              { icon: Upload, key: 'dragdrop' },
+            ].map(({ icon: Icon, key }) => (
+              <div key={key} className="flex items-center gap-3 p-4 rounded-lg border bg-card hover-elevate">
+                <Icon className="h-5 w-5 text-primary flex-shrink-0" />
+                <span className="text-sm font-medium">{t(`landing.features.${key}.title`)}</span>
+              </div>
+            ))}
           </div>
         </div>
       </section>
@@ -531,6 +402,7 @@ export default function Landing() {
             </p>
           </div>
           <div className="space-y-20">
+            {/* Research & Learning */}
             <div className="grid lg:grid-cols-2 gap-12 items-center" data-testid="use-case-knowledge">
               <div className="space-y-4">
                 <h3 className="text-3xl font-semibold">{t('landing.useCases.knowledge.title')}</h3>
@@ -583,6 +455,7 @@ export default function Landing() {
               </div>
             </div>
 
+            {/* Business & Consulting */}
             <div className="grid lg:grid-cols-2 gap-12 items-center" data-testid="use-case-development">
               <div className="order-2 lg:order-1 bg-muted/50 rounded-lg p-8 border">
                 <div className="space-y-4">
@@ -621,6 +494,7 @@ export default function Landing() {
               </div>
             </div>
 
+            {/* Creative & Content (fixed visualization) */}
             <div className="grid lg:grid-cols-2 gap-12 items-center" data-testid="use-case-team">
               <div className="space-y-4">
                 <h3 className="text-3xl font-semibold">{t('landing.useCases.team.title')}</h3>
@@ -644,24 +518,21 @@ export default function Landing() {
               </div>
               <div className="bg-muted/50 rounded-lg p-8 border">
                 <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <div className="font-medium">{t('landing.useCases.team.teamLabel')}</div>
-                    <Badge variant="secondary">5 {t('landing.useCases.team.members')}</Badge>
-                  </div>
-                  <div className="space-y-2 text-sm">
-                    <div className="flex items-center gap-2">
-                      <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-xs">JD</div>
-                      <div>
-                        <div className="font-medium">John Doe</div>
-                        <div className="text-muted-foreground text-xs">12 {t('landing.useCases.team.projects')}, 84 {t('landing.useCases.team.conversations')}</div>
+                  <div className="font-medium">{t('landing.useCases.team.projectLabel')}</div>
+                  <div className="space-y-3 text-sm">
+                    <div className="flex items-center justify-between bg-background rounded p-3">
+                      <div className="flex items-center gap-2">
+                        <FolderTree className="h-4 w-4" />
+                        <span>{t('landing.useCases.team.project1')}</span>
                       </div>
+                      <span className="text-xs text-muted-foreground">{t('landing.useCases.team.project1Detail')}</span>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-xs">SK</div>
-                      <div>
-                        <div className="font-medium">Sarah Kim</div>
-                        <div className="text-muted-foreground text-xs">8 {t('landing.useCases.team.projects')}, 56 {t('landing.useCases.team.conversations')}</div>
+                    <div className="flex items-center justify-between bg-background rounded p-3">
+                      <div className="flex items-center gap-2">
+                        <FolderTree className="h-4 w-4" />
+                        <span>{t('landing.useCases.team.project2')}</span>
                       </div>
+                      <span className="text-xs text-muted-foreground">{t('landing.useCases.team.project2Detail')}</span>
                     </div>
                   </div>
                 </div>
@@ -671,173 +542,7 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* Success Stories Section */}
-      <section className="py-20 lg:py-32" data-testid="section-success-stories">
-        <div className="container mx-auto px-6 lg:px-12">
-          <div className="text-center space-y-4 mb-16">
-            <h2 className="text-4xl font-semibold" data-testid="text-success-stories-title">
-              {t('landing.successStories.title')}
-            </h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              {t('landing.successStories.subtitle')}
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            <Card className="hover-elevate" data-testid="card-success-consulting">
-              <CardHeader>
-                <Badge variant="secondary" className="w-fit mb-2">{t('landing.successStories.consulting.industry')}</Badge>
-                <CardTitle className="text-xl">{t('landing.successStories.consulting.title')}</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="flex items-baseline gap-2">
-                  <span className="text-4xl font-bold text-primary">{t('landing.successStories.consulting.metric')}</span>
-                  <span className="text-muted-foreground">{t('landing.successStories.consulting.metricLabel')}</span>
-                </div>
-                <p className="text-muted-foreground italic text-sm">
-                  {t('landing.successStories.consulting.description')}
-                </p>
-                <div className="text-xs text-muted-foreground border-t pt-3">
-                  {t('landing.successStories.consulting.beforeAfter')}
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className="hover-elevate" data-testid="card-success-research">
-              <CardHeader>
-                <Badge variant="secondary" className="w-fit mb-2">{t('landing.successStories.research.industry')}</Badge>
-                <CardTitle className="text-xl">{t('landing.successStories.research.title')}</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="flex items-baseline gap-2">
-                  <span className="text-4xl font-bold text-primary">{t('landing.successStories.research.metric')}</span>
-                  <span className="text-muted-foreground">{t('landing.successStories.research.metricLabel')}</span>
-                </div>
-                <p className="text-muted-foreground italic text-sm">
-                  {t('landing.successStories.research.description')}
-                </p>
-                <div className="text-xs text-muted-foreground border-t pt-3">
-                  {t('landing.successStories.research.beforeAfter')}
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className="hover-elevate" data-testid="card-success-product">
-              <CardHeader>
-                <Badge variant="secondary" className="w-fit mb-2">{t('landing.successStories.product.industry')}</Badge>
-                <CardTitle className="text-xl">{t('landing.successStories.product.title')}</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="flex items-baseline gap-2">
-                  <span className="text-4xl font-bold text-primary">{t('landing.successStories.product.metric')}</span>
-                  <span className="text-muted-foreground">{t('landing.successStories.product.metricLabel')}</span>
-                </div>
-                <p className="text-muted-foreground italic text-sm">
-                  {t('landing.successStories.product.description')}
-                </p>
-                <div className="text-xs text-muted-foreground border-t pt-3">
-                  {t('landing.successStories.product.beforeAfter')}
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-      </section>
-
-      {/* RAG Engine Section */}
-      <section className="py-20 lg:py-32 bg-muted/30" data-testid="section-rag-engine">
-        <div className="container mx-auto px-6 lg:px-12">
-          <div className="text-center space-y-4 mb-16">
-            <h2 className="text-4xl font-semibold" data-testid="text-rag-engine-title">
-              {t('landing.ragEngine.title')}
-            </h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              {t('landing.ragEngine.subtitle')}
-            </p>
-          </div>
-
-          <div className="grid lg:grid-cols-2 gap-12 items-center mb-16">
-            <div className="space-y-8">
-              <h3 className="text-2xl font-semibold">{t('landing.ragEngine.howItWorks')}</h3>
-              <div className="space-y-6">
-                <div className="flex gap-4">
-                  <div className="flex-shrink-0 w-10 h-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold">1</div>
-                  <div>
-                    <h4 className="font-semibold">{t('landing.ragEngine.step1.title')}</h4>
-                    <p className="text-muted-foreground text-sm">{t('landing.ragEngine.step1.description')}</p>
-                  </div>
-                </div>
-                <div className="flex gap-4">
-                  <div className="flex-shrink-0 w-10 h-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold">2</div>
-                  <div>
-                    <h4 className="font-semibold">{t('landing.ragEngine.step2.title')}</h4>
-                    <p className="text-muted-foreground text-sm">{t('landing.ragEngine.step2.description')}</p>
-                  </div>
-                </div>
-                <div className="flex gap-4">
-                  <div className="flex-shrink-0 w-10 h-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold">3</div>
-                  <div>
-                    <h4 className="font-semibold">{t('landing.ragEngine.step3.title')}</h4>
-                    <p className="text-muted-foreground text-sm">{t('landing.ragEngine.step3.description')}</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <Card className="hover-elevate" data-testid="card-rag-cross-project">
-                <CardHeader className="pb-2">
-                  <Layers className="h-8 w-8 text-primary mb-2" />
-                  <CardTitle className="text-base">{t('landing.ragEngine.features.crossProject')}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <CardDescription className="text-xs">
-                    {t('landing.ragEngine.features.crossProjectDesc')}
-                  </CardDescription>
-                </CardContent>
-              </Card>
-
-              <Card className="hover-elevate" data-testid="card-rag-filter">
-                <CardHeader className="pb-2">
-                  <Filter className="h-8 w-8 text-primary mb-2" />
-                  <CardTitle className="text-base">{t('landing.ragEngine.features.attributeFilter')}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <CardDescription className="text-xs">
-                    {t('landing.ragEngine.features.attributeFilterDesc')}
-                  </CardDescription>
-                </CardContent>
-              </Card>
-
-              <Card className="hover-elevate" data-testid="card-rag-hybrid">
-                <CardHeader className="pb-2">
-                  <TrendingUp className="h-8 w-8 text-primary mb-2" />
-                  <CardTitle className="text-base">{t('landing.ragEngine.features.hybridSearch')}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <CardDescription className="text-xs">
-                    {t('landing.ragEngine.features.hybridSearchDesc')}
-                  </CardDescription>
-                </CardContent>
-              </Card>
-
-              <Card className="hover-elevate" data-testid="card-rag-sync">
-                <CardHeader className="pb-2">
-                  <RefreshCw className="h-8 w-8 text-primary mb-2" />
-                  <CardTitle className="text-base">{t('landing.ragEngine.features.realtimeSync')}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <CardDescription className="text-xs">
-                    {t('landing.ragEngine.features.realtimeSyncDesc')}
-                  </CardDescription>
-                </CardContent>
-              </Card>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Data Security Section */}
+      {/* Data Security Section (moved before Pricing) */}
       <section className="py-20 lg:py-32" data-testid="section-data-security">
         <div className="container mx-auto px-6 lg:px-12">
           <div className="text-center space-y-4 mb-16">
@@ -908,7 +613,7 @@ export default function Landing() {
               <CardHeader>
                 <div className="flex items-center gap-3">
                   <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center text-lg font-semibold">
-                    AJ
+                    {t('landing.testimonials.alex.name').charAt(0)}
                   </div>
                   <div>
                     <div className="font-semibold">{t('landing.testimonials.alex.name')}</div>
@@ -934,7 +639,7 @@ export default function Landing() {
               <CardHeader>
                 <div className="flex items-center gap-3">
                   <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center text-lg font-semibold">
-                    MC
+                    {t('landing.testimonials.maria.name').charAt(0)}
                   </div>
                   <div>
                     <div className="font-semibold">{t('landing.testimonials.maria.name')}</div>
@@ -960,7 +665,7 @@ export default function Landing() {
               <CardHeader>
                 <div className="flex items-center gap-3">
                   <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center text-lg font-semibold">
-                    DP
+                    {t('landing.testimonials.david.name').charAt(0)}
                   </div>
                   <div>
                     <div className="font-semibold">{t('landing.testimonials.david.name')}</div>
@@ -985,10 +690,54 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* Pricing Section */}
+      {/* Competitor Comparison Section */}
+      <section className="py-20 lg:py-32 bg-muted/30" data-testid="section-comparison">
+        <div className="container mx-auto px-6 lg:px-12">
+          <div className="max-w-4xl mx-auto text-center space-y-4 mb-12">
+            <h2 className="text-4xl font-semibold" data-testid="text-comparison-title">
+              {t('landing.comparison.title')}
+            </h2>
+            <p className="text-lg text-muted-foreground">
+              {t('landing.comparison.subtitle')}
+            </p>
+          </div>
+          <div className="max-w-4xl mx-auto">
+            <Card>
+              <CardContent className="p-0">
+                <div className="overflow-x-auto">
+                  <table className="w-full text-sm">
+                    <thead>
+                      <tr className="border-b">
+                        <th className="text-left p-4 font-semibold">{t('landing.comparison.feature')}</th>
+                        <th className="text-center p-4 font-semibold">WiseQuery</th>
+                        <th className="text-center p-4 font-semibold text-muted-foreground">{t('landing.comparison.generalAI')}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {['context', 'projectOrg', 'docAnalysis', 'semanticSearch', 'dataRetention', 'privacy'].map((key) => (
+                        <tr key={key} className="border-b last:border-0">
+                          <td className="p-4 font-medium">{t(`landing.comparison.rows.${key}`)}</td>
+                          <td className="p-4 text-center">
+                            <Check className="h-5 w-5 text-green-600 mx-auto" />
+                          </td>
+                          <td className="p-4 text-center text-muted-foreground">
+                            {t(`landing.comparison.general.${key}`)}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* Pricing Section (with annual toggle) */}
       <section id="pricing" className="py-20 lg:py-32" data-testid="section-pricing">
         <div className="container mx-auto px-6 lg:px-12">
-          <div className="text-center space-y-4 mb-16">
+          <div className="text-center space-y-4 mb-8">
             <h2 className="text-4xl font-semibold" data-testid="text-pricing-title">
               {t('landing.pricing.title')}
             </h2>
@@ -996,7 +745,21 @@ export default function Landing() {
               {t('landing.pricing.subtitle')}
             </p>
           </div>
+
+          {/* Monthly / Yearly Toggle */}
+          <div className="flex items-center justify-center gap-4 mb-12">
+            <span className={`text-sm font-medium transition-colors ${!isYearly ? 'text-foreground' : 'text-muted-foreground'}`}>
+              {t('landing.pricing.monthly')}
+            </span>
+            <Switch checked={isYearly} onCheckedChange={setIsYearly} />
+            <span className={`text-sm font-medium transition-colors ${isYearly ? 'text-foreground' : 'text-muted-foreground'}`}>
+              {t('landing.pricing.yearly')}
+              <Badge className="ml-2 text-xs">{t('landing.pricing.savePercent')}</Badge>
+            </span>
+          </div>
+
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
+            {/* Free */}
             <Card data-testid="pricing-free">
               <CardHeader>
                 <CardTitle className="text-xl">{t('landing.pricing.free.title')}</CardTitle>
@@ -1038,13 +801,19 @@ export default function Landing() {
               </CardFooter>
             </Card>
 
+            {/* Basic (Most Popular) */}
             <Card className="border-primary relative" data-testid="pricing-basic">
               <Badge className="absolute -top-3 left-1/2 -translate-x-1/2">{t('landing.pricing.basic.badge')}</Badge>
               <CardHeader>
                 <CardTitle className="text-xl">{t('landing.pricing.basic.title')}</CardTitle>
                 <div className="mt-4">
-                  <span className="text-4xl font-bold">{t('landing.pricing.basic.price')}</span>
+                  <span className="text-4xl font-bold">
+                    {isYearly ? t('landing.pricing.basic.yearlyPrice') : t('landing.pricing.basic.price')}
+                  </span>
                   <span className="text-muted-foreground">{t('landing.pricing.basic.period')}</span>
+                  {isYearly && (
+                    <div className="text-xs text-muted-foreground mt-1">{t('landing.pricing.billedAnnually')}</div>
+                  )}
                 </div>
               </CardHeader>
               <CardContent className="space-y-4">
@@ -1080,12 +849,18 @@ export default function Landing() {
               </CardFooter>
             </Card>
 
+            {/* Pro */}
             <Card data-testid="pricing-pro">
               <CardHeader>
                 <CardTitle className="text-xl">{t('landing.pricing.pro.title')}</CardTitle>
                 <div className="mt-4">
-                  <span className="text-4xl font-bold">{t('landing.pricing.pro.price')}</span>
+                  <span className="text-4xl font-bold">
+                    {isYearly ? t('landing.pricing.pro.yearlyPrice') : t('landing.pricing.pro.price')}
+                  </span>
                   <span className="text-muted-foreground">{t('landing.pricing.pro.period')}</span>
+                  {isYearly && (
+                    <div className="text-xs text-muted-foreground mt-1">{t('landing.pricing.billedAnnually')}</div>
+                  )}
                 </div>
               </CardHeader>
               <CardContent className="space-y-4">
@@ -1129,6 +904,7 @@ export default function Landing() {
               </CardFooter>
             </Card>
 
+            {/* Custom */}
             <Card data-testid="pricing-custom">
               <CardHeader>
                 <CardTitle className="text-xl">{t('landing.pricing.custom.title')}</CardTitle>
@@ -1213,6 +989,20 @@ export default function Landing() {
                 <span>{t('landing.finalCta.cancelAnytime')}</span>
               </div>
             </div>
+            <div className="mt-8 pt-8 border-t border-border/50 max-w-md mx-auto">
+              <p className="text-sm text-muted-foreground mb-3">{t('landing.newsletter.label')}</p>
+              <div className="flex gap-2">
+                <input
+                  type="email"
+                  placeholder={t('landing.newsletter.placeholder')}
+                  className="flex-1 px-4 py-2 rounded-md border bg-background text-sm"
+                  data-testid="input-newsletter-email"
+                />
+                <Button variant="outline" size="sm" data-testid="button-newsletter-submit">
+                  {t('landing.newsletter.button')}
+                </Button>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -1257,10 +1047,21 @@ export default function Landing() {
               </ul>
             </div>
           </div>
-          <div className="pt-8 border-t">
-            <p className="text-center text-sm text-muted-foreground">
+          <div className="pt-8 border-t flex flex-col sm:flex-row items-center justify-between gap-4">
+            <p className="text-sm text-muted-foreground">
               {t('landing.footer.copyright')}
             </p>
+            <div className="flex items-center gap-4">
+              <a href="https://github.com/junhan95/Wisequery" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-foreground" data-testid="link-social-github">
+                <Github className="h-5 w-5" />
+              </a>
+              <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-foreground" data-testid="link-social-twitter">
+                <Twitter className="h-5 w-5" />
+              </a>
+              <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-foreground" data-testid="link-social-linkedin">
+                <Linkedin className="h-5 w-5" />
+              </a>
+            </div>
           </div>
         </div>
       </footer>

@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { SEO } from "@/components/seo";
 import { Card, CardContent } from "@/components/ui/card";
 import { FolderTree, ArrowLeft, Target, Users, Lightbulb, Heart } from "lucide-react";
 import { LanguageToggle } from "@/components/language-toggle";
@@ -34,6 +35,7 @@ export default function About() {
 
   return (
     <div className="min-h-screen">
+      <SEO title="회사 소개" description="WiseQuery의 미션과 비전 — AI 기반 지식 관리의 미래를 만듭니다." path="/about" />
       <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container mx-auto flex h-16 items-center justify-between px-6 lg:px-12">
           <PrefetchLink

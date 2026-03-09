@@ -20,7 +20,7 @@ export default function FAQSection() {
             {t('landing.faq.subtitle')}
           </p>
         </div>
-        
+
         <div className="max-w-3xl mx-auto">
           <Accordion type="single" collapsible className="space-y-4">
             <AccordionItem value="item-1" className="bg-background border rounded-lg px-6">
@@ -31,7 +31,7 @@ export default function FAQSection() {
                 {t('landing.faq.q1.answer')}
               </AccordionContent>
             </AccordionItem>
-            
+
             <AccordionItem value="item-2" className="bg-background border rounded-lg px-6">
               <AccordionTrigger className="text-left" data-testid="faq-item-2">
                 {t('landing.faq.q2.question')}
@@ -40,7 +40,7 @@ export default function FAQSection() {
                 {t('landing.faq.q2.answer')}
               </AccordionContent>
             </AccordionItem>
-            
+
             <AccordionItem value="item-3" className="bg-background border rounded-lg px-6">
               <AccordionTrigger className="text-left" data-testid="faq-item-3">
                 {t('landing.faq.q3.question')}
@@ -49,7 +49,7 @@ export default function FAQSection() {
                 {t('landing.faq.q3.answer')}
               </AccordionContent>
             </AccordionItem>
-            
+
             <AccordionItem value="item-4" className="bg-background border rounded-lg px-6">
               <AccordionTrigger className="text-left" data-testid="faq-item-4">
                 {t('landing.faq.q4.question')}
@@ -58,13 +58,40 @@ export default function FAQSection() {
                 {t('landing.faq.q4.answer')}
               </AccordionContent>
             </AccordionItem>
-            
+
             <AccordionItem value="item-5" className="bg-background border rounded-lg px-6">
               <AccordionTrigger className="text-left" data-testid="faq-item-5">
                 {t('landing.faq.q5.question')}
               </AccordionTrigger>
               <AccordionContent className="text-muted-foreground">
                 {t('landing.faq.q5.answer')}
+              </AccordionContent>
+            </AccordionItem>
+
+            <AccordionItem value="item-6" className="bg-background border rounded-lg px-6">
+              <AccordionTrigger className="text-left" data-testid="faq-item-6">
+                {t('landing.faq.q6.question')}
+              </AccordionTrigger>
+              <AccordionContent className="text-muted-foreground">
+                {t('landing.faq.q6.answer')}
+              </AccordionContent>
+            </AccordionItem>
+
+            <AccordionItem value="item-7" className="bg-background border rounded-lg px-6">
+              <AccordionTrigger className="text-left" data-testid="faq-item-7">
+                {t('landing.faq.q7.question')}
+              </AccordionTrigger>
+              <AccordionContent className="text-muted-foreground">
+                {t('landing.faq.q7.answer')}
+              </AccordionContent>
+            </AccordionItem>
+
+            <AccordionItem value="item-8" className="bg-background border rounded-lg px-6">
+              <AccordionTrigger className="text-left" data-testid="faq-item-8">
+                {t('landing.faq.q8.question')}
+              </AccordionTrigger>
+              <AccordionContent className="text-muted-foreground">
+                {t('landing.faq.q8.answer')}
               </AccordionContent>
             </AccordionItem>
           </Accordion>

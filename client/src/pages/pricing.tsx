@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { SEO } from "@/components/seo";
 import { useAuth } from "@/hooks/useAuth";
 import { useTranslation } from "react-i18next";
 import { useQuery, useMutation } from "@tanstack/react-query";
@@ -218,6 +219,7 @@ export default function Pricing() {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEO title="가격" description="WiseQuery 요금제 - 무료부터 엔터프라이즈까지, 필요에 맞는 플랜을 선택하세요." path="/pricing" />
       <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container mx-auto flex h-16 items-center justify-between px-6 lg:px-12">
           <PrefetchLink
@@ -251,8 +253,8 @@ export default function Pricing() {
             <button
               onClick={() => setBillingPeriod("monthly")}
               className={`px-6 py-2 rounded-full text-sm font-medium transition-colors ${billingPeriod === "monthly"
-                  ? "bg-background shadow-sm text-foreground"
-                  : "text-muted-foreground hover:text-foreground"
+                ? "bg-background shadow-sm text-foreground"
+                : "text-muted-foreground hover:text-foreground"
                 }`}
               data-testid="toggle-monthly"
             >
@@ -261,8 +263,8 @@ export default function Pricing() {
             <button
               onClick={() => setBillingPeriod("yearly")}
               className={`px-6 py-2 rounded-full text-sm font-medium transition-colors ${billingPeriod === "yearly"
-                  ? "bg-background shadow-sm text-foreground"
-                  : "text-muted-foreground hover:text-foreground"
+                ? "bg-background shadow-sm text-foreground"
+                : "text-muted-foreground hover:text-foreground"
                 }`}
               data-testid="toggle-yearly"
             >

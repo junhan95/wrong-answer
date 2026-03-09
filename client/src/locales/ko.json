@@ -190,11 +190,11 @@
       }
     },
     "socialProof": {
-      "users": "5,000+",
-      "usersLabel": "활성 사용자",
-      "documents": "100K+",
+      "users": "1,000+",
+      "usersLabel": "베타 테스터",
+      "documents": "50K+",
       "documentsLabel": "처리된 문서",
-      "queries": "1M+",
+      "queries": "500K+",
       "queriesLabel": "AI 질문 응답",
       "rating": "4.9/5"
     },
@@ -232,9 +232,9 @@
       "cta": "지금 무료로 시작하기"
     },
     "hero": {
-      "title": "모든 것을 기억하는 AI 어시스턴트",
-      "subtitle": "프로젝트별로 지식을 구조화하세요. 시간이 지나며 맥락을 쌓고, 강력한 시맨틱 검색으로 전체 대화 기록에서 지능적인 답변을 얻으세요.",
-      "startTrial": "첫 프로젝트 시작하기",
+      "title": "필요한 정보, 몇 시간이 아닌 몇 초 만에",
+      "subtitle": "PDF, Word, Excel을 업로드하면 AI가 자동 분석합니다. 자연어로 질문하고, 출처가 인용된 정확한 답변을 받으세요.",
+      "startTrial": "30초 만에 무료 시작",
       "watchDemo": "작동 방식 보기",
       "noCreditCard": "신용카드 불필요",
       "freeForever": "영구 무료 플랜",
@@ -246,6 +246,7 @@
     "features": {
       "title": "단순 채팅이 아닌, 지식 작업을 위해 설계",
       "subtitle": "흩어진 대화를 시간이 지나며 더욱 가치 있어지는 구조화된 지식으로 전환하세요",
+      "moreTitle": "그 외 기능",
       "explorer": {
         "title": "프로젝트 기반 정리",
         "description": "폴더 속 파일처럼 대화를 구조화하세요. 고객 업무와 개인 연구를 분리하고, 윈도우 탐색기의 친숙함으로 지식 베이스를 탐색하세요."
@@ -308,38 +309,47 @@
       },
       "team": {
         "title": "창작 및 콘텐츠 작업",
-        "description": "아이디어를 브레인스토밍하고, 컨셉을 개발하며, 프로젝트 전반에 걸쳐 창의적 일관성을 유지하세요. 당신의 스타일과 선호를 기억하는 AI 파트너.",
+        "description": "아이디어 브레인스토밍부터 컨셉 개발까지, 프로젝트별 창의적 일관성을 유지하세요. 당신의 스타일과 선호를 기억하는 AI 파트너.",
         "benefit1": "시간 경과에 따른 창의적 진화 추적",
-        "benefit2": "브랜드 목소리 일관성 유지",
-        "benefit3": "다시는 처음부터 시작하지 않음",
+        "benefit2": "브랜드 톤 앤 매너 일관성 유지",
+        "benefit3": "과거 아이디어를 즉시 검색하여 재활용",
         "teamLabel": "프로젝트: 브랜드 전략",
         "members": "초안",
         "projects": "반복",
-        "conversations": "컨셉"
+        "conversations": "컨셉",
+        "projectLabel": "내 프로젝트",
+        "project1": "브랜드 리뉴얼",
+        "project1Detail": "12개 초안 · 34개 대화",
+        "project2": "콘텐츠 캘린더",
+        "project2Detail": "8개 초안 · 21개 대화"
       }
     },
     "testimonials": {
-      "title": "전 세계 전문가들의 사랑을 받는",
-      "rating": "2,000개 이상의 리뷰에서 4.9/5",
+      "title": "전문가들이 선택한 지식 관리 도구",
+      "rating": "베타 테스터 평균 4.9/5",
       "alex": {
-        "name": "Alex Johnson",
-        "role": "선임 개발자",
-        "quote": "사이드 프로젝트를 관리하는 데 게임 체인저입니다. RAG 시스템이 실제로 작동합니다—몇 달 전에 나눈 대화에서 맥락을 가져옵니다."
+        "name": "김준혁",
+        "role": "프리랜서 개발자 · 6개월 사용",
+        "quote": "사이드 프로젝트마다 맥락을 분리해서 관리할 수 있어서 최고입니다. 3달 전 대화에서도 정확한 답변을 가져옵니다."
       },
       "maria": {
-        "name": "Maria Chen",
-        "role": "제품 관리자",
-        "quote": "마침내 우리 제품 결정을 기억하는 AI 비서입니다. 폴더 구조로 기능별로 쉽게 정리할 수 있습니다."
+        "name": "이서연",
+        "role": "UX 리서처 · 4개월 사용",
+        "quote": "사용자 조사 데이터를 프로젝트별로 정리하고 자연어로 검색하니까 리포트 작성 시간이 절반으로 줄었어요."
       },
       "david": {
-        "name": "David Park",
-        "role": "연구 과학자",
-        "quote": "문헌 검토에 완벽합니다. 질문을 하면 여러 논문의 모든 연구 노트에서 통합된 답변을 얻을 수 있습니다."
+        "name": "박민수",
+        "role": "경영 컨설턴트 · 8개월 사용",
+        "quote": "고객별 프로젝트를 분리하면서도 과거 솔루션을 교차 검색할 수 있어서 제안서 작성이 훨씬 빨라졌습니다."
       }
     },
     "pricing": {
       "title": "간단하고 투명한 가격",
       "subtitle": "필요에 맞는 플랜을 선택하세요",
+      "monthly": "월간",
+      "yearly": "연간",
+      "savePercent": "20% 절약",
+      "billedAnnually": "연간 결제 시",
       "free": {
         "title": "무료",
         "price": "$0",
@@ -368,6 +378,7 @@
         "title": "프로",
         "price": "$40",
         "period": "/월",
+        "yearlyPrice": "$32",
         "feature1": "무제한 프로젝트",
         "feature2": "무제한 대화",
         "feature3": "100GB 저장공간",
@@ -427,12 +438,51 @@
       "q5": {
         "question": "데이터를 내보낼 수 있나요?",
         "answer": "네! 언제든지 대화를 JSON 또는 텍스트 파일로 내보낼 수 있습니다. 데이터는 당신의 것이며, 가져가기 쉽게 만들어 드립니다."
+      },
+      "q6": {
+        "question": "ChatGPT나 Claude와 뭐가 다른가요?",
+        "answer": "일반 AI 챗봇은 대화가 끝나면 맥락을 잃습니다. WiseQuery는 모든 대화를 프로젝트별로 영구 저장하고, RAG 기술로 과거 대화에서 관련 맥락을 자동으로 찾아 답변합니다. 시간이 지날수록 더 정확한 답변을 제공하는 '성장하는 지식 베이스'입니다."
+      },
+      "q7": {
+        "question": "데이터 서버는 어디에 있나요?",
+        "answer": "WiseQuery는 AWS 클라우드 인프라를 사용하며, 모든 데이터는 업계 표준 암호화(AES-256)로 보호됩니다. 각 사용자의 데이터는 완전히 격리되어 있으며, GDPR 준수 정책을 따릅니다."
+      },
+      "q8": {
+        "question": "API 연동이 가능한가요?",
+        "answer": "현재는 웹 인터페이스를 통한 사용만 지원됩니다. REST API는 Pro 플랜 이상 사용자를 대상으로 개발 중이며, 향후 Zapier, Make 등의 자동화 도구와의 연동도 계획하고 있습니다."
       }
     },
+    "comparison": {
+      "title": "WiseQuery vs 일반 AI 챗봇",
+      "subtitle": "왜 범용 AI 챗봇 대신 WiseQuery를 선택해야 할까요?",
+      "feature": "기능",
+      "generalAI": "일반 AI 챗봇",
+      "rows": {
+        "context": "이전 대화 맥락 기억",
+        "projectOrg": "프로젝트별 지식 분리",
+        "docAnalysis": "문서 자동 분석 (PDF, Word, Excel)",
+        "semanticSearch": "시맨틱 검색",
+        "dataRetention": "장기 데이터 보존",
+        "privacy": "완전한 데이터 격리"
+      },
+      "general": {
+        "context": "❌ 대화 종료 시 초기화",
+        "projectOrg": "❌ 단일 대화 스레드",
+        "docAnalysis": "⚠️ 제한적 (파일 크기 제한)",
+        "semanticSearch": "❌ 키워드 기반만 지원",
+        "dataRetention": "❌ 세션 종료 시 삭제",
+        "privacy": "⚠️ 학습 데이터로 사용 가능"
+      }
+    },
+    "newsletter": {
+      "label": "제품 업데이트와 AI 활용 팁을 받아보세요",
+      "placeholder": "이메일 주소를 입력하세요",
+      "button": "구독하기"
+    },
     "finalCta": {
-      "title": "지속되는 지식을 구축할 준비가 되셨나요?",
-      "subtitle": "WiseQuery를 신뢰하여 지식을 정리, 검색하고 활용하는 수천 명의 전문가와 함께하세요.",
-      "button": "오늘 무료로 시작하기",
+      "title": "더 이상 '어디서 봤더라'를 반복하지 마세요",
+      "subtitle": "지금 시작하세요. 2분이면 첫 프로젝트를 만들고, 문서를 업로드하고, AI에게 질문할 수 있습니다.",
+      "button": "무료로 시작하기",
       "setupTime": "2분 만에 설정",
       "cancelAnytime": "언제든 취소 가능"
     },

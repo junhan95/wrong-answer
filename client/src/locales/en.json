@@ -190,11 +190,11 @@
       }
     },
     "socialProof": {
-      "users": "5,000+",
-      "usersLabel": "Active Users",
-      "documents": "100K+",
+      "users": "1,000+",
+      "usersLabel": "Beta Testers",
+      "documents": "50K+",
       "documentsLabel": "Documents Processed",
-      "queries": "1M+",
+      "queries": "500K+",
       "queriesLabel": "AI Queries Answered",
       "rating": "4.9/5"
     },
@@ -232,9 +232,9 @@
       "cta": "Try It Free Now"
     },
     "hero": {
-      "title": "The AI Assistant That Remembers Everything",
-      "subtitle": "Structure knowledge by project. Build context over time. Get intelligent answers from your entire conversation history with powerful semantic search.",
-      "startTrial": "Start Your First Project",
+      "title": "Find What You Need in Seconds, Not Hours",
+      "subtitle": "Upload PDFs, Word docs, and Excel files. AI analyzes them automatically. Ask in natural language and get precise answers with source citations.",
+      "startTrial": "Start Free in 30 Seconds",
       "watchDemo": "See How It Works",
       "noCreditCard": "No credit card required",
       "freeForever": "Free forever plan",
@@ -246,6 +246,7 @@
     "features": {
       "title": "Built for Knowledge Work, Not Just Chatting",
       "subtitle": "Transform scattered conversations into structured knowledge that grows more valuable over time",
+      "moreTitle": "More Features",
       "explorer": {
         "title": "Project-Based Organization",
         "description": "Structure conversations like files in folders. Keep client work separate from personal research. Navigate your knowledge base with Windows Explorer familiarity."
@@ -308,38 +309,47 @@
       },
       "team": {
         "title": "Creative & Content Work",
-        "description": "Brainstorm ideas, develop concepts, and maintain creative consistency across projects. Your AI partner that remembers your style and preferences.",
+        "description": "From brainstorming to concept development, maintain creative consistency across projects. An AI partner that remembers your style and preferences.",
         "benefit1": "Track creative evolution over time",
-        "benefit2": "Maintain brand voice consistency",
-        "benefit3": "Never start from scratch again",
+        "benefit2": "Maintain brand tone & voice consistency",
+        "benefit3": "Instantly search and reuse past ideas",
         "teamLabel": "Project: Brand Strategy",
         "members": "drafts",
         "projects": "iterations",
-        "conversations": "concepts"
+        "conversations": "concepts",
+        "projectLabel": "My Projects",
+        "project1": "Brand Renewal",
+        "project1Detail": "12 drafts · 34 conversations",
+        "project2": "Content Calendar",
+        "project2Detail": "8 drafts · 21 conversations"
       }
     },
     "testimonials": {
-      "title": "Loved by Professionals Worldwide",
-      "rating": "4.9/5 from 2,000+ reviews",
+      "title": "Trusted by Knowledge Workers",
+      "rating": "4.9/5 average from beta testers",
       "alex": {
         "name": "Alex Johnson",
-        "role": "Senior Developer",
-        "quote": "Game changer for managing my side projects. The RAG system actually works—it pulls context from conversations I had months ago."
+        "role": "Freelance Developer · 6 months",
+        "quote": "Being able to keep context separated per side project is amazing. It pulls accurate answers from conversations I had 3 months ago."
       },
       "maria": {
         "name": "Maria Chen",
-        "role": "Product Manager",
-        "quote": "Finally, an AI assistant that remembers our product decisions. The folder structure makes it easy to organize by feature."
+        "role": "UX Researcher · 4 months",
+        "quote": "Organizing user research data by project and searching in natural language cut my report writing time in half."
       },
       "david": {
         "name": "David Park",
-        "role": "Research Scientist",
-        "quote": "Perfect for literature review. I can ask questions and get answers synthesized from all my research notes across different papers."
+        "role": "Management Consultant · 8 months",
+        "quote": "I can keep client projects separate while cross-searching past solutions. Proposal writing is so much faster now."
       }
     },
     "pricing": {
       "title": "Simple, Transparent Pricing",
       "subtitle": "Choose the plan that fits your needs",
+      "monthly": "Monthly",
+      "yearly": "Yearly",
+      "savePercent": "Save 20%",
+      "billedAnnually": "billed annually",
       "free": {
         "title": "Free",
         "price": "$0",
@@ -368,6 +378,7 @@
         "title": "Pro",
         "price": "$40",
         "period": "/month",
+        "yearlyPrice": "$32",
         "feature1": "Unlimited projects",
         "feature2": "Unlimited conversations",
         "feature3": "100GB storage",
@@ -427,11 +438,50 @@
       "q5": {
         "question": "Can I export my data?",
         "answer": "Yes! You can export your conversations as JSON or text files at any time. Your data belongs to you, and we make it easy to take it with you."
+      },
+      "q6": {
+        "question": "How is this different from ChatGPT or Claude?",
+        "answer": "General AI chatbots lose context when the conversation ends. WiseQuery permanently stores all conversations by project and uses RAG technology to automatically find relevant context from past conversations. It's a 'growing knowledge base' that provides more accurate answers over time."
+      },
+      "q7": {
+        "question": "Where are data servers located?",
+        "answer": "WiseQuery uses AWS cloud infrastructure, and all data is protected with industry-standard encryption (AES-256). Each user's data is completely isolated, and we follow GDPR compliance policies."
+      },
+      "q8": {
+        "question": "Is API integration available?",
+        "answer": "Currently, WiseQuery is available through the web interface only. A REST API is under development for Pro plan users and above, with planned integrations for automation tools like Zapier and Make."
       }
     },
+    "comparison": {
+      "title": "WiseQuery vs General AI Chatbots",
+      "subtitle": "Why choose WiseQuery over generic AI chatbots?",
+      "feature": "Feature",
+      "generalAI": "General AI Chatbot",
+      "rows": {
+        "context": "Remembers past conversation context",
+        "projectOrg": "Project-level knowledge separation",
+        "docAnalysis": "Auto document analysis (PDF, Word, Excel)",
+        "semanticSearch": "Semantic search",
+        "dataRetention": "Long-term data retention",
+        "privacy": "Complete data isolation"
+      },
+      "general": {
+        "context": "❌ Resets when conversation ends",
+        "projectOrg": "❌ Single conversation thread",
+        "docAnalysis": "⚠️ Limited (file size restrictions)",
+        "semanticSearch": "❌ Keyword-based only",
+        "dataRetention": "❌ Deleted when session ends",
+        "privacy": "⚠️ May be used for training"
+      }
+    },
+    "newsletter": {
+      "label": "Get product updates and AI tips",
+      "placeholder": "Enter your email address",
+      "button": "Subscribe"
+    },
     "finalCta": {
-      "title": "Ready to Build Knowledge That Lasts?",
-      "subtitle": "Join thousands of professionals who trust WiseQuery to organize, search, and leverage their knowledge.",
+      "title": "Stop Losing Track of Where You Saw That",
+      "subtitle": "Get started now. In 2 minutes, create your first project, upload documents, and ask AI questions.",
       "button": "Start Free Today",
       "setupTime": "Setup in 2 minutes",
       "cancelAnytime": "Cancel anytime"
