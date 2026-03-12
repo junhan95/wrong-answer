@@ -2,13 +2,13 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { WebSocketServer, WebSocket } from "ws";
 import { storage } from "./storage";
-import { generateChatCompletionStream, generateEmbedding, cosineSimilarity, rewriteQueryForSearch } from "./openai";
+import { generateChatCompletionStream, generateEmbedding, rewriteQueryForSearch } from "./openai";
 import { type SearchResult, type Message } from "@shared/schema";
 import path from "path";
 import { promises as fs } from "fs";
 import { setupAuth, isAuthenticated, getSession } from "./sessionAuth";
 import { setupSocialAuth } from "./socialAuth";
-import { PLAN_LIMITS } from "./stripe";
+import { PLAN_LIMITS } from "./plans";
 import { chunkingQueue } from "./chunkingQueue";
 import { expirationScheduler } from "./scheduler";
 import { supabaseStorageService } from "./supabaseStorage";
@@ -32,7 +32,7 @@ import {
   conversationsRouter,
   filesRouter,
   searchRouter,
-  stripeRouter,
+  subscriptionRouter,
   adminRouter,
   trashRouter,
 } from "./routes/index";
@@ -56,7 +56,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.use("/api", conversationsRouter);
   app.use("/api", filesRouter);
   app.use("/api", searchRouter);
-  app.use("/api", stripeRouter);
+  app.use("/api", subscriptionRouter);
   app.use("/api", adminRouter);
   app.use("/api", trashRouter);
 
@@ -183,52 +183,31 @@ FORMAT INSTRUCTIONS:
             err => console.error("Background embedding save failed:", err)
           );
 
-          // Optimized RAG: Fetch only messages with embeddings, batch conversation/project lookups
-          const allMessages = await storage.getAllMessages(userId);
+          // pgvector 기반 시맨틱 검색 (현재 대화 제외, threshold 0.35)
+          const vectorMessages = await storage.searchMessagesByVector(
+            userId, userEmbedding, 20, conversationId
+          );
+
           const relevantContexts: SearchResult[] = [];
-
-          const conversationIds = new Set<string>();
-          const projectIds = new Set<string>();
-          const similarMessages: Array<{ msg: any; similarity: number }> = [];
-
-          for (const msg of allMessages) {
-            if (msg.id === userMessage.id || !msg.embedding || msg.conversationId === conversationId) continue;
-
-            try {
-              const msgEmbedding = JSON.parse(msg.embedding);
-              const similarity = cosineSimilarity(userEmbedding, msgEmbedding);
-
-              if (similarity > 0.35) {
-                similarMessages.push({ msg, similarity });
-                conversationIds.add(msg.conversationId);
-              }
-            } catch {
-              continue;
-            }
-          }
-
-          // Batch fetch conversations
           const conversationMap = new Map<string, any>();
-          for (const convId of Array.from(conversationIds)) {
-            const conv = await storage.getConversation(convId, userId);
-            if (conv) {
-              conversationMap.set(convId, conv);
-              projectIds.add(conv.projectId);
-            }
-          }
-
-          // Batch fetch projects
           const projectMap = new Map<string, any>();
-          for (const projId of Array.from(projectIds)) {
-            const proj = await storage.getProject(projId, userId);
-            if (proj) projectMap.set(projId, proj);
-          }
 
-          // Build contexts with pre-fetched data
-          for (const { msg, similarity } of similarMessages) {
+          for (const msg of vectorMessages) {
+            if (msg.id === userMessage.id || msg.similarity < 0.35) continue;
+
+            // Batch fetch conversation (캐시 활용)
+            if (!conversationMap.has(msg.conversationId)) {
+              const conv = await storage.getConversation(msg.conversationId, userId);
+              if (conv) conversationMap.set(msg.conversationId, conv);
+            }
             const msgConversation = conversationMap.get(msg.conversationId);
             if (!msgConversation) continue;
 
+            // Batch fetch project (캐시 활용)
+            if (!projectMap.has(msgConversation.projectId)) {
+              const proj = await storage.getProject(msgConversation.projectId, userId);
+              if (proj) projectMap.set(msgConversation.projectId, proj);
+            }
             const project = projectMap.get(msgConversation.projectId);
             if (!project) continue;
 
@@ -239,7 +218,7 @@ FORMAT INSTRUCTIONS:
               projectName: project.name,
               role: msg.role,
               messageContent: msg.content,
-              similarity,
+              similarity: msg.similarity,
               createdAt: new Date(msg.createdAt).toISOString(),
               matchType: 'semantic',
             });
@@ -294,17 +273,33 @@ FORMAT INSTRUCTIONS:
         (res as any).flush();
       }
       res.end();
-    } catch (error) {
+    } catch (error: any) {
       console.error("Chat error:", error);
-      res.write(`data: ${JSON.stringify({ type: "error", error: "Failed to process chat message" })}\n\n`);
+      let errorMessage = "메시지 처리에 실패했습니다. 잠시 후 다시 시도해주세요.";
+      if (error?.status === 429 || error?.code === "rate_limit_exceeded") {
+        errorMessage = "요청이 너무 많습니다. 잠시 후 다시 시도해주세요.";
+      } else if (error?.code === "context_length_exceeded" || error?.code === "max_tokens") {
+        errorMessage = "메시지가 너무 길어 처리할 수 없습니다. 대화를 나눠서 시도해주세요.";
+      } else if (error?.code === "insufficient_quota") {
+        errorMessage = "AI 서비스 한도에 도달했습니다. 관리자에게 문의하세요.";
+      } else if (error?.code === "invalid_api_key") {
+        errorMessage = "AI 서비스 연결에 문제가 있습니다. 관리자에게 문의하세요.";
+      }
+      res.write(`data: ${JSON.stringify({ type: "error", error: errorMessage })}\n\n`);
       res.end();
     }
   });
 
-  // Serve uploaded files (for search router's /uploads/:filename - needs to be at app level)
-  app.get("/uploads/:filename", async (req, res) => {
+  // Serve uploaded files — path traversal 방어: basename으로 디렉터리 구성요소 제거
+  app.get("/uploads/:filename", isAuthenticated, async (req, res) => {
     try {
-      const filePath = path.join(uploadDir, req.params.filename);
+      const safeFilename = path.basename(req.params.filename);
+      const filePath = path.resolve(uploadDir, safeFilename);
+      // uploadDir 밖으로 벗어나는 경로 차단
+      if (!filePath.startsWith(path.resolve(uploadDir))) {
+        res.status(400).json({ error: "Invalid file path" });
+        return;
+      }
       res.sendFile(filePath);
     } catch (error) {
       res.status(404).json({ error: "File not found" });

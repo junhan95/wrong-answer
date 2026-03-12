@@ -43,16 +43,14 @@ export const sessions = pgTable(
 export const users = pgTable("users", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
   email: varchar("email").unique().notNull(),
-  password: varchar("password"),
   firstName: varchar("first_name"),
   lastName: varchar("last_name"),
   profileImageUrl: varchar("profile_image_url"),
   department: varchar("department"),
   jobTitle: varchar("job_title"),
   phone: varchar("phone"),
-  emailVerified: timestamp("email_verified"),
-  authProvider: varchar("auth_provider").default("email"),
-  stripeCustomerId: varchar("stripe_customer_id"),
+  authProvider: varchar("auth_provider").default("oauth"),
+  role: varchar("role").default("user"), // "user" | "admin"
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });
@@ -196,21 +194,8 @@ export const subscriptions = pgTable("subscriptions", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
   userId: varchar("user_id").notNull().unique().references(() => users.id, { onDelete: "cascade" }),
   plan: varchar("plan").notNull().default("free"),
-  stripeSubscriptionId: varchar("stripe_subscription_id"),
-  stripeStatus: varchar("stripe_status"),
-  stripePriceId: varchar("stripe_price_id"),
-  stripeCurrentPeriodEnd: timestamp("stripe_current_period_end"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
-});
-
-export const verificationCodes = pgTable("verification_codes", {
-  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
-  email: varchar("email").notNull(),
-  code: varchar("code").notNull(),
-  type: varchar("type").notNull(),
-  expiresAt: timestamp("expires_at").notNull(),
-  createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
 // Retention policies per subscription plan
@@ -325,16 +310,6 @@ export const insertSubscriptionSchema = createInsertSchema(subscriptions).omit({
   userId: true,
   createdAt: true,
   updatedAt: true,
-}).extend({
-  stripeSubscriptionId: z.string().nullable().optional(),
-  stripePriceId: z.string().nullable().optional(),
-  stripeStatus: z.string().nullable().optional(),
-  stripeCurrentPeriodEnd: z.date().nullable().optional(),
-});
-
-export const insertVerificationCodeSchema = createInsertSchema(verificationCodes).omit({
-  id: true,
-  createdAt: true,
 });
 
 export const insertUserSchema = createInsertSchema(users).omit({
@@ -345,9 +320,6 @@ export const insertUserSchema = createInsertSchema(users).omit({
 
 export type UpsertUser = typeof users.$inferInsert;
 export type User = typeof users.$inferSelect;
-
-export type InsertVerificationCode = z.infer<typeof insertVerificationCodeSchema>;
-export type VerificationCode = typeof verificationCodes.$inferSelect;
 
 export type InsertProject = z.infer<typeof insertProjectSchema>;
 export type Project = typeof projects.$inferSelect;

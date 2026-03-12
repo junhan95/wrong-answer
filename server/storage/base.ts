@@ -1,9 +1,6 @@
-import { drizzle } from "drizzle-orm/neon-serverless";
-import { Pool, neonConfig } from "@neondatabase/serverless";
+import { drizzle } from "drizzle-orm/node-postgres";
+import { Pool } from "pg";
 import * as schema from "@shared/schema";
-import ws from "ws";
-
-neonConfig.webSocketConstructor = ws;
 
 // Singleton Pool for pgvector operations - prevents connection exhaustion
 let pgVectorPool: Pool | null = null;
@@ -14,7 +11,8 @@ export function getPgVectorPool(): Pool {
             connectionString: process.env.DATABASE_URL,
             max: 10,  // Maximum 10 connections in pool
             idleTimeoutMillis: 30000,  // Close idle connections after 30 seconds
-            connectionTimeoutMillis: 10000  // Timeout after 10 seconds when acquiring connection
+            connectionTimeoutMillis: 10000,  // Timeout after 10 seconds when acquiring connection
+            ssl: { rejectUnauthorized: false }
         });
 
         // Handle pool errors gracefully

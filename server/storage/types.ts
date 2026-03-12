@@ -15,8 +15,6 @@ import type {
     InsertFileChunk,
     Subscription,
     InsertSubscription,
-    VerificationCode,
-    InsertVerificationCode,
     RetentionPolicy,
     InsertRetentionPolicy,
     PendingNotification,
@@ -34,14 +32,6 @@ export interface IStorage {
     createUser(user: UpsertUser): Promise<User>;
     upsertUser(user: UpsertUser): Promise<User>;
     updateUser(id: string, data: Partial<User>): Promise<User | undefined>;
-    updateUserStripeCustomerId(userId: string, stripeCustomerId: string): Promise<User | undefined>;
-
-    // Verification code operations
-    createVerificationCode(code: InsertVerificationCode): Promise<VerificationCode>;
-    getVerificationCode(email: string, code: string, type: string): Promise<VerificationCode | undefined>;
-    deleteVerificationCode(id: string): Promise<void>;
-    deleteVerificationCodesByEmailAndType(email: string, type: string): Promise<void>;
-    deleteExpiredVerificationCodes(): Promise<void>;
 
     getProjects(userId: string): Promise<Project[]>;
     getProject(id: string, userId: string): Promise<Project | undefined>;

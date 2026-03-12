@@ -1,6 +1,5 @@
 import cron from 'node-cron';
 import { storage } from './storage';
-import { sendExpirationWarningEmail } from './email';
 
 // Default retention policies by plan (in days)
 export const DEFAULT_RETENTION_POLICIES: Record<string, {
@@ -89,7 +88,6 @@ export class ExpirationScheduler {
         );
 
         if (expiringConversations.length > 0 || expiringFiles.length > 0) {
-          // Create pending notification
           await storage.createPendingNotification({
             userId: user.id,
             type: 'expiration_warning',
@@ -98,21 +96,6 @@ export class ExpirationScheduler {
             entityName: `${expiringConversations.length} conversations, ${expiringFiles.length} files`,
             scheduledFor: new Date(),
           });
-
-          // Send email if user has email
-          if (user.email) {
-            try {
-              await sendExpirationWarningEmail(
-                user.email,
-                expiringConversations.length,
-                expiringFiles.length,
-                WARNING_DAYS_BEFORE_ARCHIVE
-              );
-              console.log(`[Scheduler] Sent warning email to ${user.email}`);
-            } catch (error) {
-              console.error(`[Scheduler] Failed to send warning email to ${user.email}:`, error);
-            }
-          }
         }
       }
     } catch (error) {

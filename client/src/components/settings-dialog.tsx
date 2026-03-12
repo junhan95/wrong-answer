@@ -16,7 +16,7 @@ import { Label } from "@/components/ui/label";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { User, CreditCard, Crown, ExternalLink, Camera } from "lucide-react";
+import { User, CreditCard, Crown, Camera } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 interface SettingsDialogProps {
@@ -36,7 +36,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
     const [phone, setPhone] = useState((user as any)?.phone || "");
 
     const { data: subscriptionData } = useQuery<{
-        subscription: { plan: string; stripeStatus: string | null };
+        subscription: { plan: string };
         usage: { projects: number; conversations: number; aiQueries: number; storageGB: number };
         limits: { projects: number; conversations: number; aiQueries: number; storageGB: number };
     }>({
@@ -76,16 +76,6 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
         },
         onError: () => {
             toast({ title: t("settings.profile.imageUploadFailed"), variant: "destructive" });
-        },
-    });
-
-    const portalMutation = useMutation({
-        mutationFn: async () => {
-            const res = await apiRequest("POST", "/api/customer-portal");
-            return res.json();
-        },
-        onSuccess: (data: { url: string }) => {
-            window.open(data.url, "_blank");
         },
     });
 
@@ -246,11 +236,6 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                                     {planLabel(plan)}
                                 </Badge>
                             </div>
-                            {subscriptionData?.subscription?.stripeStatus && (
-                                <p className="text-xs text-muted-foreground">
-                                    {t("settings.membership.status")}: {subscriptionData.subscription.stripeStatus}
-                                </p>
-                            )}
                         </div>
 
                         {/* Usage */}
@@ -288,25 +273,13 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
 
                         {/* Actions */}
                         <div className="space-y-2">
-                            {plan === "free" ? (
-                                <Button
-                                    className="w-full"
-                                    onClick={() => window.location.href = "/pricing"}
-                                >
-                                    <Crown className="h-4 w-4 mr-2" />
-                                    {t("settings.membership.upgrade")}
-                                </Button>
-                            ) : (
-                                <Button
-                                    variant="outline"
-                                    className="w-full"
-                                    onClick={() => portalMutation.mutate()}
-                                    disabled={portalMutation.isPending}
-                                >
-                                    <ExternalLink className="h-4 w-4 mr-2" />
-                                    {t("settings.membership.manageSubscription")}
-                                </Button>
-                            )}
+                            <Button
+                                className="w-full"
+                                onClick={() => window.location.href = "/pricing"}
+                            >
+                                <Crown className="h-4 w-4 mr-2" />
+                                {plan === "free" ? t("settings.membership.upgrade") : t("settings.membership.viewPlans")}
+                            </Button>
                         </div>
                     </TabsContent>
                 </Tabs>

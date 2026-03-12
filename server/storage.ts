@@ -1,7 +1,4 @@
-﻿import { randomUUID } from "crypto";
-import { drizzle } from "drizzle-orm/neon-serverless";
-import { Pool, neonConfig } from "@neondatabase/serverless";
-import { eq, desc, sql, max, and, lt, isNull, isNotNull, or } from "drizzle-orm";
+import { randomUUID } from "crypto";
 import * as schema from "@shared/schema";
 import type {
   User,
@@ -20,8 +17,6 @@ import type {
   InsertFileChunk,
   Subscription,
   InsertSubscription,
-  VerificationCode,
-  InsertVerificationCode,
   RetentionPolicy,
   InsertRetentionPolicy,
   PendingNotification,
@@ -32,31 +27,6 @@ import type {
   InsertGoogleDriveTempFile,
   ChunkAttributes,
 } from "@shared/schema";
-import ws from "ws";
-
-neonConfig.webSocketConstructor = ws;
-
-// Singleton Pool for pgvector operations - prevents connection exhaustion
-let pgVectorPool: Pool | null = null;
-
-function getPgVectorPool(): Pool {
-  if (!pgVectorPool) {
-    pgVectorPool = new Pool({
-      connectionString: process.env.DATABASE_URL,
-      max: 3,  // Optimized for low-resource instances (Render Free: 0.1 CPU)
-      idleTimeoutMillis: 15000,  // Close idle connections after 15 seconds
-      connectionTimeoutMillis: 10000  // Timeout after 10 seconds when acquiring connection
-    });
-
-    // Handle pool errors gracefully
-    pgVectorPool.on('error', (err) => {
-      console.error('[PgVector Pool] Unexpected error:', err);
-    });
-  }
-  return pgVectorPool;
-}
-
-// IStorage ?명꽣?섏씠?ㅻ뒗 storage/types.ts濡?遺꾨━??
 // IStorage 인터페이스는 storage/types.ts로 분리됨
 export type { IStorage } from "./storage/types";
 import type { IStorage } from "./storage/types";
@@ -70,7 +40,6 @@ export class MemStorage implements IStorage {
   private files: Map<string, File>;
   private fileChunks: Map<string, FileChunk>;
   private subscriptions: Map<string, Subscription>;
-  private verificationCodes: Map<string, VerificationCode>;
 
   constructor() {
     this.users = new Map();
@@ -81,7 +50,6 @@ export class MemStorage implements IStorage {
     this.files = new Map();
     this.fileChunks = new Map();
     this.subscriptions = new Map();
-    this.verificationCodes = new Map();
   }
 
   // User operations
@@ -99,13 +67,14 @@ export class MemStorage implements IStorage {
     const user: User = {
       id,
       email: userData.email ?? null,
-      password: userData.password ?? null,
       firstName: userData.firstName ?? null,
       lastName: userData.lastName ?? null,
       profileImageUrl: userData.profileImageUrl ?? null,
-      emailVerified: userData.emailVerified ?? null,
-      authProvider: userData.authProvider ?? "email",
-      stripeCustomerId: userData.stripeCustomerId ?? null,
+      department: userData.department ?? null,
+      jobTitle: userData.jobTitle ?? null,
+      phone: userData.phone ?? null,
+      authProvider: userData.authProvider ?? "oauth",
+      role: userData.role ?? "user",
       createdAt: now,
       updatedAt: now,
     };
@@ -118,13 +87,14 @@ export class MemStorage implements IStorage {
     const user: User = {
       id: userData.id!,
       email: userData.email ?? null,
-      password: userData.password ?? null,
       firstName: userData.firstName ?? null,
       lastName: userData.lastName ?? null,
       profileImageUrl: userData.profileImageUrl ?? null,
-      emailVerified: userData.emailVerified ?? null,
-      authProvider: userData.authProvider ?? "email",
-      stripeCustomerId: userData.stripeCustomerId ?? null,
+      department: userData.department ?? null,
+      jobTitle: userData.jobTitle ?? null,
+      phone: userData.phone ?? null,
+      authProvider: userData.authProvider ?? "oauth",
+      role: userData.role ?? "user",
       createdAt: this.users.get(userData.id!)?.createdAt ?? now,
       updatedAt: now,
     };
@@ -142,45 +112,6 @@ export class MemStorage implements IStorage {
     };
     this.users.set(id, updated);
     return updated;
-  }
-
-  async createVerificationCode(insertCode: InsertVerificationCode): Promise<VerificationCode> {
-    const id = randomUUID();
-    const verificationCode: VerificationCode = {
-      id,
-      ...insertCode,
-      createdAt: new Date(),
-    };
-    this.verificationCodes.set(id, verificationCode);
-    return verificationCode;
-  }
-
-  async getVerificationCode(email: string, code: string, type: string): Promise<VerificationCode | undefined> {
-    const now = new Date();
-    return Array.from(this.verificationCodes.values()).find(
-      (vc) => vc.email === email && vc.code === code && vc.type === type && vc.expiresAt > now
-    );
-  }
-
-  async deleteVerificationCode(id: string): Promise<void> {
-    this.verificationCodes.delete(id);
-  }
-
-  async deleteVerificationCodesByEmailAndType(email: string, type: string): Promise<void> {
-    Array.from(this.verificationCodes.entries()).forEach(([id, code]) => {
-      if (code.email === email && code.type === type) {
-        this.verificationCodes.delete(id);
-      }
-    });
-  }
-
-  async deleteExpiredVerificationCodes(): Promise<void> {
-    const now = new Date();
-    Array.from(this.verificationCodes.entries()).forEach(([id, code]) => {
-      if (code.expiresAt <= now) {
-        this.verificationCodes.delete(id);
-      }
-    });
   }
 
   async getProjects(userId: string): Promise<Project[]> {
@@ -534,18 +465,6 @@ export class MemStorage implements IStorage {
     }
   }
 
-  async updateUserStripeCustomerId(userId: string, stripeCustomerId: string): Promise<User | undefined> {
-    const user = this.users.get(userId);
-    if (!user) return undefined;
-    const updated: User = {
-      ...user,
-      stripeCustomerId,
-      updatedAt: new Date(),
-    };
-    this.users.set(userId, updated);
-    return updated;
-  }
-
   async getSubscription(userId: string): Promise<Subscription | undefined> {
     return Array.from(this.subscriptions.values()).find((s) => s.userId === userId);
   }
@@ -557,10 +476,6 @@ export class MemStorage implements IStorage {
       id,
       userId,
       plan: insertSubscription.plan ?? "free",
-      stripeSubscriptionId: insertSubscription.stripeSubscriptionId ?? null,
-      stripeStatus: insertSubscription.stripeStatus ?? null,
-      stripePriceId: insertSubscription.stripePriceId ?? null,
-      stripeCurrentPeriodEnd: insertSubscription.stripeCurrentPeriodEnd ?? null,
       createdAt: now,
       updatedAt: now,
     };

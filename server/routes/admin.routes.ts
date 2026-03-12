@@ -1,12 +1,12 @@
 import { Router } from "express";
-import { isAuthenticated } from "../sessionAuth";
+import { isAuthenticated, isAdmin } from "../sessionAuth";
 import { storage } from "../storage";
 import { expirationScheduler, DEFAULT_RETENTION_POLICIES } from "../scheduler";
 
 const router = Router();
 
 // Get retention policy for a plan
-router.get("/admin/retention-policies/:plan", isAuthenticated, async (req, res) => {
+router.get("/admin/retention-policies/:plan", isAuthenticated, isAdmin, async (req, res) => {
     try {
         const { plan } = req.params;
         const policy = await storage.getRetentionPolicy(plan);
@@ -22,7 +22,7 @@ router.get("/admin/retention-policies/:plan", isAuthenticated, async (req, res) 
 });
 
 // Get all retention policies
-router.get("/admin/retention-policies", isAuthenticated, async (req, res) => {
+router.get("/admin/retention-policies", isAuthenticated, isAdmin, async (req, res) => {
     try {
         res.json(DEFAULT_RETENTION_POLICIES);
     } catch (error) {
@@ -110,7 +110,7 @@ router.get("/notifications", isAuthenticated, async (req, res) => {
 });
 
 // Run maintenance
-router.post("/admin/run-maintenance", isAuthenticated, async (req, res) => {
+router.post("/admin/run-maintenance", isAuthenticated, isAdmin, async (req, res) => {
     try {
         expirationScheduler.runDailyMaintenance();
         res.json({ success: true, message: "Maintenance job started" });
@@ -121,50 +121,48 @@ router.post("/admin/run-maintenance", isAuthenticated, async (req, res) => {
 });
 
 // Migrate embeddings to pgvector format
-router.post("/embeddings/migrate", isAuthenticated, async (req, res) => {
+router.post("/embeddings/migrate", isAuthenticated, isAdmin, async (req, res) => {
+    const pool = new (await import("pg")).Pool({
+        connectionString: process.env.DATABASE_URL
+    });
+
     try {
         const user = req.user as any;
         const userId = user.id;
-
-        const pool = new (await import("@neondatabase/serverless")).Pool({
-            connectionString: process.env.DATABASE_URL
-        });
 
         let messagesConverted = 0;
         let chunksConverted = 0;
         let filesConverted = 0;
 
         const messagesResult = await pool.query(`
-      UPDATE messages 
-      SET embedding_vector = embedding::vector 
-      WHERE user_id = $1 
-        AND embedding IS NOT NULL 
+      UPDATE messages
+      SET embedding_vector = embedding::vector
+      WHERE user_id = $1
+        AND embedding IS NOT NULL
         AND embedding_vector IS NULL
       RETURNING id
     `, [userId]);
         messagesConverted = messagesResult.rowCount || 0;
 
         const chunksResult = await pool.query(`
-      UPDATE file_chunks 
-      SET embedding_vector = embedding::vector 
-      WHERE user_id = $1 
-        AND embedding IS NOT NULL 
+      UPDATE file_chunks
+      SET embedding_vector = embedding::vector
+      WHERE user_id = $1
+        AND embedding IS NOT NULL
         AND embedding_vector IS NULL
       RETURNING id
     `, [userId]);
         chunksConverted = chunksResult.rowCount || 0;
 
         const filesResult = await pool.query(`
-      UPDATE files 
-      SET embedding_vector = embedding::vector 
-      WHERE user_id = $1 
-        AND embedding IS NOT NULL 
+      UPDATE files
+      SET embedding_vector = embedding::vector
+      WHERE user_id = $1
+        AND embedding IS NOT NULL
         AND embedding_vector IS NULL
       RETURNING id
     `, [userId]);
         filesConverted = filesResult.rowCount || 0;
-
-        await pool.end();
 
         console.log(`[Embedding Migration] User ${userId}: ${messagesConverted} messages, ${chunksConverted} chunks, ${filesConverted} files converted`);
 
@@ -178,6 +176,9 @@ router.post("/embeddings/migrate", isAuthenticated, async (req, res) => {
     } catch (error) {
         console.error("Error migrating embeddings:", error);
         res.status(500).json({ error: "Failed to migrate embeddings" });
+    } finally {
+        // 성공/실패 모두 pool 종료 보장
+        await pool.end().catch(err => console.error("[Embedding Migration] Pool close error:", err));
     }
 });
 

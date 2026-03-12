@@ -4,6 +4,6 @@ export { default as foldersRouter } from "./folders.routes";
 export { default as conversationsRouter } from "./conversations.routes";
 export { default as filesRouter } from "./files.routes";
 export { default as searchRouter } from "./search.routes";
-export { default as stripeRouter } from "./stripe.routes";
+export { default as subscriptionRouter } from "./subscription.routes";
 export { default as adminRouter } from "./admin.routes";
 export { default as trashRouter } from "./trash.routes";

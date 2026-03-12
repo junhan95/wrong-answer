@@ -1,4 +1,7 @@
 import { useTranslation } from "react-i18next";
+import { useLocation } from "wouter";
+import { useEffect } from "react";
+import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { FolderTree } from "lucide-react";
@@ -7,6 +10,36 @@ import { PrefetchLink } from "@/components/prefetch-link";
 
 export default function LoginPage() {
   const { t } = useTranslation();
+  const [location] = useLocation();
+  const { toast } = useToast();
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const error = params.get("error");
+    
+    if (error === "google_not_configured") {
+      toast({
+        variant: "destructive",
+        title: "로그인 불가",
+        description: "Google 로그인 설정이 누락되었습니다.",
+      });
+      window.history.replaceState({}, document.title, window.location.pathname);
+    } else if (error === "naver_not_configured") {
+      toast({
+        variant: "destructive",
+        title: "로그인 불가",
+        description: "Naver 로그인 설정이 누락되었습니다.",
+      });
+      window.history.replaceState({}, document.title, window.location.pathname);
+    } else if (error === "kakao_not_configured") {
+      toast({
+        variant: "destructive",
+        title: "로그인 불가",
+        description: "Kakao 로그인 설정이 누락되었습니다.",
+      });
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
+  }, [toast]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-background p-4">

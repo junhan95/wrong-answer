@@ -103,14 +103,8 @@ router.post("/conversations/:conversationId/files", isAuthenticated, upload.sing
         }, userId);
 
         if (content) {
+            // 청킹 큐에서 청크별 임베딩을 생성하므로 파일 전체 임베딩은 중복 제거
             chunkingQueue.addJob(fileRecord.id, userId);
-            generateEmbedding(content)
-                .then(async (embedding) => {
-                    await storage.updateFileEmbedding(fileRecord.id, userId, JSON.stringify(embedding), embedding);
-                })
-                .catch((error) => {
-                    console.error(`Failed to generate embedding for file ${fileRecord.id}:`, error);
-                });
         }
 
         res.json({
@@ -860,14 +854,8 @@ router.post("/projects/:projectId/files", isAuthenticated, upload.single("file")
         }, userId);
 
         if (content) {
+            // 청킹 큐에서 청크별 임베딩을 생성하므로 파일 전체 임베딩은 중복 제거
             chunkingQueue.addJob(fileRecord.id, userId);
-            generateEmbedding(content)
-                .then(async (embedding) => {
-                    await storage.updateFileEmbedding(fileRecord.id, userId, JSON.stringify(embedding), embedding);
-                })
-                .catch((error) => {
-                    console.error(`Failed to generate embedding for file ${fileRecord.id}:`, error);
-                });
         }
 
         res.json({
@@ -973,6 +961,142 @@ router.post("/files/:id/restore", isAuthenticated, async (req, res) => {
     } catch (error) {
         console.error("Error restoring file:", error);
         res.status(500).json({ error: "Failed to restore file" });
+    }
+});
+
+// Google Drive integration routes
+
+// Get Google Drive status for a file
+router.get("/files/:fileId/google-drive/status", isAuthenticated, async (req, res) => {
+    try {
+        const user = req.user as any;
+        const userId = user.id;
+        const { fileId } = req.params;
+
+        const file = await storage.getFileById(fileId, userId);
+        if (!file) {
+            res.status(404).json({ error: "File not found" });
+            return;
+        }
+
+        const tempFile = await storage.getGoogleDriveTempFile(fileId, userId);
+        if (!tempFile) {
+            res.json({ status: "not_uploaded", fileId });
+            return;
+        }
+
+        res.json({
+            status: tempFile.status,
+            fileId: tempFile.fileId,
+            googleDriveFileId: tempFile.googleDriveFileId,
+            editUrl: tempFile.editUrl,
+            lastSyncedAt: tempFile.lastSyncedAt,
+            expiresAt: tempFile.expiresAt,
+        });
+    } catch (error) {
+        console.error("Google Drive status error:", error);
+        res.status(500).json({ error: "Failed to get Google Drive status" });
+    }
+});
+
+// Upload file to Google Drive for editing
+router.post("/files/:fileId/google-drive/upload", isAuthenticated, async (req, res) => {
+    try {
+        const user = req.user as any;
+        const userId = user.id;
+        const { fileId } = req.params;
+
+        const file = await storage.getFileById(fileId, userId);
+        if (!file) {
+            res.status(404).json({ error: "File not found" });
+            return;
+        }
+
+        const existing = await storage.getGoogleDriveTempFile(fileId, userId);
+        if (existing && existing.status !== "expired") {
+            res.json({
+                status: existing.status,
+                editUrl: existing.editUrl,
+                googleDriveFileId: existing.googleDriveFileId,
+                message: "File already uploaded to Google Drive",
+            });
+            return;
+        }
+
+        if (!process.env.GOOGLE_DRIVE_CLIENT_ID || !process.env.GOOGLE_DRIVE_CLIENT_SECRET) {
+            res.status(503).json({
+                error: "Google Drive integration not configured",
+                message: "Set GOOGLE_DRIVE_CLIENT_ID and GOOGLE_DRIVE_CLIENT_SECRET to enable Google Drive editing",
+            });
+            return;
+        }
+
+        res.status(501).json({ error: "Google Drive upload not implemented" });
+    } catch (error) {
+        console.error("Google Drive upload error:", error);
+        res.status(500).json({ error: "Failed to upload to Google Drive" });
+    }
+});
+
+// Sync changes back from Google Drive
+router.post("/files/:fileId/google-drive/sync", isAuthenticated, async (req, res) => {
+    try {
+        const user = req.user as any;
+        const userId = user.id;
+        const { fileId } = req.params;
+
+        const file = await storage.getFileById(fileId, userId);
+        if (!file) {
+            res.status(404).json({ error: "File not found" });
+            return;
+        }
+
+        const tempFile = await storage.getGoogleDriveTempFile(fileId, userId);
+        if (!tempFile) {
+            res.status(404).json({ error: "File not uploaded to Google Drive" });
+            return;
+        }
+
+        if (!process.env.GOOGLE_DRIVE_CLIENT_ID || !process.env.GOOGLE_DRIVE_CLIENT_SECRET) {
+            res.status(503).json({
+                error: "Google Drive integration not configured",
+                message: "Set GOOGLE_DRIVE_CLIENT_ID and GOOGLE_DRIVE_CLIENT_SECRET to enable Google Drive syncing",
+            });
+            return;
+        }
+
+        res.status(501).json({ error: "Google Drive sync not implemented" });
+    } catch (error) {
+        console.error("Google Drive sync error:", error);
+        res.status(500).json({ error: "Failed to sync from Google Drive" });
+    }
+});
+
+// Remove file from Google Drive
+router.delete("/files/:fileId/google-drive", isAuthenticated, async (req, res) => {
+    try {
+        const user = req.user as any;
+        const userId = user.id;
+        const { fileId } = req.params;
+
+        const file = await storage.getFileById(fileId, userId);
+        if (!file) {
+            res.status(404).json({ error: "File not found" });
+            return;
+        }
+
+        const tempFile = await storage.getGoogleDriveTempFile(fileId, userId);
+        if (!tempFile) {
+            res.status(404).json({ error: "File not uploaded to Google Drive" });
+            return;
+        }
+
+        await storage.deleteGoogleDriveTempFile(tempFile.id, userId);
+
+        res.json({ success: true, message: "Google Drive temp file removed" });
+    } catch (error) {
+        console.error("Google Drive delete error:", error);
+        res.status(500).json({ error: "Failed to remove from Google Drive" });
     }
 });
 

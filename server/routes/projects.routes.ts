@@ -3,7 +3,7 @@ import { isAuthenticated } from "../sessionAuth";
 import { storage } from "../storage";
 import { insertProjectSchema } from "@shared/schema";
 import { z } from "zod";
-import { PLAN_LIMITS } from "../stripe";
+import { PLAN_LIMITS } from "../plans";
 
 const router = Router();
 

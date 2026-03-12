@@ -42,10 +42,17 @@ export const isAuthenticated: RequestHandler = async (req, res, next) => {
 
     const user = req.user as any;
 
-    // Email/password sessions store user.id directly
     if (user.id) {
         return next();
     }
 
     return res.status(401).json({ message: "Unauthorized" });
+};
+
+export const isAdmin: RequestHandler = (req, res, next) => {
+    const user = req.user as any;
+    if (user?.role !== "admin") {
+        return res.status(403).json({ message: "Forbidden: Admin access required" });
+    }
+    next();
 };

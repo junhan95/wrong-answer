@@ -2,15 +2,13 @@ import { useState } from "react";
 import { SEO } from "@/components/seo";
 import { useAuth } from "@/hooks/useAuth";
 import { useTranslation } from "react-i18next";
-import { useQuery, useMutation } from "@tanstack/react-query";
-import { apiRequest, queryClient } from "@/lib/queryClient";
+import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Check, Crown, Users, Zap, ArrowLeft, Sparkles, X, Building2, FolderTree } from "lucide-react";
 import { useLocation } from "wouter";
-import { useToast } from "@/hooks/use-toast";
 import { PrefetchLink } from "@/components/prefetch-link";
 import { LanguageToggle } from "@/components/language-toggle";
 import { ThemeToggle } from "@/components/theme-toggle";
@@ -25,8 +23,6 @@ import {
 
 interface Subscription {
   plan: string;
-  stripeStatus: string | null;
-  stripeCurrentPeriodEnd: string | null;
 }
 
 interface SubscriptionData {
@@ -57,7 +53,6 @@ export default function Pricing() {
   const { t } = useTranslation();
   const { isAuthenticated, isLoading: authLoading } = useAuth();
   const [, setLocation] = useLocation();
-  const { toast } = useToast();
   const [billingPeriod, setBillingPeriod] = useState<"monthly" | "yearly">("monthly");
 
   const { data: subscriptionData, isLoading: subLoading } = useQuery<SubscriptionData>({
@@ -65,58 +60,11 @@ export default function Pricing() {
     enabled: isAuthenticated,
   });
 
-  const checkoutMutation = useMutation({
-    mutationFn: async (params: { plan: string; period: "monthly" | "yearly" }) => {
-      const response = await apiRequest("POST", "/api/create-checkout-session", params);
-      return response;
-    },
-    onSuccess: (data: { url: string }) => {
-      window.location.href = data.url;
-    },
-    onError: () => {
-      toast({
-        title: t("pricing.error.checkout_failed"),
-        description: t("pricing.error.try_again"),
-        variant: "destructive",
-      });
-    },
-  });
-
-  const portalMutation = useMutation({
-    mutationFn: async () => {
-      const response = await apiRequest("POST", "/api/customer-portal", {});
-      return response;
-    },
-    onSuccess: (data: { url: string }) => {
-      window.location.href = data.url;
-    },
-    onError: () => {
-      toast({
-        title: t("pricing.error.portal_failed"),
-        description: t("pricing.error.try_again"),
-        variant: "destructive",
-      });
-    },
-  });
-
   const handleCheckout = (plan: string) => {
-    if (plan === "custom") {
-      setLocation("/contact");
-      return;
-    }
-    if (!isAuthenticated) {
-      window.location.href = "/login";
-      return;
-    }
-    checkoutMutation.mutate({ plan, period: billingPeriod });
-  };
-
-  const handleManageSubscription = () => {
-    portalMutation.mutate();
+    setLocation("/contact");
   };
 
   const currentPlan = subscriptionData?.subscription?.plan || "free";
-  const isActive = subscriptionData?.subscription?.stripeStatus === "active";
 
   const plans = [
     {
@@ -286,8 +234,8 @@ export default function Pricing() {
                   <p className="text-2xl font-bold capitalize">{currentPlan}</p>
                 </div>
                 {currentPlan !== "free" && (
-                  <Badge variant={isActive ? "default" : "secondary"} data-testid="badge-subscription-status">
-                    {isActive ? t("pricing.current_plan.active") : t("pricing.current_plan.inactive")}
+                  <Badge data-testid="badge-subscription-status">
+                    {currentPlan}
                   </Badge>
                 )}
               </div>
@@ -342,17 +290,6 @@ export default function Pricing() {
                 </div>
               </div>
 
-              {currentPlan !== "free" && (
-                <Button
-                  variant="outline"
-                  onClick={handleManageSubscription}
-                  disabled={portalMutation.isPending}
-                  className="w-full"
-                  data-testid="button-manage-subscription"
-                >
-                  {portalMutation.isPending ? t("common.loading") : t("pricing.current_plan.manage")}
-                </Button>
-              )}
             </CardContent>
           </Card>
         )}
@@ -434,17 +371,16 @@ export default function Pricing() {
                     <Button
                       variant={plan.highlighted ? "default" : "outline"}
                       onClick={() => handleCheckout(plan.id)}
-                      disabled={checkoutMutation.isPending}
                       className="w-full mb-6"
                       data-testid={`button-upgrade-${plan.id}`}
                     >
-                      {checkoutMutation.isPending ? t("common.loading") : plan.cta}
+                      {plan.cta}
                     </Button>
                   ) : (
                     <Button
                       variant="outline"
                       onClick={() => handleCheckout(plan.id)}
-                      disabled={plan.id === "free" || checkoutMutation.isPending}
+                      disabled={plan.id === "free"}
                       className="w-full mb-6"
                       data-testid={`button-action-${plan.id}`}
                     >

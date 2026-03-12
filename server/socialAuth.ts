@@ -30,7 +30,6 @@ async function findOrCreateUser(profile: OAuthProfile) {
         await storage.updateUser(user.id, {
             authProvider: profile.provider,
             profileImageUrl: profile.profileImageUrl || user.profileImageUrl,
-            emailVerified: user.emailVerified || new Date(),
         });
         return await storage.getUser(user.id);
     }
@@ -38,11 +37,9 @@ async function findOrCreateUser(profile: OAuthProfile) {
     // Create new user
     user = await storage.createUser({
         email: profile.email,
-        password: null,
         firstName: profile.firstName || null,
         lastName: profile.lastName || null,
         profileImageUrl: profile.profileImageUrl || null,
-        emailVerified: new Date(),
         authProvider: profile.provider,
     });
 
@@ -106,6 +103,9 @@ export function setupSocialAuth(app: Express) {
         console.log("✅ Google OAuth configured");
     } else {
         console.warn("⚠️ Google OAuth not configured (missing GOOGLE_CLIENT_ID / GOOGLE_CLIENT_SECRET)");
+        app.get("/api/auth/google", (_req, res) => {
+            res.redirect("/login?error=google_not_configured");
+        });
     }
 
     // =====================
@@ -155,6 +155,9 @@ export function setupSocialAuth(app: Express) {
         console.log("✅ Naver OAuth configured");
     } else {
         console.warn("⚠️ Naver OAuth not configured (missing NAVER_CLIENT_ID / NAVER_CLIENT_SECRET)");
+        app.get("/api/auth/naver", (_req, res) => {
+            res.redirect("/login?error=naver_not_configured");
+        });
     }
 
     // =====================
@@ -165,7 +168,7 @@ export function setupSocialAuth(app: Express) {
             new KakaoStrategy(
                 {
                     clientID: process.env.KAKAO_CLIENT_ID,
-                    clientSecret: process.env.KAKAO_CLIENT_SECRET || "",
+                    clientSecret: process.env.KAKAO_CLIENT_SECRET,
                     callbackURL: `${callbackBaseUrl}/api/auth/kakao/callback`,
                 },
                 async (_accessToken: string, _refreshToken: string, profile: any, done: any) => {
@@ -209,5 +212,8 @@ export function setupSocialAuth(app: Express) {
         console.log("✅ Kakao OAuth configured");
     } else {
         console.warn("⚠️ Kakao OAuth not configured (missing KAKAO_CLIENT_ID)");
+        app.get("/api/auth/kakao", (_req, res) => {
+            res.redirect("/login?error=kakao_not_configured");
+        });
     }
 }
