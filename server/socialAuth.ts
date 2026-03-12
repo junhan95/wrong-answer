@@ -26,11 +26,16 @@ async function findOrCreateUser(profile: OAuthProfile) {
     let user = await storage.getUserByEmail(profile.email);
 
     if (user) {
-        // Update auth provider and profile if needed
-        await storage.updateUser(user.id, {
+        // Update auth provider and profile (including names) if needed
+        const updateData: Record<string, any> = {
             authProvider: profile.provider,
             profileImageUrl: profile.profileImageUrl || user.profileImageUrl,
-        });
+        };
+
+        if (profile.firstName) updateData.firstName = profile.firstName;
+        if (profile.lastName) updateData.lastName = profile.lastName;
+
+        await storage.updateUser(user.id, updateData);
         return await storage.getUser(user.id);
     }
 
