@@ -355,8 +355,8 @@
         "price": "$0",
         "period": "/month",
         "feature1": "3 projects",
-        "feature2": "30 conversations",
-        "feature3": "10GB storage",
+        "feature2": "50 AI queries/month",
+        "feature3": "250MB storage",
         "feature4": "Basic RAG search",
         "retention": "30-day data retention",
         "cta": "Get Started"
@@ -368,8 +368,8 @@
         "period": "/month",
         "yearlyPrice": "$20",
         "feature1": "10 projects",
-        "feature2": "Unlimited conversations",
-        "feature3": "50GB storage",
+        "feature2": "1,000 AI queries/month",
+        "feature3": "5GB storage",
         "feature4": "Basic RAG search",
         "retention": "180-day data retention",
         "cta": "Upgrade to Basic"
@@ -380,8 +380,8 @@
         "period": "/month",
         "yearlyPrice": "$32",
         "feature1": "Unlimited projects",
-        "feature2": "Unlimited conversations",
-        "feature3": "100GB storage",
+        "feature2": "5,000 AI queries/month",
+        "feature3": "20GB storage",
         "feature4": "Advanced RAG with latest AI models",
         "feature5": "Document image analysis",
         "feature6": "Priority support",
@@ -421,7 +421,7 @@
       "subtitle": "Everything you need to know about WiseQuery",
       "q1": {
         "question": "What are the limitations of the free plan?",
-        "answer": "The free plan includes 3 projects, 30 conversations, and 10GB storage with 30-day data retention. You get full access to basic RAG search and all core features. Perfect for personal use and trying out the platform."
+        "answer": "The free plan includes 3 projects, 50 AI queries per month, and 250MB storage with 30-day data retention. You get full access to basic RAG search and all core features. Perfect for personal use and trying out the platform."
       },
       "q2": {
         "question": "What file formats are supported?",
@@ -706,7 +706,6 @@
     "movingFolders": "Moving {{count}} folders",
     "movingConversation": "Moving conversation",
     "movingConversations": "Moving {{count}} conversations",
-    "multipleConversationsMoved": "{{count}} conversations moved",
     "cannotMoveIntoSelf": "Cannot move folder into itself",
     "cannotMoveToDescendant": "Cannot move folder into its descendant",
     "deleteMultipleConfirm": "Are you sure you want to delete {{count}} selected items?",

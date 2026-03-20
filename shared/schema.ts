@@ -194,6 +194,9 @@ export const subscriptions = pgTable("subscriptions", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
   userId: varchar("user_id").notNull().unique().references(() => users.id, { onDelete: "cascade" }),
   plan: varchar("plan").notNull().default("free"),
+  monthlyAiQueriesAllowed: integer("monthly_ai_queries_allowed").notNull().default(50),
+  monthlyAiQueriesUsed: integer("monthly_ai_queries_used").notNull().default(0),
+  billingCycleStart: timestamp("billing_cycle_start").notNull().defaultNow(),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });

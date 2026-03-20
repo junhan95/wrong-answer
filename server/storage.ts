@@ -472,13 +472,16 @@ export class MemStorage implements IStorage {
   async createSubscription(insertSubscription: InsertSubscription, userId: string): Promise<Subscription> {
     const id = randomUUID();
     const now = new Date();
-    const subscription: Subscription = {
-      id,
-      userId,
-      plan: insertSubscription.plan ?? "free",
-      createdAt: now,
-      updatedAt: now,
-    };
+      const subscription: Subscription = {
+        id: randomUUID(),
+        userId: id,
+        plan: "free",
+        monthlyAiQueriesAllowed: 50,
+        monthlyAiQueriesUsed: 0,
+        billingCycleStart: now,
+        createdAt: now,
+        updatedAt: now,
+      };
     this.subscriptions.set(id, subscription);
     return subscription;
   }
@@ -979,6 +982,28 @@ export class MemStorage implements IStorage {
 
   async migrateEmbeddingsToVector(): Promise<{ messages: number; fileChunks: number }> {
     return { messages: 0, fileChunks: 0 };
+  }
+
+  async checkAiQuota(userId: string): Promise<{ allowed: number; used: number; hasQuota: boolean }> {
+    const sub = Array.from(this.subscriptions.values()).find(s => s.userId === userId);
+    if (!sub) return { allowed: 50, used: 0, hasQuota: true };
+    return {
+      allowed: sub.monthlyAiQueriesAllowed,
+      used: sub.monthlyAiQueriesUsed,
+      hasQuota: sub.monthlyAiQueriesAllowed === -1 || sub.monthlyAiQueriesUsed < sub.monthlyAiQueriesAllowed
+    };
+  }
+
+  async incrementAiUsage(userId: string): Promise<boolean> {
+    const sub = Array.from(this.subscriptions.values()).find(s => s.userId === userId);
+    if (!sub) return false;
+    if (sub.monthlyAiQueriesAllowed !== -1 && sub.monthlyAiQueriesUsed >= sub.monthlyAiQueriesAllowed) {
+        return false;
+    }
+    sub.monthlyAiQueriesUsed += 1;
+    sub.updatedAt = new Date();
+    this.subscriptions.set(sub.id, sub);
+    return true;
   }
 }
 

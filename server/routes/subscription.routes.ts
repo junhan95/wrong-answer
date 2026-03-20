@@ -24,7 +24,7 @@ router.get("/subscription", isAuthenticated, async (req, res) => {
 
         const files = await storage.getFilesByUser(userId);
         const storageUsedBytes = files.reduce((total, file) => total + (file.size || 0), 0);
-        const storageUsedGB = storageUsedBytes / (1024 * 1024 * 1024);
+        const storageUsedMB = storageUsedBytes / (1024 * 1024);
 
         res.json({
             subscription: subscription || { plan: "free" },
@@ -32,13 +32,12 @@ router.get("/subscription", isAuthenticated, async (req, res) => {
                 projects: projectCount,
                 conversations: conversationCount,
                 aiQueries: aiQueryCount,
-                storageGB: Math.round(storageUsedGB * 100) / 100,
+                storageMB: Math.round(storageUsedMB * 100) / 100,
             },
             limits: {
                 projects: planLimits.projects,
-                conversations: planLimits.conversations,
-                aiQueries: planLimits.conversations,
-                storageGB: planLimits.storageGB,
+                aiQueries: planLimits.aiQueries,
+                storageMB: planLimits.storageMB,
                 imageGeneration: planLimits.imageGeneration,
             },
         });

@@ -23,6 +23,15 @@ router.post("/chat", isAuthenticated, async (req, res) => {
       return;
     }
 
+    // Check AI Quota
+    const quota = await storage.checkAiQuota(userId);
+    if (!quota.hasQuota) {
+      const err = new Error("Monthly AI Queries Quota Exceeded");
+      (err as any).code = "insufficient_quota";
+      throw err;
+    }
+
+
     // Set up SSE headers immediately
     res.setHeader("Content-Type", "text/event-stream");
     res.setHeader("Cache-Control", "no-cache");
@@ -207,10 +216,11 @@ FORMAT INSTRUCTIONS:
       content: fullResponse,
     }, userId);
 
-    // Background: Generate AI response embedding (don't block response)
-    generateEmbedding(fullResponse)
-      .then(embedding => storage.updateMessageEmbedding(aiMessage.id, userId, JSON.stringify(embedding), embedding))
-      .catch(err => console.error("Background AI embedding failed:", err));
+    // Background: Generate AI response embedding and increment usage (don't block response)
+    Promise.all([
+      generateEmbedding(fullResponse).then(embedding => storage.updateMessageEmbedding(aiMessage.id, userId, JSON.stringify(embedding), embedding)),
+      storage.incrementAiUsage(userId)
+    ]).catch(err => console.error("Background AI post-processing failed:", err));
 
     console.log(`[Chat API] Total time: ${Date.now() - startTime}ms`);
 

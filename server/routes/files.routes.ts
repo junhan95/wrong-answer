@@ -21,6 +21,7 @@ import {
     convertToPdf,
 } from "../utils/fileProcessing";
 import { upload } from "../utils/uploadConfig";
+import { PLAN_LIMITS } from "../plans";
 
 const router = Router();
 
@@ -46,6 +47,24 @@ router.post("/conversations/:conversationId/files", isAuthenticated, upload.sing
 
         if (!req.file) {
             res.status(400).json({ error: "No file uploaded" });
+            return;
+        }
+
+        const subscription = await storage.getSubscription(userId);
+        const plan = (subscription?.plan || "free") as keyof typeof PLAN_LIMITS;
+        const planLimits = PLAN_LIMITS[plan] ?? PLAN_LIMITS.free;
+
+        if (planLimits.maxFileSizeMB !== -1 && req.file.size > planLimits.maxFileSizeMB * 1024 * 1024) {
+            await fs.unlink(req.file.path);
+            res.status(413).json({ error: `File size exceeds the limit of ${planLimits.maxFileSizeMB}MB for your plan.` });
+            return;
+        }
+
+        const userFiles = await storage.getFilesByUser(userId);
+        const storageUsedBytes = userFiles.reduce((total, file) => total + (file.size || 0), 0);
+        if (planLimits.storageMB !== -1 && (storageUsedBytes + req.file.size) > planLimits.storageMB * 1024 * 1024) {
+            await fs.unlink(req.file.path);
+            res.status(413).json({ error: `Total storage exceeds your plan's limit of ${planLimits.storageMB}MB.` });
             return;
         }
 
@@ -788,6 +807,24 @@ router.post("/projects/:projectId/files", isAuthenticated, upload.single("file")
 
         if (!req.file) {
             res.status(400).json({ error: "No file uploaded" });
+            return;
+        }
+
+        const subscription = await storage.getSubscription(userId);
+        const plan = (subscription?.plan || "free") as keyof typeof PLAN_LIMITS;
+        const planLimits = PLAN_LIMITS[plan] ?? PLAN_LIMITS.free;
+
+        if (planLimits.maxFileSizeMB !== -1 && req.file.size > planLimits.maxFileSizeMB * 1024 * 1024) {
+            await fs.unlink(req.file.path);
+            res.status(413).json({ error: `File size exceeds the limit of ${planLimits.maxFileSizeMB}MB for your plan.` });
+            return;
+        }
+
+        const userFiles = await storage.getFilesByUser(userId);
+        const storageUsedBytes = userFiles.reduce((total, file) => total + (file.size || 0), 0);
+        if (planLimits.storageMB !== -1 && (storageUsedBytes + req.file.size) > planLimits.storageMB * 1024 * 1024) {
+            await fs.unlink(req.file.path);
+            res.status(413).json({ error: `Total storage exceeds your plan's limit of ${planLimits.storageMB}MB.` });
             return;
         }
 

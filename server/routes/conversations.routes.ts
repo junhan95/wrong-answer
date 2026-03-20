@@ -25,22 +25,7 @@ router.post("/conversations", isAuthenticated, async (req, res) => {
         const user = req.user as any;
         const userId = user.id;
 
-        const subscription = await storage.getSubscription(userId);
-        const plan = (subscription?.plan || "free") as keyof typeof PLAN_LIMITS;
-        const planLimit = PLAN_LIMITS[plan]?.conversations ?? PLAN_LIMITS.free.conversations;
 
-        if (planLimit > 0) {
-            const existingConversations = await storage.getConversations(userId);
-            if (existingConversations.length >= planLimit) {
-                return res.status(403).json({
-                    error: `Plan limit reached. You can have up to ${planLimit} conversations on the ${plan} plan.`,
-                    limitType: "conversations",
-                    currentPlan: plan,
-                    limit: planLimit,
-                    current: existingConversations.length
-                });
-            }
-        }
 
         const data = insertConversationSchema.parse(req.body);
         const conversation = await storage.createConversation(data, userId);

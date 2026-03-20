@@ -56,7 +56,9 @@ export interface IStorage {
 
     getMessages(conversationId: string, userId: string): Promise<Message[]>;
     getAllMessages(userId: string, includeArchived?: boolean): Promise<Message[]>;
-    getAIQueryCount(userId: string): Promise<number>;
+    getAIQueryCount(userId: string): Promise<number>; // Deprecated in favor of checkAiQuota
+    checkAiQuota(userId: string): Promise<{ allowed: number; used: number; hasQuota: boolean }>;
+    incrementAiUsage(userId: string): Promise<boolean>;
     createMessage(message: InsertMessage, userId: string): Promise<Message>;
     updateMessageEmbedding(id: string, userId: string, embedding: string, embeddingVector?: number[]): Promise<void>;
 

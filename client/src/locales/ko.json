@@ -355,8 +355,8 @@
         "price": "$0",
         "period": "/월",
         "feature1": "3개 프로젝트",
-        "feature2": "30개 대화",
-        "feature3": "10GB 저장공간",
+        "feature2": "월 50회 AI 질문",
+        "feature3": "250MB 저장공간",
         "feature4": "기본 RAG 검색",
         "retention": "30일 데이터 보존",
         "cta": "시작하기"
@@ -368,8 +368,8 @@
         "period": "/월",
         "yearlyPrice": "$20",
         "feature1": "10개 프로젝트",
-        "feature2": "무제한 대화",
-        "feature3": "50GB 저장공간",
+        "feature2": "월 1,000회 AI 질문",
+        "feature3": "5GB 저장공간",
         "feature4": "기본 RAG 검색",
         "retention": "180일 데이터 보존",
         "cta": "베이직으로 업그레이드"
@@ -380,8 +380,8 @@
         "period": "/월",
         "yearlyPrice": "$32",
         "feature1": "무제한 프로젝트",
-        "feature2": "무제한 대화",
-        "feature3": "100GB 저장공간",
+        "feature2": "월 5,000회 AI 질문",
+        "feature3": "20GB 저장공간",
         "feature4": "최신 AI 모델 고급 RAG",
         "feature5": "문서 이미지 분석",
         "feature6": "우선 지원",
@@ -421,7 +421,7 @@
       "subtitle": "WiseQuery에 대해 알아야 할 모든 것",
       "q1": {
         "question": "무료 플랜의 제한사항은 무엇인가요?",
-        "answer": "무료 플랜에는 3개 프로젝트, 30개 대화, 10GB 저장공간이 포함되며 30일 데이터 보존 기간이 있습니다. 기본 RAG 검색과 모든 핵심 기능에 완전히 액세스할 수 있습니다. 개인용 및 플랫폼 체험에 적합합니다."
+        "answer": "무료 플랜에는 3개 프로젝트, 월 50회 AI 질문, 250MB 저장공간이 포함되며 30일 데이터 보존 기간이 있습니다. 기본 RAG 검색과 모든 핵심 기능에 완전히 액세스할 수 있습니다. 개인용 및 플랫폼 체험에 적합합니다."
       },
       "q2": {
         "question": "어떤 파일 형식이 지원되나요?",
@@ -706,7 +706,6 @@
     "movingFolders": "{{count}}개 폴더 이동 중",
     "movingConversation": "대화 이동 중",
     "movingConversations": "{{count}}개 대화 이동 중",
-    "multipleConversationsMoved": "{{count}}개 대화가 이동되었습니다",
     "cannotMoveIntoSelf": "폴더를 자신 안으로 이동할 수 없습니다",
     "cannotMoveToDescendant": "폴더를 하위 폴더로 이동할 수 없습니다",
     "deleteMultipleConfirm": "선택한 {{count}}개 항목을 삭제하시겠습니까?",

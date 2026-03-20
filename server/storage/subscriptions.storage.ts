@@ -26,6 +26,45 @@ export class SubscriptionsMixin extends BaseStorage {
             .returning();
         return results[0];
     }
+
+    async checkAiQuota(userId: string): Promise<{ allowed: number; used: number; hasQuota: boolean }> {
+        const [sub] = await this.db.select().from(schema.subscriptions).where(eq(schema.subscriptions.userId, userId));
+        if (!sub) return { allowed: 50, used: 0, hasQuota: true };
+
+        // Check if billing cycle has reset
+        const now = new Date();
+        const cycleStart = new Date(sub.billingCycleStart);
+        const monthsPassed = (now.getFullYear() - cycleStart.getFullYear()) * 12 + now.getMonth() - cycleStart.getMonth();
+
+        if (monthsPassed > 0 || (monthsPassed === 0 && now.getDate() < cycleStart.getDate() && now.getTime() - cycleStart.getTime() > 28 * 24 * 60 * 60 * 1000)) {
+            // It's a new billing cycle, reset usage
+            await this.db.update(schema.subscriptions)
+                .set({ monthlyAiQueriesUsed: 0, billingCycleStart: now, updatedAt: now })
+                .where(eq(schema.subscriptions.userId, userId));
+            return { allowed: sub.monthlyAiQueriesAllowed, used: 0, hasQuota: sub.monthlyAiQueriesAllowed === -1 || sub.monthlyAiQueriesAllowed > 0 };
+        }
+
+        const allowed = sub.monthlyAiQueriesAllowed;
+        const used = sub.monthlyAiQueriesUsed;
+        const hasQuota = allowed === -1 || used < allowed;
+
+        return { allowed, used, hasQuota };
+    }
+
+    async incrementAiUsage(userId: string): Promise<boolean> {
+        const [sub] = await this.db.select().from(schema.subscriptions).where(eq(schema.subscriptions.userId, userId));
+        if (!sub) return false;
+
+        if (sub.monthlyAiQueriesAllowed !== -1 && sub.monthlyAiQueriesUsed >= sub.monthlyAiQueriesAllowed) {
+            return false;
+        }
+
+        await this.db.update(schema.subscriptions)
+            .set({ monthlyAiQueriesUsed: sub.monthlyAiQueriesUsed + 1, updatedAt: new Date() })
+            .where(eq(schema.subscriptions.userId, userId));
+
+        return true;
+    }
 }
 
 export class FileChunksMixin extends BaseStorage {

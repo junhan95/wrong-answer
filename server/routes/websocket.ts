@@ -127,6 +127,12 @@ export function setupWebSocket(httpServer: Server): void {
           return;
         }
 
+        const quota = await storage.checkAiQuota(userId);
+        if (!quota.hasQuota) {
+          safeSend({ type: "error", error: "AI 서비스 한도에 도달했습니다. 관리자에게 문의하세요.", code: "insufficient_quota" });
+          return;
+        }
+
         // Fetch tagged file contents from database
         let taggedTextFiles: Array<{ name: string; content: string; mimeType: string }> = [];
         let taggedImageFiles: Array<{ name: string; dataUrl: string; mimeType: string }> = [];
@@ -826,19 +832,18 @@ FORMAT INSTRUCTIONS:
         }, userId);
 
         // Generate AI embedding in background - don't wait for it
-        generateEmbedding(fullResponse)
-          .then(async (aiEmbedding) => {
+        Promise.all([
+          generateEmbedding(fullResponse).then(async (aiEmbedding) => {
             try {
               await storage.updateMessageEmbedding(aiMessage.id, userId, JSON.stringify(aiEmbedding), aiEmbedding);
             } catch (storageError) {
               console.error("Failed to store AI message embedding:", storageError);
-              safeSend({
-                type: "error",
-                error: "Failed to save AI response embedding. RAG search may not include this response."
-              });
+              safeSend({ type: "error", error: "Failed to save AI response embedding. RAG search may not include this response." });
             }
-          })
-          .catch((embeddingError: any) => {
+          }),
+          storage.incrementAiUsage(userId)
+        ]).catch((embeddingError: any) => {
+
             console.error("Failed to generate embedding for AI response:", embeddingError);
             if (embeddingError.code === 'insufficient_quota') {
               safeSend({

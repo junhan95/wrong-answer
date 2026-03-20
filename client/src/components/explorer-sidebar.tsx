@@ -503,8 +503,8 @@ export function ExplorerSidebar({
 
   const { data: subscriptionData } = useQuery<{
     subscription: { plan: string };
-    usage: { projects: number; conversations: number; aiQueries: number; storageGB: number };
-    limits: { projects: number; conversations: number; aiQueries: number; storageGB: number };
+    usage: { projects: number; conversations: number; aiQueries: number; storageMB: number };
+    limits: { projects: number; conversations: number; aiQueries: number; storageMB: number };
   }>({
     queryKey: ["/api/subscription"],
     enabled: isAuthenticated,
@@ -719,20 +719,40 @@ export function ExplorerSidebar({
 
         {/* Usage Display Section */}
         {isAuthenticated && subscriptionData && (
-          <div className="border-t border-sidebar-border px-3 py-2" data-testid="usage-display">
-            <div className="flex items-center gap-2">
-              {subscriptionData.limits.storageGB > 0 && (
-                <div className="flex-1">
-                  <Progress
-                    value={Math.min((subscriptionData.usage.storageGB / subscriptionData.limits.storageGB) * 100, 100)}
-                    className="h-2"
-                    data-testid="progress-storage"
-                  />
-                </div>
+          <div className="border-t border-sidebar-border px-3 py-3 space-y-3" data-testid="usage-display">
+            {/* AI Queries Progress */}
+            <div className="space-y-1.5">
+              <div className="flex justify-between items-center text-[10px] text-muted-foreground uppercase tracking-wider font-semibold">
+                <span>AI 질문</span>
+                <span>{subscriptionData.usage.aiQueries} / {subscriptionData.limits.aiQueries > 0 ? subscriptionData.limits.aiQueries : '∞'}</span>
+              </div>
+              {subscriptionData.limits.aiQueries > 0 && (
+                <Progress
+                  value={Math.min((subscriptionData.usage.aiQueries / subscriptionData.limits.aiQueries) * 100, 100)}
+                  className="h-1.5"
+                  data-testid="progress-ai-queries"
+                />
               )}
-              <span className="text-xs text-muted-foreground whitespace-nowrap" data-testid="text-usage">
-                ({subscriptionData.usage.storageGB}/{subscriptionData.limits.storageGB > 0 ? subscriptionData.limits.storageGB : '∞'}GB) ({subscriptionData.usage.aiQueries}/{subscriptionData.limits.aiQueries > 0 ? subscriptionData.limits.aiQueries : '∞'})
-              </span>
+            </div>
+
+            {/* Storage Progress */}
+            <div className="space-y-1.5">
+              <div className="flex justify-between items-center text-[10px] text-muted-foreground uppercase tracking-wider font-semibold">
+                <span>공간</span>
+                <span>
+                  {subscriptionData.usage.storageMB >= 1024 ? `${(subscriptionData.usage.storageMB / 1024).toFixed(1).replace('.0', '')}GB` : `${Math.round(subscriptionData.usage.storageMB)}MB`} / 
+                  {subscriptionData.limits.storageMB > 0 
+                    ? (subscriptionData.limits.storageMB >= 1024 ? ` ${(subscriptionData.limits.storageMB / 1024).toFixed(1).replace('.0', '')}GB` : ` ${subscriptionData.limits.storageMB}MB`) 
+                    : ' ∞'}
+                </span>
+              </div>
+              {subscriptionData.limits.storageMB > 0 && (
+                <Progress
+                  value={Math.min((subscriptionData.usage.storageMB / subscriptionData.limits.storageMB) * 100, 100)}
+                  className="h-1.5"
+                  data-testid="progress-storage"
+                />
+              )}
             </div>
           </div>
         )}
