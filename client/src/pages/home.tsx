@@ -1,5 +1,5 @@
 import { useState, useCallback, useRef, useEffect, lazy, Suspense } from "react";
-import { useQuery, useMutation } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { PanelGroup, Panel, PanelResizeHandle } from "react-resizable-panels";
 
 // Lazy load main panel components for faster initial load
@@ -23,6 +23,8 @@ import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import { useTranslation } from "react-i18next";
 import { queryClient, apiRequest } from "@/lib/queryClient";
+import { useMutations } from "@/hooks/use-mutations";
+import { useWebSocketChat } from "@/hooks/use-websocket-chat";
 import type { Project, Conversation, Message, SearchResult, Folder } from "@shared/schema";
 
 // Lazy load dialogs - only loaded when needed
@@ -113,11 +115,6 @@ export default function Home() {
   const [expandedFolderIds, setExpandedFolderIds] = useState<Set<string>>(new Set());
   const [navigationHistory, setNavigationHistory] = useState<string[]>([]);
   const [historyIndex, setHistoryIndex] = useState(-1);
-  const [contextSources, setContextSources] = useState<SearchResult[] | undefined>(undefined);
-  const [streamingMessage, setStreamingMessage] = useState<{
-    role: string;
-    content: string;
-  } | null>(null);
   const highlightTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const highlightPendingRef = useRef(false);
 
@@ -158,14 +155,6 @@ export default function Home() {
     url: string;
     type?: "file" | "conversation"; // 파일 또는 대화 구분
   }>>([]);
-  const [conversionStatus, setConversionStatus] = useState<{
-    isConverting: boolean;
-    currentFile: string | null;
-    results: Array<{
-      originalFile: { id: string; name: string };
-      convertedFile: { id: string; name: string; size: number; downloadUrl: string };
-    }>;
-  }>({ isConverting: false, currentFile: null, results: [] });
 
   const { data: projectsData = [], isLoading: projectsLoading } = useQuery<Project[]>({
     queryKey: ["/api/projects"],
@@ -245,555 +234,41 @@ export default function Home() {
     };
   }, []);
 
-  const createProjectMutation = useMutation({
-    mutationFn: async (name: string) => {
-      return await apiRequest("POST", "/api/projects", { name });
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/projects"] });
-      queryClient.invalidateQueries({ queryKey: ["/api/subscription"] });
-      toast({ title: t('home.projectCreated') });
-    },
+  const {
+    createProjectMutation,
+    updateProjectMutation,
+    deleteProjectMutation,
+    createFolderMutation,
+    updateFolderMutation,
+    deleteFolderMutation,
+    createConversationMutation,
+    updateConversationMutation,
+    updateConversationSettingsMutation,
+    moveConversationMutation,
+    moveFolderMutation,
+    reorderProjectsMutation,
+    deleteConversationMutation,
+  } = useMutations({ selectedConversationId, setSelectedConversationId });
+
+  const {
+    isStreaming,
+    setIsStreaming,
+    streamingMessage,
+    setStreamingMessage,
+    optimisticUserMessage,
+    setOptimisticUserMessage,
+    contextSources,
+    conversionStatus,
+    wsRef,
+    currentConversationIdRef,
+    sendMessage,
+  } = useWebSocketChat({
+    selectedConversationId,
+    fileViewerProjectId,
+    subscriptionData,
+    setUpgradeLimitType,
+    setUpgradeLimitOpen,
   });
-
-  const updateProjectMutation = useMutation({
-    mutationFn: async ({ id, name }: { id: string; name: string }) => {
-      return await apiRequest("PATCH", `/api/projects/${id}`, { name });
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/projects"] });
-      toast({ title: t('home.projectRenamed') });
-    },
-  });
-
-  const deleteProjectMutation = useMutation({
-    mutationFn: async (id: string) => {
-      return await apiRequest("DELETE", `/api/projects/${id}`, undefined);
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/projects"] });
-      queryClient.invalidateQueries({ queryKey: ["/api/conversations"] });
-      queryClient.invalidateQueries({ queryKey: ["/api/subscription"] });
-      toast({ title: t('home.projectDeleted') });
-    },
-  });
-
-  const createFolderMutation = useMutation({
-    mutationFn: async ({ projectId, name, parentFolderId }: { projectId: string; name: string; parentFolderId?: string }) => {
-      return await apiRequest("POST", "/api/folders", { projectId, name, parentFolderId });
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/folders"] });
-      toast({ title: t('home.folderCreated') });
-    },
-  });
-
-  const updateFolderMutation = useMutation({
-    mutationFn: async ({ id, name }: { id: string; name: string }) => {
-      return await apiRequest("PATCH", `/api/folders/${id}`, { name });
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/folders"] });
-      toast({ title: t('home.folderRenamed') });
-    },
-  });
-
-  const deleteFolderMutation = useMutation({
-    mutationFn: async (id: string) => {
-      return await apiRequest("DELETE", `/api/folders/${id}`, undefined);
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/folders"] });
-      queryClient.invalidateQueries({ queryKey: ["/api/conversations"] });
-      toast({ title: t('home.folderDeleted') });
-    },
-  });
-
-  const createConversationMutation = useMutation({
-    mutationFn: async ({
-      projectId,
-      name,
-      description,
-      instructions,
-      files,
-      folderId
-    }: {
-      projectId: string;
-      name: string;
-      description?: string;
-      instructions?: string;
-      files?: File[];
-      folderId?: string;
-    }) => {
-      const conversation = await apiRequest("POST", "/api/conversations", {
-        projectId,
-        name,
-        description,
-        instructions,
-        folderId
-      }) as unknown as Conversation;
-
-      // Upload files if any
-      if (files && files.length > 0) {
-        const uploadResults = await Promise.allSettled(
-          files.map(async (file) => {
-            const formData = new FormData();
-            formData.append("file", file);
-
-            const res = await fetch(`/api/conversations/${conversation.id}/files`, {
-              method: "POST",
-              body: formData,
-              credentials: "include",
-            });
-
-            if (!res.ok) {
-              const errorText = await res.text();
-              throw new Error(file.name);
-            }
-
-            return res.json();
-          })
-        );
-
-        // Show appropriate toast based on results
-        const failedFiles = uploadResults
-          .filter(r => r.status === "rejected")
-          .map((f) => f.status === "rejected" ? f.reason.message : "");
-
-        if (failedFiles.length > 0) {
-          toast({
-            title: t('home.conversationCreated'),
-            description: t('home.uploadWarning', { files: failedFiles.join(", ") }),
-            variant: "default"
-          });
-        } else {
-          toast({ title: t('home.conversationCreated') });
-        }
-      } else {
-        toast({ title: t('home.conversationCreated') });
-      }
-
-      return conversation;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/conversations"] });
-      queryClient.invalidateQueries({ queryKey: ["/api/subscription"] });
-    },
-  });
-
-  const updateConversationMutation = useMutation({
-    mutationFn: async ({ id, name }: { id: string; name: string }) => {
-      return await apiRequest("PATCH", `/api/conversations/${id}`, { name });
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/conversations"] });
-      toast({ title: t('home.conversationRenamed') });
-    },
-  });
-
-  const updateConversationSettingsMutation = useMutation({
-    mutationFn: async ({
-      id,
-      name,
-      description,
-      instructions,
-      newFiles,
-      deleteFileIds
-    }: {
-      id: string;
-      name: string;
-      description?: string;
-      instructions?: string;
-      newFiles?: File[];
-      deleteFileIds?: string[];
-    }) => {
-      // Update conversation metadata
-      await apiRequest("PATCH", `/api/conversations/${id}`, {
-        name,
-        description,
-        instructions
-      });
-
-      // Delete files if any
-      if (deleteFileIds && deleteFileIds.length > 0) {
-        const deleteResults = await Promise.allSettled(
-          deleteFileIds.map(async (fileId) => {
-            const res = await fetch(`/api/files/${fileId}`, {
-              method: "DELETE",
-              credentials: "include",
-            });
-            if (!res.ok) {
-              throw new Error(`Failed to delete file ${fileId}`);
-            }
-            return res;
-          })
-        );
-
-        const failedDeletes = deleteResults.filter(r => r.status === "rejected");
-        if (failedDeletes.length > 0) {
-          throw new Error(`Failed to delete ${failedDeletes.length} file(s)`);
-        }
-      }
-
-      // Upload new files if any
-      if (newFiles && newFiles.length > 0) {
-        const uploadResults = await Promise.allSettled(
-          newFiles.map(async (file) => {
-            const formData = new FormData();
-            formData.append("file", file);
-
-            const res = await fetch(`/api/conversations/${id}/files`, {
-              method: "POST",
-              body: formData,
-              credentials: "include",
-            });
-
-            if (!res.ok) {
-              throw new Error(file.name);
-            }
-
-            return res.json();
-          })
-        );
-
-        // Show appropriate toast based on results
-        const failedFiles = uploadResults
-          .filter(r => r.status === "rejected")
-          .map((f) => f.status === "rejected" ? f.reason.message : "");
-
-        if (failedFiles.length > 0) {
-          toast({
-            title: t('home.conversationUpdated'),
-            description: t('home.uploadWarning', { files: failedFiles.join(", ") }),
-            variant: "default"
-          });
-        } else {
-          toast({ title: t('home.conversationUpdated') });
-        }
-      } else {
-        toast({ title: t('home.conversationUpdated') });
-      }
-    },
-    onSuccess: (_data, variables) => {
-      queryClient.invalidateQueries({ queryKey: ["/api/conversations"] });
-      queryClient.invalidateQueries({ queryKey: ["/api/conversations", variables.id, "files"] });
-    },
-    onError: (error) => {
-      toast({
-        title: t('home.conversationUpdateFailed'),
-        description: error instanceof Error ? error.message : t('home.unknownError'),
-        variant: "destructive"
-      });
-    },
-  });
-
-  const moveConversationMutation = useMutation({
-    mutationFn: async ({ id, projectId, folderId }: { id: string; projectId: string; folderId?: string | null }) => {
-      return await apiRequest("PATCH", `/api/conversations/${id}`, { projectId, folderId });
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/conversations"] });
-      toast({ title: t('home.conversationMoved') });
-    },
-  });
-
-  const moveFolderMutation = useMutation({
-    mutationFn: async ({ id, projectId, parentFolderId }: { id: string; projectId: string; parentFolderId?: string | null }) => {
-      return await apiRequest("PATCH", `/api/folders/${id}`, { projectId, parentFolderId });
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/folders"] });
-      queryClient.invalidateQueries({ queryKey: ["/api/conversations"] });
-      toast({ title: t('home.folderMoved') });
-    },
-  });
-
-  const reorderProjectsMutation = useMutation({
-    mutationFn: async (reorderedProjects: { id: string; order: number }[]) => {
-      return await Promise.all(
-        reorderedProjects.map(({ id, order }) =>
-          apiRequest("PATCH", `/api/projects/${id}`, { order })
-        )
-      );
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["/api/projects"],
-        refetchType: 'active'
-      });
-    },
-  });
-
-  const deleteConversationMutation = useMutation({
-    mutationFn: async (id: string) => {
-      return await apiRequest("DELETE", `/api/conversations/${id}`, undefined);
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/conversations"] });
-      queryClient.invalidateQueries({ queryKey: ["/api/subscription"] });
-      if (selectedConversationId) {
-        setSelectedConversationId(null);
-      }
-      toast({ title: t('home.conversationDeleted') });
-    },
-  });
-
-  const [isStreaming, setIsStreaming] = useState(false);
-  const [optimisticUserMessage, setOptimisticUserMessage] = useState<{
-    content: string;
-    timestamp: Date;
-  } | null>(null);
-
-  // WebSocket ref for persistent connection
-  const wsRef = useRef<WebSocket | null>(null);
-  const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const mountedRef = useRef(true);
-  const currentConversationIdRef = useRef(selectedConversationId);
-  const reconnectAttemptsRef = useRef(0);
-  const reconnectDelayRef = useRef(2000); // Start with 2 seconds
-  const fileViewerProjectIdRef = useRef<string | null>(fileViewerProjectId);
-  const maxReconnectAttempts = 10;
-  const maxReconnectDelay = 30000; // Max 30 seconds
-
-  // Update ref when selectedConversationId changes
-  useEffect(() => {
-    currentConversationIdRef.current = selectedConversationId;
-  }, [selectedConversationId]);
-
-  // Update ref when fileViewerProjectId changes
-  useEffect(() => {
-    fileViewerProjectIdRef.current = fileViewerProjectId;
-  }, [fileViewerProjectId]);
-
-  // Setup WebSocket connection
-  useEffect(() => {
-    mountedRef.current = true;
-
-    const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
-    const wsUrl = `${protocol}//${window.location.host}/ws/chat`;
-
-    const connectWS = () => {
-      if (!mountedRef.current) return;
-
-      // Check if page is visible - don't reconnect if user left the tab
-      if (document.visibilityState === "hidden") {
-        return;
-      }
-
-      // Check max reconnect attempts
-      if (reconnectAttemptsRef.current >= maxReconnectAttempts) {
-        toast({
-          title: "연결 실패",
-          description: "서버에 연결할 수 없습니다. 페이지를 새로고침해주세요.",
-          variant: "destructive",
-        });
-        return;
-      }
-
-      const ws = new WebSocket(wsUrl);
-      wsRef.current = ws;
-
-      ws.onopen = () => {
-        // Reset reconnect attempts and delay on successful connection
-        reconnectAttemptsRef.current = 0;
-        reconnectDelayRef.current = 2000;
-      };
-
-      ws.onmessage = async (event) => {
-        try {
-          const data = JSON.parse(event.data);
-
-          if (data.type === "context") {
-            setContextSources(data.sources);
-          } else if (data.type === "context_delayed") {
-            // RAG search completed after AI streaming started
-            // Update context sources with delayed results
-            setContextSources(data.sources);
-            console.log("[RAG] Delayed context received:", data.sources.length, "sources");
-          } else if (data.type === "content") {
-            setStreamingMessage((prev) => ({
-              role: "assistant",
-              content: (prev?.content || "") + data.content,
-            }));
-          } else if (data.type === "done") {
-            // Use ref to get current conversationId
-            const activeConversationId = currentConversationIdRef.current;
-            if (activeConversationId) {
-              // Wait for query to complete before clearing streaming state
-              // This prevents flickering when transitioning from streaming to stored messages
-              await queryClient.invalidateQueries({
-                queryKey: ["/api/messages", activeConversationId],
-              });
-            }
-            // Invalidate subscription cache to update AI query count
-            queryClient.invalidateQueries({ queryKey: ["/api/subscription"] });
-            setStreamingMessage(null);
-            setOptimisticUserMessage(null);
-            setIsStreaming(false);
-          } else if (data.type === "error") {
-            toast({ title: "오류 발생", description: data.error, variant: "destructive" });
-            setStreamingMessage(null);
-            setOptimisticUserMessage(null);
-            setIsStreaming(false);
-          } else if (data.type === "conversion_started") {
-            setConversionStatus(prev => ({
-              ...prev,
-              isConverting: true,
-              currentFile: data.filename,
-            }));
-            toast({
-              title: t("chat.conversion.started"),
-              description: data.filename,
-            });
-          } else if (data.type === "conversion_completed") {
-            const result = data.result;
-            if (result?.originalFile && result?.convertedFile) {
-              setConversionStatus(prev => ({
-                ...prev,
-                isConverting: false,
-                currentFile: null,
-                results: [...prev.results, result],
-              }));
-              toast({
-                title: t("chat.conversion.completed"),
-                description: result.convertedFile.name,
-              });
-              // Refresh file and project lists to show new PDF
-              queryClient.invalidateQueries({ queryKey: ["/api/projects"] });
-              const activeProjectId = fileViewerProjectIdRef.current;
-              if (activeProjectId) {
-                queryClient.invalidateQueries({ queryKey: ["/api/projects", activeProjectId, "files"] });
-              }
-            } else {
-              console.warn("Received incomplete conversion result:", data);
-            }
-          } else if (data.type === "conversion_error") {
-            setConversionStatus(prev => ({
-              ...prev,
-              isConverting: false,
-              currentFile: null,
-            }));
-            toast({
-              title: t("chat.conversion.error"),
-              description: data.filename,
-              variant: "destructive",
-            });
-          }
-        } catch (e) {
-          // Failed to parse message
-        }
-      };
-
-      ws.onerror = (error) => {
-        console.error("[WebSocket] Error:", error);
-        // Force close on error to trigger reconnection
-        if (ws.readyState !== WebSocket.CLOSED) {
-          ws.close();
-        }
-      };
-
-      ws.onclose = (event) => {
-        console.log(`[WebSocket] Closed: code=${event.code}, reason=${event.reason}`);
-        wsRef.current = null; // Clear the reference to ensure proper reconnection check
-
-        if (mountedRef.current && document.visibilityState === "visible") {
-          reconnectAttemptsRef.current += 1;
-
-          // Exponential backoff: double the delay each time, up to max
-          const currentDelay = reconnectDelayRef.current;
-          reconnectTimeoutRef.current = setTimeout(connectWS, currentDelay);
-
-          reconnectDelayRef.current = Math.min(currentDelay * 2, maxReconnectDelay);
-        }
-      };
-    };
-
-    // Handle page visibility change - reconnect immediately when user comes back
-    const handleVisibilityChange = () => {
-      if (document.visibilityState === "visible") {
-        // User came back to the tab
-        if (!wsRef.current || wsRef.current.readyState !== WebSocket.OPEN) {
-          // Reset attempts when user actively returns
-          reconnectAttemptsRef.current = 0;
-          reconnectDelayRef.current = 2000;
-          connectWS();
-        }
-      } else {
-        // User left the tab - cancel any pending reconnection
-        if (reconnectTimeoutRef.current) {
-          clearTimeout(reconnectTimeoutRef.current);
-          reconnectTimeoutRef.current = null;
-        }
-      }
-    };
-
-    document.addEventListener("visibilitychange", handleVisibilityChange);
-    connectWS();
-
-    return () => {
-      mountedRef.current = false;
-      document.removeEventListener("visibilitychange", handleVisibilityChange);
-      if (reconnectTimeoutRef.current) {
-        clearTimeout(reconnectTimeoutRef.current);
-      }
-      if (wsRef.current) {
-        wsRef.current.close();
-      }
-    };
-  }, []);
-
-  const sendMessage = async (message: string, attachments?: any[], taggedFilesParam?: any[]) => {
-    if (!selectedConversationId || !wsRef.current || wsRef.current.readyState !== WebSocket.OPEN) {
-      toast({ title: "연결 오류", description: "서버에 연결되지 않았습니다", variant: "destructive" });
-      return;
-    }
-
-    // Check AI query limit for non-unlimited plans
-    const plan = subscriptionData?.subscription?.plan || "free";
-    const aiQueryLimit = subscriptionData?.limits?.aiQueries ?? 30;
-    const currentAiQueries = subscriptionData?.usage?.aiQueries ?? 0;
-
-    // Free plan has limited AI queries, basic and pro are unlimited (limit = -1 or very high)
-    if (plan === "free" && aiQueryLimit > 0 && currentAiQueries >= aiQueryLimit) {
-      setUpgradeLimitType("aiQueries");
-      setUpgradeLimitOpen(true);
-      return;
-    }
-
-    setIsStreaming(true);
-    setContextSources(undefined);
-
-    // 태그된 파일이 있으면 메시지 앞에 파일 정보 추가 (백엔드 파싱용 @{} 형식 유지)
-    let fullMessage = message;
-    if (taggedFilesParam && taggedFilesParam.length > 0) {
-      const fileRefs = taggedFilesParam.map((f) => `@{${f.originalName}}`).join(" ");
-      fullMessage = `${fileRefs}\n\n${message}`;
-    }
-
-    // 사용자 메시지를 즉시 화면에 표시
-    setOptimisticUserMessage({
-      content: fullMessage,
-      timestamp: new Date(),
-    });
-
-    setStreamingMessage({ role: "assistant", content: "" });
-
-    try {
-      // Send message via WebSocket
-      wsRef.current.send(JSON.stringify({
-        conversationId: selectedConversationId,
-        content: fullMessage,
-        attachments,
-        taggedFiles: taggedFilesParam,
-      }));
-    } catch (error) {
-      console.error("Failed to send message:", error);
-      toast({ title: "메시지 전송 실패", variant: "destructive" });
-      setStreamingMessage(null);
-      setOptimisticUserMessage(null);
-      setIsStreaming(false);
-    }
-  };
 
   const handleProjectToggle = (projectId: string) => {
     setExpandedProjects((prev) => {

@@ -13,8 +13,6 @@ import {
   TouchSensor,
   useSensor,
   useSensors,
-  useDroppable,
-  useDraggable,
 } from "@dnd-kit/core";
 import {
   DropdownMenu,
@@ -56,14 +54,7 @@ import {
   Upload,
   Download,
   File as FileIcon,
-  FileText,
   FileImage,
-  FileVideo,
-  FileAudio,
-  FileArchive,
-  FileCode,
-  FileSpreadsheet,
-  Presentation,
   Scissors,
   Copy,
   ClipboardPaste,
@@ -87,260 +78,27 @@ import { GoogleDriveEditorModal } from "./google-drive-editor-modal";
 import { UpgradeLimitDialog } from "./upgrade-limit-dialog";
 import { MessageSquare, Info, ArrowDownAZ, ArrowUpAZ, Check } from "lucide-react";
 import { SiGoogledocs, SiGooglesheets, SiGoogleslides } from "react-icons/si";
-
-type ViewMode = "largeIcons" | "list" | "details";
-type SortBy = "name" | "date" | "type";
-type SortOrder = "asc" | "desc";
-type SelectedItemType = { type: "file"; id: string } | { type: "folder"; id: string } | { type: "conversation"; id: string } | null;
-
-interface SelectionRect {
-  startX: number;
-  startY: number;
-  endX: number;
-  endY: number;
-}
-
-type SelectedItems = {
-  files: Set<string>;
-  folders: Set<string>;
-  conversations: Set<string>;
-};
-
-interface FileViewerProps {
-  selectedProjectId: string | null;
-  selectedFolderId: string | null;
-  projects: Project[];
-  folders: Folder[];
-  conversations?: Conversation[];
-  onFolderNavigate?: (folderId: string | null, projectId: string) => void;
-  onConversationSelect?: (conversationId: string) => void;
-  onAttachFile?: (file: FileType) => void;
-  onTagConversation?: (conversation: Conversation) => void;
-  onConversationSettings?: (conversationId: string) => void;
-}
-
-function formatFileSize(bytes: number): string {
-  if (bytes < 1024) return `${bytes} B`;
-  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
-  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
-}
-
-function getFileIcon(mimeType: string, fileName?: string) {
-  if (mimeType.startsWith("image/")) return FileImage;
-  if (mimeType.startsWith("video/")) return FileVideo;
-  if (mimeType.startsWith("audio/")) return FileAudio;
-  if (mimeType.includes("zip") || mimeType.includes("archive") || mimeType.includes("compressed")) return FileArchive;
-  if (mimeType.includes("javascript") || mimeType.includes("typescript") || mimeType.includes("json") || mimeType.includes("xml") || mimeType.includes("html") || mimeType.includes("css")) return FileCode;
-  
-  const ext = fileName?.split('.').pop()?.toLowerCase();
-  if (mimeType.includes("spreadsheet") || mimeType.includes("excel") || ext === "xlsx" || ext === "xls" || ext === "csv") return FileSpreadsheet;
-  if (mimeType.includes("presentation") || mimeType.includes("powerpoint") || ext === "pptx" || ext === "ppt") return Presentation;
-  if (mimeType.includes("word") || mimeType.includes("document") || ext === "docx" || ext === "doc") return FileText;
-  if (mimeType.includes("pdf") || ext === "pdf") return FileText;
-  if (mimeType.startsWith("text/")) return FileText;
-  
-  return FileIcon;
-}
-
-function isImageFile(mimeType: string): boolean {
-  return mimeType.startsWith("image/");
-}
-
-const ICON_SIZES = [64, 96, 128, 160, 192, 256];
-const DEFAULT_ICON_SIZE_INDEX = 2;
-
-function getFileType(mimeType: string): string {
-  if (mimeType.startsWith("image/")) return "Image";
-  if (mimeType.startsWith("video/")) return "Video";
-  if (mimeType.startsWith("audio/")) return "Audio";
-  if (mimeType.includes("pdf")) return "PDF";
-  if (mimeType.includes("zip") || mimeType.includes("archive")) return "Archive";
-  if (mimeType.includes("javascript")) return "JavaScript";
-  if (mimeType.includes("typescript")) return "TypeScript";
-  if (mimeType.includes("json")) return "JSON";
-  if (mimeType.includes("html")) return "HTML";
-  if (mimeType.includes("css")) return "CSS";
-  if (mimeType.startsWith("text/")) return "Text";
-  return "File";
-}
-
-// Draggable wrapper for file items
-function DraggableFileItem({ 
-  fileId, 
-  isDragging,
-  isMultiSelected,
-  isDndActiveRef,
-  lastDragEndTimeRef,
-  children 
-}: { 
-  fileId: string; 
-  isDragging: boolean;
-  isMultiSelected: boolean;
-  isDndActiveRef: React.MutableRefObject<boolean>;
-  lastDragEndTimeRef: React.MutableRefObject<number>;
-  children: React.ReactNode;
-}) {
-  const { attributes, listeners, setNodeRef, transform } = useDraggable({
-    id: `draggable-file-${fileId}`,
-  });
-  
-  // Ghost styling for dragged items - NO pointer-events:none so drop targets still work
-  const ghostStyles: React.CSSProperties = isDragging ? {
-    opacity: 0.25,
-    border: '2px dashed hsl(var(--primary) / 0.5)',
-    borderRadius: '0.5rem',
-  } : {};
-  
-  // Don't apply transform to original - DragOverlay handles visual drag
-  const style: React.CSSProperties = ghostStyles;
-  
-  // Prevent click from clearing selection when multi-selected or during/after drag
-  const handleClick = (e: React.MouseEvent) => {
-    const timeSinceLastDrag = Date.now() - lastDragEndTimeRef.current;
-    // Use refs directly to get latest values
-    if (isMultiSelected || isDndActiveRef.current || timeSinceLastDrag < 500) {
-      e.stopPropagation();
-    }
-  };
-  
-  return (
-    <div 
-      ref={setNodeRef} 
-      style={style} 
-      {...attributes}
-      {...listeners}
-      onClickCapture={handleClick}
-    >
-      {children}
-    </div>
-  );
-}
-
-// Droppable wrapper for folder items
-function DroppableFolderItem({ 
-  folderId, 
-  isOver,
-  children 
-}: { 
-  folderId: string; 
-  isOver: boolean;
-  children: React.ReactNode;
-}) {
-  const { setNodeRef } = useDroppable({
-    id: `droppable-folder-${folderId}`,
-  });
-  
-  return (
-    <div 
-      ref={setNodeRef} 
-      className={isOver ? "ring-2 ring-primary rounded-lg" : ""}
-    >
-      {children}
-    </div>
-  );
-}
-
-// Draggable wrapper for folder items
-function DraggableFolderItem({ 
-  folderId, 
-  isDragging,
-  isMultiSelected,
-  isDndActiveRef,
-  lastDragEndTimeRef,
-  children 
-}: { 
-  folderId: string; 
-  isDragging: boolean;
-  isMultiSelected: boolean;
-  isDndActiveRef: React.MutableRefObject<boolean>;
-  lastDragEndTimeRef: React.MutableRefObject<number>;
-  children: React.ReactNode;
-}) {
-  const { attributes, listeners, setNodeRef, transform } = useDraggable({
-    id: `draggable-folder-${folderId}`,
-  });
-  
-  // Ghost styling - NO pointer-events:none so drop targets still work
-  const ghostStyles: React.CSSProperties = isDragging ? {
-    opacity: 0.25,
-    border: '2px dashed hsl(var(--primary) / 0.5)',
-    borderRadius: '0.5rem',
-  } : {};
-  
-  // Don't apply transform to original - DragOverlay handles visual drag
-  const style: React.CSSProperties = ghostStyles;
-  
-  // Prevent click from clearing selection when multi-selected or during/after drag
-  const handleClick = (e: React.MouseEvent) => {
-    const timeSinceLastDrag = Date.now() - lastDragEndTimeRef.current;
-    if (isMultiSelected || isDndActiveRef.current || timeSinceLastDrag < 500) {
-      e.stopPropagation();
-    }
-  };
-  
-  return (
-    <div 
-      ref={setNodeRef} 
-      style={style} 
-      {...attributes}
-      {...listeners}
-      onClickCapture={handleClick}
-    >
-      {children}
-    </div>
-  );
-}
-
-// Draggable wrapper for conversation items
-function DraggableConversationItem({ 
-  conversationId, 
-  isDragging,
-  isMultiSelected,
-  isDndActiveRef,
-  lastDragEndTimeRef,
-  children 
-}: { 
-  conversationId: string; 
-  isDragging: boolean;
-  isMultiSelected: boolean;
-  isDndActiveRef: React.MutableRefObject<boolean>;
-  lastDragEndTimeRef: React.MutableRefObject<number>;
-  children: React.ReactNode;
-}) {
-  const { attributes, listeners, setNodeRef, transform } = useDraggable({
-    id: `draggable-conversation-${conversationId}`,
-  });
-  
-  // Ghost styling - NO pointer-events:none so drop targets still work
-  const ghostStyles: React.CSSProperties = isDragging ? {
-    opacity: 0.25,
-    border: '2px dashed hsl(var(--primary) / 0.5)',
-    borderRadius: '0.5rem',
-  } : {};
-  
-  // Don't apply transform to original - DragOverlay handles visual drag
-  const style: React.CSSProperties = ghostStyles;
-  
-  // Prevent click from clearing selection when multi-selected or during/after drag
-  const handleClick = (e: React.MouseEvent) => {
-    const timeSinceLastDrag = Date.now() - lastDragEndTimeRef.current;
-    if (isMultiSelected || isDndActiveRef.current || timeSinceLastDrag < 500) {
-      e.stopPropagation();
-    }
-  };
-  
-  return (
-    <div 
-      ref={setNodeRef} 
-      style={style} 
-      {...attributes}
-      {...listeners}
-      onClickCapture={handleClick}
-    >
-      {children}
-    </div>
-  );
-}
+import {
+  type ViewMode,
+  type SortBy,
+  type SortOrder,
+  type SelectedItemType,
+  type SelectionRect,
+  type SelectedItems,
+  type FileViewerProps,
+  ICON_SIZES,
+  DEFAULT_ICON_SIZE_INDEX,
+  formatFileSize,
+  getFileIcon,
+  isImageFile,
+  getFileType,
+} from "./file-viewer-utils";
+import {
+  DraggableFileItem,
+  DroppableFolderItem,
+  DraggableFolderItem,
+  DraggableConversationItem,
+} from "./draggable-items";
 
 export function FileViewer({
   selectedProjectId,

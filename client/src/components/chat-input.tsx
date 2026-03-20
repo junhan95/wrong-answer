@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { Send, Paperclip, X, Image as ImageIcon, File, AtSign, Square } from "lucide-react";
+import { Send, Paperclip, X, Image as ImageIcon, File as FileIcon, AtSign, Square } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
@@ -226,7 +226,7 @@ export function ChatInput({
               {attachment.mimeType.startsWith("image/") ? (
                 <ImageIcon className="h-4 w-4 text-muted-foreground" />
               ) : (
-                <File className="h-4 w-4 text-muted-foreground" />
+                <FileIcon className="h-4 w-4 text-muted-foreground" />
               )}
               <span className="text-sm truncate max-w-[200px]">
                 {attachment.originalName}
