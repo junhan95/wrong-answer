@@ -810,14 +810,14 @@
       "relatedConversations": "Related Conversations"
     },
     "upgradeLimitDialog": {
-      "title": "Upgrade Required",
+      "title": "Upgrade Limit",
       "projectsLimitReached": "You've reached the limit of {{max}} projects on your current plan. You currently have {{current}} projects.",
       "conversationsLimitReached": "You've reached the limit of {{max}} conversations on your current plan. You currently have {{current}} conversations.",
       "aiQueriesLimitReached": "You've reached the limit of {{max}} AI queries on your current plan. You have used {{current}} AI queries.",
       "storageLimitReached": "You've reached the storage limit of {{max}} on your current plan. You are currently using {{current}}.",
       "upgradeMessage": "Upgrade your plan to unlock more features:",
-      "upgradeToBasic": "Upgrade to Basic for 10 projects, unlimited conversations, and 50GB storage.",
-      "upgradeToPro": "Upgrade to Pro for unlimited projects, unlimited conversations, 100GB storage, and image generation.",
+      "upgradeToBasic": "Upgrade to Basic for 10 projects, unlimited conversations, and 5GB storage.",
+      "upgradeToPro": "Upgrade to Pro for unlimited projects, unlimited conversations, 20GB storage, and image generation.",
       "upgradeToCustom": "Contact us for custom limits tailored to your needs.",
       "benefits": {
         "moreProjects": "More projects",
@@ -1372,7 +1372,7 @@
       },
       "vulnerability": {
         "title": "Vulnerability Disclosure",
-        "content": "We welcome responsible disclosure of security vulnerabilities:\n\n• Please report security issues to security@wisequery.app\n\n• Include detailed steps to reproduce the vulnerability\n\n• Allow reasonable time for us to address the issue before public disclosure\n\n• Do not access or modify other users' data during research\n\nWe appreciate the security research community's help in keeping WiseQuery safe."
+        "content": "We welcome responsible disclosure of security vulnerabilities:\n\n• Please report security issues to security@wisequery.app\n\n• Include detailed steps to reproduce the vulnerability\n\n• Allow reasonable time for us to address the issue before public disclosure\n\n• Do not access or modify other users' data during research\n\n• Do not access or modify other users' data during research\n\nWe appreciate the security research community's help in keeping WiseQuery safe."
       }
     },
     "report": {
@@ -1412,8 +1412,8 @@
         "description": "Perfect for trying out WiseQuery.",
         "features": {
           "projects": "3 projects",
-          "conversations": "30 conversations",
-          "storage": "10GB storage",
+          "conversations": "Unlimited conversations (50 AI queries/mo)",
+          "storage": "250MB storage",
           "rag": "Basic RAG search",
           "retention": "30-day conversation / 60-day file retention"
         },
@@ -1425,8 +1425,8 @@
         "description": "Great for personal use.",
         "features": {
           "projects": "10 projects",
-          "conversations": "Unlimited conversations",
-          "storage": "50GB storage",
+          "conversations": "Unlimited conversations (1,000 AI queries/mo)",
+          "storage": "5GB storage",
           "rag": "Basic RAG search",
           "retention": "180-day data retention"
         },
@@ -1438,8 +1438,8 @@
         "description": "Everything you need for serious work.",
         "features": {
           "projects": "Unlimited projects",
-          "conversations": "Unlimited conversations",
-          "storage": "100GB storage",
+          "conversations": "Unlimited conversations (5,000 AI queries/mo)",
+          "storage": "20GB storage",
           "rag": "Advanced RAG with GPT-5",
           "image_gen": "Nano Banana Pro image generation",
           "priority_support": "Priority support",
@@ -1477,8 +1477,8 @@
       "values": {
         "free": {
           "projects": "3",
-          "conversations": "30",
-          "storage": "10GB",
+          "conversations": "Unlimited (50 AI queries/mo)",
+          "storage": "250MB",
           "data_retention": "30/60 days",
           "rag_search": "Basic",
           "image_generation": "No",
@@ -1487,8 +1487,8 @@
         },
         "basic": {
           "projects": "10",
-          "conversations": "Unlimited",
-          "storage": "50GB",
+          "conversations": "Unlimited (1,000 AI queries/mo)",
+          "storage": "5GB",
           "data_retention": "180 days",
           "rag_search": "Basic",
           "image_generation": "No",
@@ -1497,8 +1497,8 @@
         },
         "pro": {
           "projects": "Unlimited",
-          "conversations": "Unlimited",
-          "storage": "100GB",
+          "conversations": "Unlimited (5,000 AI queries/mo)",
+          "storage": "20GB",
           "data_retention": "1 year",
           "rag_search": "Advanced",
           "image_generation": "Yes",

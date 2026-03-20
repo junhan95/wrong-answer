@@ -816,8 +816,8 @@
       "aiQueriesLimitReached": "현재 플랜의 AI 대화 한도({{max}}개)에 도달했습니다. 현재 {{current}}개의 AI 대화를 사용했습니다.",
       "storageLimitReached": "현재 플랜의 저장공간 한도({{max}})에 도달했습니다. 현재 {{current}}를 사용 중입니다.",
       "upgradeMessage": "플랜을 업그레이드하여 더 많은 기능을 사용하세요:",
-      "upgradeToBasic": "베이직으로 업그레이드하여 10개 프로젝트, 무제한 대화, 50GB 저장공간을 이용하세요.",
-      "upgradeToPro": "프로로 업그레이드하여 무제한 프로젝트, 무제한 대화, 100GB 저장공간, 이미지 생성을 이용하세요.",
+      "upgradeToBasic": "베이직으로 업그레이드하여 10개 프로젝트, 무제한 대화, 5GB 저장공간을 이용하세요.",
+      "upgradeToPro": "프로로 업그레이드하여 무제한 프로젝트, 무제한 대화, 20GB 저장공간, 이미지 생성을 이용하세요.",
       "upgradeToCustom": "맞춤형 한도가 필요하시면 문의해 주세요.",
       "benefits": {
         "moreProjects": "더 많은 프로젝트",
@@ -1412,8 +1412,8 @@
         "description": "WiseQuery를 체험해 보세요.",
         "features": {
           "projects": "3개 프로젝트",
-          "conversations": "30개 대화",
-          "storage": "10GB 저장공간",
+          "conversations": "무제한 대화 (월 50회 AI 질문)",
+          "storage": "250MB 저장공간",
           "rag": "기본 RAG 검색",
           "retention": "대화 30일 / 파일 60일 보존"
         },
@@ -1425,8 +1425,8 @@
         "description": "개인 사용에 적합합니다.",
         "features": {
           "projects": "10개 프로젝트",
-          "conversations": "무제한 대화",
-          "storage": "50GB 저장공간",
+          "conversations": "무제한 대화 (월 1,000회 AI 질문)",
+          "storage": "5GB 저장공간",
           "rag": "기본 RAG 검색",
           "retention": "180일 데이터 보존"
         },
@@ -1438,8 +1438,8 @@
         "description": "본격적인 작업에 필요한 모든 것.",
         "features": {
           "projects": "무제한 프로젝트",
-          "conversations": "무제한 대화",
-          "storage": "100GB 저장공간",
+          "conversations": "무제한 대화 (월 5,000회 AI 질문)",
+          "storage": "20GB 저장공간",
           "rag": "GPT-5 기반 고급 RAG",
           "image_gen": "Nano Banana Pro 이미지 생성",
           "priority_support": "우선 지원",
@@ -1477,8 +1477,8 @@
       "values": {
         "free": {
           "projects": "3개",
-          "conversations": "30개",
-          "storage": "10GB",
+          "conversations": "무제한 (월 50회 AI 질문)",
+          "storage": "250MB",
           "data_retention": "30/60일",
           "rag_search": "기본",
           "image_generation": "불가",
@@ -1487,8 +1487,8 @@
         },
         "basic": {
           "projects": "10개",
-          "conversations": "무제한",
-          "storage": "50GB",
+          "conversations": "무제한 (월 1,000회 AI 질문)",
+          "storage": "5GB",
           "data_retention": "180일",
           "rag_search": "기본",
           "image_generation": "불가",
@@ -1497,8 +1497,8 @@
         },
         "pro": {
           "projects": "무제한",
-          "conversations": "무제한",
-          "storage": "100GB",
+          "conversations": "무제한 (월 5,000회 AI 질문)",
+          "storage": "20GB",
           "data_retention": "1년",
           "rag_search": "고급",
           "image_generation": "가능",
