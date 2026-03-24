@@ -165,4 +165,60 @@ router.post("/subscription/downgrade", isAuthenticated, async (req, res) => {
     }
 });
 
+// Apply promotion code
+const PROMO_CODES: Record<string, { plan: string; durationDays: number }> = {
+    "Wisequery Open Beta": { plan: "pro", durationDays: 30 },
+};
+
+router.post("/subscription/promo", isAuthenticated, async (req, res) => {
+    try {
+        const user = req.user as any;
+        const userId = user?.id;
+        if (!userId) {
+            return res.status(401).json({ error: "Not authenticated" });
+        }
+
+        const { code } = req.body;
+        if (!code || typeof code !== "string") {
+            return res.status(400).json({ error: "Promotion code is required" });
+        }
+
+        const promo = PROMO_CODES[code.trim()];
+        if (!promo) {
+            return res.status(400).json({ error: "INVALID_CODE" });
+        }
+
+        const subscription = await storage.getSubscription(userId);
+        const currentPlan = subscription?.plan || "free";
+        const planOrder: Record<string, number> = { free: 0, basic: 1, pro: 2, custom: 3 };
+
+        if ((planOrder[currentPlan] ?? 0) >= (planOrder[promo.plan] ?? 0)) {
+            return res.status(400).json({ error: "ALREADY_HIGHER" });
+        }
+
+        const planLimits = PLAN_LIMITS[promo.plan as keyof typeof PLAN_LIMITS] ?? PLAN_LIMITS.free;
+        const billingStart = new Date();
+        const billingEnd = new Date(billingStart.getTime() + promo.durationDays * 24 * 60 * 60 * 1000);
+
+        await storage.updateSubscription(userId, {
+            plan: promo.plan,
+            monthlyAiQueriesAllowed: planLimits.aiQueries,
+            monthlyAiQueriesUsed: 0,
+            billingCycleStart: billingStart,
+            billingCycleEnd: billingEnd,
+            pendingPlan: "free",
+        });
+
+        res.json({
+            success: true,
+            plan: promo.plan,
+            billingCycleStart: billingStart,
+            billingCycleEnd: billingEnd,
+        });
+    } catch (error) {
+        console.error("Error applying promo code:", error);
+        res.status(500).json({ error: "Failed to apply promotion code" });
+    }
+});
+
 export default router;

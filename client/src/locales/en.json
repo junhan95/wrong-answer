@@ -1679,7 +1679,14 @@
       "cancelPending": "Cancel Scheduled Change",
       "cancelPendingSuccess": "Scheduled plan change has been cancelled.",
       "cancelScheduledNote": "Your current plan will remain active until {{date}}, after which it will change to Free.",
-      "downgradeScheduledNote": "Your current plan will remain active until {{date}}, after which it will change to Basic."
+      "downgradeScheduledNote": "Your current plan will remain active until {{date}}, after which it will change to Basic.",
+      "promoTitle": "Promotion Code",
+      "promoPlaceholder": "Enter promotion code",
+      "promoApply": "Apply",
+      "promoSuccess": "Promotion code applied! Pro plan is now active.",
+      "promoInvalid": "Invalid promotion code.",
+      "promoAlreadyHigher": "Your current plan is already equal or higher.",
+      "promoFailed": "Failed to apply promotion code."
     },
     "account": {
       "tab": "Account",
