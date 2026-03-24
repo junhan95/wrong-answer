@@ -61,7 +61,15 @@ export default function Pricing() {
   });
 
   const handleCheckout = (plan: string) => {
-    setLocation("/contact");
+    if (plan === "custom") {
+      setLocation("/contact");
+      return;
+    }
+    if (!isAuthenticated) {
+      setLocation("/login");
+      return;
+    }
+    setLocation(`/checkout?plan=${plan}`);
   };
 
   const currentPlan = subscriptionData?.subscription?.plan || "free";

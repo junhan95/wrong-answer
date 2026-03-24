@@ -25,6 +25,9 @@ const Terms = lazy(() => import("@/pages/terms"));
 const Security = lazy(() => import("@/pages/security"));
 const Login = lazy(() => import("@/pages/login"));
 const NotFound = lazy(() => import("@/pages/not-found"));
+const Checkout = lazy(() => import("@/pages/checkout"));
+const PaymentSuccess = lazy(() => import("@/pages/payment-success"));
+const PaymentFail = lazy(() => import("@/pages/payment-fail"));
 
 function PageLoader() {
   return (
@@ -71,6 +74,9 @@ function Router() {
         <Route path="/terms" component={Terms} />
         <Route path="/security" component={Security} />
         <Route path="/login" component={Login} />
+        <Route path="/checkout" component={Checkout} />
+        <Route path="/payment/success" component={PaymentSuccess} />
+        <Route path="/payment/fail" component={PaymentFail} />
         <Route component={NotFound} />
       </Switch>
     </Suspense>

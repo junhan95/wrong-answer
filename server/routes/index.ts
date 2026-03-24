@@ -7,3 +7,4 @@ export { default as searchRouter } from "./search.routes";
 export { default as subscriptionRouter } from "./subscription.routes";
 export { default as adminRouter } from "./admin.routes";
 export { default as trashRouter } from "./trash.routes";
+export { default as paymentRouter } from "./payment.routes";

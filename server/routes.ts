@@ -18,6 +18,7 @@ import {
   subscriptionRouter,
   adminRouter,
   trashRouter,
+  paymentRouter,
 } from "./routes/index";
 import chatRouter from "./routes/chat.routes";
 
@@ -43,6 +44,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.use("/api", subscriptionRouter);
   app.use("/api", adminRouter);
   app.use("/api", trashRouter);
+  app.use("/api", paymentRouter);
 
   // Chat SSE streaming
   app.use("/api", chatRouter);

@@ -35,3 +35,9 @@ services:
         sync: false
       - key: KAKAO_CLIENT_SECRET
         sync: false
+      - key: TOSS_CLIENT_KEY
+        sync: false
+      - key: TOSS_SECRET_KEY
+        sync: false
+      - key: VITE_TOSS_CLIENT_KEY
+        sync: false
