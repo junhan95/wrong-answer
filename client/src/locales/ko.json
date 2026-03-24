@@ -1679,7 +1679,14 @@
       "cancelPending": "예약 취소",
       "cancelPendingSuccess": "플랜 변경 예약이 취소되었습니다.",
       "cancelScheduledNote": "현재 플랜은 {{date}}까지 유지되며, 이후 Free 플랜으로 변경됩니다.",
-      "downgradeScheduledNote": "현재 플랜은 {{date}}까지 유지되며, 이후 Basic 플랜으로 변경됩니다."
+      "downgradeScheduledNote": "현재 플랜은 {{date}}까지 유지되며, 이후 Basic 플랜으로 변경됩니다.",
+      "promoTitle": "프로모션 코드",
+      "promoPlaceholder": "프로모션 코드를 입력하세요",
+      "promoApply": "적용",
+      "promoSuccess": "프로모션 코드가 적용되었습니다! Pro 플랜이 활성화되었습니다.",
+      "promoInvalid": "유효하지 않은 프로모션 코드입니다.",
+      "promoAlreadyHigher": "현재 플랜이 프로모션 플랜보다 높거나 동일합니다.",
+      "promoFailed": "프로모션 코드 적용에 실패했습니다."
     },
     "account": {
       "tab": "계정",

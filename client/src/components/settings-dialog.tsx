@@ -20,7 +20,7 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { User, CreditCard, Crown, Camera, AlertTriangle, ArrowDown, X, Trash2, Download, Shield, Calendar, Clock, Monitor, Chrome, FileText, ExternalLink } from "lucide-react";
+import { User, CreditCard, Crown, Camera, AlertTriangle, ArrowDown, X, Trash2, Download, Shield, Calendar, Clock, Monitor, Chrome, FileText, ExternalLink, Gift } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 interface SettingsPanelProps {
@@ -42,6 +42,8 @@ export function SettingsPanel({ onClose }: SettingsPanelProps) {
     const [deleteAccountDialogOpen, setDeleteAccountDialogOpen] = useState(false);
     const [deleteConfirmText, setDeleteConfirmText] = useState("");
     const [googleDocsDialogOpen, setGoogleDocsDialogOpen] = useState(false);
+    const [promoCode, setPromoCode] = useState("");
+    const [promoError, setPromoError] = useState("");
     const [pwaInstallPrompt, setPwaInstallPrompt] = useState<any>(null);
     const [pwaInstalled, setPwaInstalled] = useState(false);
 
@@ -164,6 +166,32 @@ export function SettingsPanel({ onClose }: SettingsPanelProps) {
         },
         onError: () => {
             toast({ title: t("settings.account.deleteFailed"), variant: "destructive" });
+        },
+    });
+
+    const promoMutation = useMutation({
+        mutationFn: async (code: string) => {
+            const res = await apiRequest("POST", "/api/subscription/promo", { code });
+            if (!res.ok) {
+                const body = await res.json();
+                throw new Error(body.error);
+            }
+            return res.json();
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["/api/subscription"] });
+            setPromoCode("");
+            setPromoError("");
+            toast({ title: t("settings.membership.promoSuccess") });
+        },
+        onError: (err: Error) => {
+            if (err.message === "INVALID_CODE") {
+                setPromoError(t("settings.membership.promoInvalid"));
+            } else if (err.message === "ALREADY_HIGHER") {
+                setPromoError(t("settings.membership.promoAlreadyHigher"));
+            } else {
+                setPromoError(t("settings.membership.promoFailed"));
+            }
         },
     });
 
@@ -464,6 +492,36 @@ export function SettingsPanel({ onClose }: SettingsPanelProps) {
                                 <Crown className="h-4 w-4 mr-2" />
                                 {plan === "free" ? t("settings.membership.upgrade") : t("settings.membership.viewPlans")}
                             </Button>
+
+                            {/* Promotion Code */}
+                            <div className="rounded-lg border p-3 space-y-2">
+                                <div className="flex items-center gap-2">
+                                    <Gift className="h-4 w-4 text-primary" />
+                                    <span className="text-sm font-medium">{t("settings.membership.promoTitle")}</span>
+                                </div>
+                                <div className="flex gap-2">
+                                    <Input
+                                        value={promoCode}
+                                        onChange={(e) => {
+                                            setPromoCode(e.target.value);
+                                            setPromoError("");
+                                        }}
+                                        placeholder={t("settings.membership.promoPlaceholder")}
+                                        className="flex-1 h-9 text-sm"
+                                    />
+                                    <Button
+                                        size="sm"
+                                        className="h-9 px-4"
+                                        disabled={!promoCode.trim() || promoMutation.isPending}
+                                        onClick={() => promoMutation.mutate(promoCode.trim())}
+                                    >
+                                        {promoMutation.isPending ? t("common.loading") : t("settings.membership.promoApply")}
+                                    </Button>
+                                </div>
+                                {promoError && (
+                                    <p className="text-xs text-destructive">{promoError}</p>
+                                )}
+                            </div>
 
                             {/* Downgrade (Pro → Basic) */}
                             {plan === "pro" && (
