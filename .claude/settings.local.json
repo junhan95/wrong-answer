@@ -1,7 +1,10 @@
 {
   "permissions": {
     "allow": [
-      "Bash(node -e \"const fs = require\\(''fs''\\); console.log\\(fs.existsSync\\(''server/storage/users.storage.ts''\\)\\)\")"
+      "Bash(node -e \"const fs = require\\(''fs''\\); console.log\\(fs.existsSync\\(''server/storage/users.storage.ts''\\)\\)\")",
+      "mcp__209e7499-6b38-436d-b0b0-452433af62e9__list_projects",
+      "mcp__209e7499-6b38-436d-b0b0-452433af62e9__execute_sql",
+      "mcp__209e7499-6b38-436d-b0b0-452433af62e9__apply_migration"
     ]
   }
 }
