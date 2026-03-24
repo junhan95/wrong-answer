@@ -16,7 +16,17 @@ import { Label } from "@/components/ui/label";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { User, CreditCard, Crown, Camera } from "lucide-react";
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { User, CreditCard, Crown, Camera, AlertTriangle, ArrowDown } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 interface SettingsDialogProps {
@@ -34,6 +44,8 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
     const [department, setDepartment] = useState((user as any)?.department || "");
     const [jobTitle, setJobTitle] = useState((user as any)?.jobTitle || "");
     const [phone, setPhone] = useState((user as any)?.phone || "");
+    const [cancelDialogOpen, setCancelDialogOpen] = useState(false);
+    const [downgradeDialogOpen, setDowngradeDialogOpen] = useState(false);
 
     const { data: subscriptionData } = useQuery<{
         subscription: { plan: string };
@@ -76,6 +88,36 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
         },
         onError: () => {
             toast({ title: t("settings.profile.imageUploadFailed"), variant: "destructive" });
+        },
+    });
+
+    const cancelSubscriptionMutation = useMutation({
+        mutationFn: async () => {
+            const res = await apiRequest("POST", "/api/subscription/cancel");
+            return res.json();
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["/api/subscription"] });
+            setCancelDialogOpen(false);
+            toast({ title: t("settings.membership.cancelSuccess") });
+        },
+        onError: () => {
+            toast({ title: t("settings.membership.cancelFailed"), variant: "destructive" });
+        },
+    });
+
+    const downgradeSubscriptionMutation = useMutation({
+        mutationFn: async (targetPlan: string) => {
+            const res = await apiRequest("POST", "/api/subscription/downgrade", { targetPlan });
+            return res.json();
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["/api/subscription"] });
+            setDowngradeDialogOpen(false);
+            toast({ title: t("settings.membership.downgradeSuccess") });
+        },
+        onError: () => {
+            toast({ title: t("settings.membership.downgradeFailed"), variant: "destructive" });
         },
     });
 
@@ -288,7 +330,78 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                                 <Crown className="h-4 w-4 mr-2" />
                                 {plan === "free" ? t("settings.membership.upgrade") : t("settings.membership.viewPlans")}
                             </Button>
+
+                            {/* Downgrade (Pro → Basic) */}
+                            {plan === "pro" && (
+                                <Button
+                                    variant="outline"
+                                    className="w-full"
+                                    onClick={() => setDowngradeDialogOpen(true)}
+                                >
+                                    <ArrowDown className="h-4 w-4 mr-2" />
+                                    {t("settings.membership.downgradeToBasic")}
+                                </Button>
+                            )}
+
+                            {/* Cancel subscription */}
+                            {plan !== "free" && (
+                                <Button
+                                    variant="ghost"
+                                    className="w-full text-destructive hover:text-destructive hover:bg-destructive/10"
+                                    onClick={() => setCancelDialogOpen(true)}
+                                >
+                                    <AlertTriangle className="h-4 w-4 mr-2" />
+                                    {t("settings.membership.cancelSubscription")}
+                                </Button>
+                            )}
                         </div>
+
+                        {/* Cancel Subscription Dialog */}
+                        <AlertDialog open={cancelDialogOpen} onOpenChange={setCancelDialogOpen}>
+                            <AlertDialogContent>
+                                <AlertDialogHeader>
+                                    <AlertDialogTitle>{t("settings.membership.cancelConfirmTitle")}</AlertDialogTitle>
+                                    <AlertDialogDescription>
+                                        {t("settings.membership.cancelConfirmDesc")}
+                                    </AlertDialogDescription>
+                                </AlertDialogHeader>
+                                <AlertDialogFooter>
+                                    <AlertDialogCancel>{t("common.cancel")}</AlertDialogCancel>
+                                    <AlertDialogAction
+                                        onClick={() => cancelSubscriptionMutation.mutate()}
+                                        disabled={cancelSubscriptionMutation.isPending}
+                                        className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                                    >
+                                        {cancelSubscriptionMutation.isPending
+                                            ? t("common.loading")
+                                            : t("settings.membership.cancelConfirmAction")}
+                                    </AlertDialogAction>
+                                </AlertDialogFooter>
+                            </AlertDialogContent>
+                        </AlertDialog>
+
+                        {/* Downgrade Dialog */}
+                        <AlertDialog open={downgradeDialogOpen} onOpenChange={setDowngradeDialogOpen}>
+                            <AlertDialogContent>
+                                <AlertDialogHeader>
+                                    <AlertDialogTitle>{t("settings.membership.downgradeConfirmTitle")}</AlertDialogTitle>
+                                    <AlertDialogDescription>
+                                        {t("settings.membership.downgradeConfirmDesc")}
+                                    </AlertDialogDescription>
+                                </AlertDialogHeader>
+                                <AlertDialogFooter>
+                                    <AlertDialogCancel>{t("common.cancel")}</AlertDialogCancel>
+                                    <AlertDialogAction
+                                        onClick={() => downgradeSubscriptionMutation.mutate("basic")}
+                                        disabled={downgradeSubscriptionMutation.isPending}
+                                    >
+                                        {downgradeSubscriptionMutation.isPending
+                                            ? t("common.loading")
+                                            : t("settings.membership.downgradeConfirmAction")}
+                                    </AlertDialogAction>
+                                </AlertDialogFooter>
+                            </AlertDialogContent>
+                        </AlertDialog>
                     </TabsContent>
                 </Tabs>
             </DialogContent>
