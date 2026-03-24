@@ -1669,6 +1669,26 @@
       "downgradeConfirmAction": "Downgrade",
       "downgradeSuccess": "Your plan has been changed to Basic.",
       "downgradeFailed": "Failed to downgrade. Please try again."
+    },
+    "account": {
+      "tab": "Account",
+      "exportTitle": "Data Backup",
+      "exportDesc": "Download all your conversations, project info, and file list as a JSON file.",
+      "exportButton": "Download Data Backup",
+      "deleteTitle": "Delete Account",
+      "deleteDesc": "Deleting your account will permanently remove all your data and cannot be undone.",
+      "deleteButton": "Delete Account",
+      "deleteConfirmTitle": "Are you sure you want to delete your account?",
+      "deleteWarning": "This action cannot be undone. The following data will be permanently deleted:",
+      "deleteWarn1": "All account information will be deleted.",
+      "deleteWarn2": "All AI conversations and projects will be deleted.",
+      "deleteWarn3": "All uploaded files will be deleted.",
+      "deleteBackupHint": "We strongly recommend using the 'Data Backup' feature above to save your conversation history before deleting your account.",
+      "deleteConfirmLabel": "To confirm, type 'DELETE' below.",
+      "deleteConfirmPlaceholder": "DELETE",
+      "deleteConfirmText": "DELETE",
+      "deleteConfirmAction": "Permanently Delete Account",
+      "deleteFailed": "Failed to delete account. Please try again."
     }
   }
 }

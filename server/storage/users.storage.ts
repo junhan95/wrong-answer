@@ -44,4 +44,12 @@ export class UsersMixin extends BaseStorage {
             .returning();
         return results[0];
     }
+
+    async deleteUser(id: string): Promise<boolean> {
+        const results = await this.db
+            .delete(schema.users)
+            .where(eq(schema.users.id, id))
+            .returning();
+        return results.length > 0;
+    }
 }

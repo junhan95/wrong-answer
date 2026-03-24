@@ -1669,6 +1669,26 @@
       "downgradeConfirmAction": "다운그레이드",
       "downgradeSuccess": "Basic 플랜으로 변경되었습니다.",
       "downgradeFailed": "다운그레이드에 실패했습니다. 다시 시도해 주세요."
+    },
+    "account": {
+      "tab": "계정",
+      "exportTitle": "데이터 백업",
+      "exportDesc": "모든 대화 기록, 프로젝트 정보, 파일 목록을 JSON 파일로 다운로드합니다.",
+      "exportButton": "데이터 백업 다운로드",
+      "deleteTitle": "회원 탈퇴",
+      "deleteDesc": "계정을 삭제하면 모든 데이터가 영구적으로 삭제되며 복구할 수 없습니다.",
+      "deleteButton": "회원 탈퇴",
+      "deleteConfirmTitle": "정말로 탈퇴하시겠습니까?",
+      "deleteWarning": "이 작업은 되돌릴 수 없습니다. 다음 데이터가 모두 영구 삭제됩니다:",
+      "deleteWarn1": "모든 회원 정보가 삭제됩니다.",
+      "deleteWarn2": "모든 AI 대화 기록 및 프로젝트가 삭제됩니다.",
+      "deleteWarn3": "모든 업로드 파일이 삭제됩니다.",
+      "deleteBackupHint": "탈퇴 전에 위의 '데이터 백업' 기능을 사용하여 대화 기록을 저장하시길 강력히 권장합니다.",
+      "deleteConfirmLabel": "탈퇴를 확인하려면 아래에 '회원탈퇴'를 입력해 주세요.",
+      "deleteConfirmPlaceholder": "회원탈퇴",
+      "deleteConfirmText": "회원탈퇴",
+      "deleteConfirmAction": "계정 영구 삭제",
+      "deleteFailed": "회원 탈퇴에 실패했습니다. 다시 시도해 주세요."
     }
   }
 }
