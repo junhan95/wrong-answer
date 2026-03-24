@@ -114,6 +114,10 @@ export class MemStorage implements IStorage {
     return updated;
   }
 
+  async deleteUser(id: string): Promise<boolean> {
+    return this.users.delete(id);
+  }
+
   async getProjects(userId: string): Promise<Project[]> {
     return Array.from(this.projects.values())
       .filter((p) => p.userId === userId)

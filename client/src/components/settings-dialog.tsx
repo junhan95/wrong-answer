@@ -20,7 +20,7 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { User, CreditCard, Crown, Camera, AlertTriangle, ArrowDown, X } from "lucide-react";
+import { User, CreditCard, Crown, Camera, AlertTriangle, ArrowDown, X, Trash2, Download, Shield } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 interface SettingsPanelProps {
@@ -39,6 +39,8 @@ export function SettingsPanel({ onClose }: SettingsPanelProps) {
     const [phone, setPhone] = useState((user as any)?.phone || "");
     const [cancelDialogOpen, setCancelDialogOpen] = useState(false);
     const [downgradeDialogOpen, setDowngradeDialogOpen] = useState(false);
+    const [deleteAccountDialogOpen, setDeleteAccountDialogOpen] = useState(false);
+    const [deleteConfirmText, setDeleteConfirmText] = useState("");
 
     const { data: subscriptionData } = useQuery<{
         subscription: { plan: string };
@@ -113,6 +115,23 @@ export function SettingsPanel({ onClose }: SettingsPanelProps) {
         },
     });
 
+    const deleteAccountMutation = useMutation({
+        mutationFn: async () => {
+            const res = await apiRequest("DELETE", "/api/auth/account", { confirmation: "DELETE_MY_ACCOUNT" });
+            return res.json();
+        },
+        onSuccess: () => {
+            window.location.href = "/";
+        },
+        onError: () => {
+            toast({ title: t("settings.account.deleteFailed"), variant: "destructive" });
+        },
+    });
+
+    const handleExportData = () => {
+        window.open("/api/auth/export", "_blank");
+    };
+
     const plan = subscriptionData?.subscription?.plan || "free";
     const usage = subscriptionData?.usage;
     const limits = subscriptionData?.limits;
@@ -155,7 +174,7 @@ export function SettingsPanel({ onClose }: SettingsPanelProps) {
                 </div>
 
                 <Tabs defaultValue="profile">
-                    <TabsList className="grid w-full grid-cols-2">
+                    <TabsList className="grid w-full grid-cols-3">
                         <TabsTrigger value="profile" className="flex items-center gap-2">
                             <User className="h-4 w-4" />
                             {t("settings.profile.tab")}
@@ -163,6 +182,10 @@ export function SettingsPanel({ onClose }: SettingsPanelProps) {
                         <TabsTrigger value="membership" className="flex items-center gap-2">
                             <CreditCard className="h-4 w-4" />
                             {t("settings.membership.tab")}
+                        </TabsTrigger>
+                        <TabsTrigger value="account" className="flex items-center gap-2">
+                            <Shield className="h-4 w-4" />
+                            {t("settings.account.tab")}
                         </TabsTrigger>
                     </TabsList>
 
@@ -396,6 +419,109 @@ export function SettingsPanel({ onClose }: SettingsPanelProps) {
                                         {downgradeSubscriptionMutation.isPending
                                             ? t("common.loading")
                                             : t("settings.membership.downgradeConfirmAction")}
+                                    </AlertDialogAction>
+                                </AlertDialogFooter>
+                            </AlertDialogContent>
+                        </AlertDialog>
+                    </TabsContent>
+
+                    {/* Account Tab */}
+                    <TabsContent value="account" className="space-y-4 mt-4">
+                        {/* Data Backup */}
+                        <div className="rounded-lg border p-4 space-y-3">
+                            <div className="flex items-center gap-2">
+                                <Download className="h-5 w-5 text-primary" />
+                                <span className="font-medium">{t("settings.account.exportTitle")}</span>
+                            </div>
+                            <p className="text-sm text-muted-foreground">
+                                {t("settings.account.exportDesc")}
+                            </p>
+                            <Button variant="outline" className="w-full" onClick={handleExportData}>
+                                <Download className="h-4 w-4 mr-2" />
+                                {t("settings.account.exportButton")}
+                            </Button>
+                        </div>
+
+                        {/* Delete Account */}
+                        <div className="rounded-lg border border-destructive/30 p-4 space-y-3">
+                            <div className="flex items-center gap-2">
+                                <Trash2 className="h-5 w-5 text-destructive" />
+                                <span className="font-medium text-destructive">{t("settings.account.deleteTitle")}</span>
+                            </div>
+                            <p className="text-sm text-muted-foreground">
+                                {t("settings.account.deleteDesc")}
+                            </p>
+                            <Button
+                                variant="destructive"
+                                className="w-full"
+                                onClick={() => {
+                                    setDeleteConfirmText("");
+                                    setDeleteAccountDialogOpen(true);
+                                }}
+                            >
+                                <Trash2 className="h-4 w-4 mr-2" />
+                                {t("settings.account.deleteButton")}
+                            </Button>
+                        </div>
+
+                        {/* Delete Account Confirmation Dialog */}
+                        <AlertDialog open={deleteAccountDialogOpen} onOpenChange={setDeleteAccountDialogOpen}>
+                            <AlertDialogContent>
+                                <AlertDialogHeader>
+                                    <AlertDialogTitle className="flex items-center gap-2 text-destructive">
+                                        <AlertTriangle className="h-5 w-5" />
+                                        {t("settings.account.deleteConfirmTitle")}
+                                    </AlertDialogTitle>
+                                    <AlertDialogDescription asChild>
+                                        <div className="space-y-3">
+                                            <p className="font-medium text-destructive">
+                                                {t("settings.account.deleteWarning")}
+                                            </p>
+                                            <ul className="space-y-2 text-sm">
+                                                <li className="flex items-start gap-2">
+                                                    <AlertTriangle className="h-4 w-4 text-destructive mt-0.5 flex-shrink-0" />
+                                                    <span>{t("settings.account.deleteWarn1")}</span>
+                                                </li>
+                                                <li className="flex items-start gap-2">
+                                                    <AlertTriangle className="h-4 w-4 text-destructive mt-0.5 flex-shrink-0" />
+                                                    <span>{t("settings.account.deleteWarn2")}</span>
+                                                </li>
+                                                <li className="flex items-start gap-2">
+                                                    <AlertTriangle className="h-4 w-4 text-destructive mt-0.5 flex-shrink-0" />
+                                                    <span>{t("settings.account.deleteWarn3")}</span>
+                                                </li>
+                                            </ul>
+                                            <div className="rounded-md bg-primary/10 border border-primary/20 p-3 text-sm">
+                                                <p className="flex items-start gap-2">
+                                                    <Download className="h-4 w-4 text-primary mt-0.5 flex-shrink-0" />
+                                                    <span>{t("settings.account.deleteBackupHint")}</span>
+                                                </p>
+                                            </div>
+                                            <div className="space-y-2 pt-2">
+                                                <Label htmlFor="delete-confirm" className="text-sm">
+                                                    {t("settings.account.deleteConfirmLabel")}
+                                                </Label>
+                                                <Input
+                                                    id="delete-confirm"
+                                                    value={deleteConfirmText}
+                                                    onChange={(e) => setDeleteConfirmText(e.target.value)}
+                                                    placeholder={t("settings.account.deleteConfirmPlaceholder")}
+                                                    className="border-destructive/30 focus-visible:ring-destructive"
+                                                />
+                                            </div>
+                                        </div>
+                                    </AlertDialogDescription>
+                                </AlertDialogHeader>
+                                <AlertDialogFooter>
+                                    <AlertDialogCancel>{t("common.cancel")}</AlertDialogCancel>
+                                    <AlertDialogAction
+                                        onClick={() => deleteAccountMutation.mutate()}
+                                        disabled={deleteConfirmText !== t("settings.account.deleteConfirmText") || deleteAccountMutation.isPending}
+                                        className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                                    >
+                                        {deleteAccountMutation.isPending
+                                            ? t("common.loading")
+                                            : t("settings.account.deleteConfirmAction")}
                                     </AlertDialogAction>
                                 </AlertDialogFooter>
                             </AlertDialogContent>
