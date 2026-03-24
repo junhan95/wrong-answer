@@ -6,48 +6,11 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Crown, ArrowLeft, Loader2, ShieldCheck } from "lucide-react";
-
-declare global {
-  interface Window {
-    TossPayments?: (clientKey: string) => any;
-  }
-}
-
-function loadTossScript(): Promise<void> {
-  return new Promise((resolve, reject) => {
-    // Already loaded
-    if (typeof window.TossPayments === "function") {
-      resolve();
-      return;
-    }
-    // Script tag already in DOM — wait for its load event
-    const existing = document.querySelector<HTMLScriptElement>(
-      'script[src="https://js.tosspayments.com/v2/standard"]'
-    );
-    if (existing) {
-      const onLoad = () => {
-        if (typeof window.TossPayments === "function") resolve();
-        else reject(new Error("TossPayments not defined after script load"));
-      };
-      existing.addEventListener("load", onLoad, { once: true });
-      existing.addEventListener("error", () => reject(new Error("TossPayments script error")), { once: true });
-      return;
-    }
-    // Fresh load
-    const script = document.createElement("script");
-    script.src = "https://js.tosspayments.com/v2/standard";
-    script.onload = () => {
-      if (typeof window.TossPayments === "function") resolve();
-      else reject(new Error("TossPayments not defined after script load"));
-    };
-    script.onerror = () => reject(new Error("Failed to load TossPayments script"));
-    document.head.appendChild(script);
-  });
-}
+import { loadTossPayments } from "@tosspayments/tosspayments-sdk";
 
 const TOSS_CLIENT_KEY =
   import.meta.env.VITE_TOSS_CLIENT_KEY ||
-  "test_gck_docs_Ovk5rk1EwkEbP0W43n75lmeaxYG5";
+  "test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm";
 
 const PLAN_INFO: Record<string, { name: string; priceKRW: number; features: string[] }> = {
   basic: {
@@ -69,6 +32,10 @@ const PLAN_INFO: Record<string, { name: string; priceKRW: number; features: stri
     ],
   },
 };
+
+function generateRandomString(): string {
+  return btoa(Math.random().toString(36).slice(2) + Date.now().toString(36));
+}
 
 export default function Checkout() {
   const [, setLocation] = useLocation();
@@ -117,11 +84,11 @@ export default function Checkout() {
     setDebugError(null);
 
     try {
-      // CDN 스크립트로 TossPayments 로드 (번들링 충돌 방지)
-      await loadTossScript();
-      const tossPayments = window.TossPayments!(TOSS_CLIENT_KEY);
+      // npm 패키지로 SDK 로드 (공식 권장 방식)
+      const tossPayments = await loadTossPayments(TOSS_CLIENT_KEY);
 
-      const customerKey = `wq_user_${(user as any)?.id ?? "guest"}`;
+      // customerKey: 최소 2자 이상, 영문/숫자/특수문자(-, _, =, ., @)
+      const customerKey = `wq_user_${(user as any)?.id ?? generateRandomString()}`;
       const widgets = tossPayments.widgets({ customerKey });
 
       await widgets.setAmount({ currency: "KRW", value: planInfo.priceKRW });
@@ -143,8 +110,9 @@ export default function Checkout() {
       console.error("[Checkout] Widget init error:", err);
       initializedRef.current = false;
 
-      // 실제 에러 정보를 함께 표시 (디버그용)
-      const errDetail = err?.message || err?.code || String(err);
+      const errCode = err?.code || "";
+      const errMsg = err?.message || "";
+      const errDetail = errCode ? `[${errCode}] ${errMsg}` : errMsg || String(err);
       setDebugError(errDetail);
       setError("결제 위젯을 불러오지 못했습니다.");
     }
@@ -164,7 +132,7 @@ export default function Checkout() {
     setError(null);
 
     try {
-      const orderId = crypto.randomUUID().replace(/-/g, "").slice(0, 20);
+      const orderId = generateRandomString().slice(0, 20);
       const planInfo = PLAN_INFO[plan];
 
       await widgetsRef.current.requestPayment({
