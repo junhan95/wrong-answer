@@ -1655,7 +1655,20 @@
       "aiQueries": "AI 쿼리 (이번 달)",
       "storage": "저장공간",
       "upgrade": "플랜 업그레이드",
-      "manageSubscription": "구독 관리"
+      "viewPlans": "요금제 보기",
+      "manageSubscription": "구독 관리",
+      "cancelSubscription": "구독 취소",
+      "cancelConfirmTitle": "구독을 취소하시겠습니까?",
+      "cancelConfirmDesc": "구독을 취소하면 Free 플랜으로 변경됩니다. 현재 플랜의 혜택(추가 프로젝트, AI 쿼리, 저장공간 등)을 더 이상 이용할 수 없습니다.",
+      "cancelConfirmAction": "구독 취소",
+      "cancelSuccess": "구독이 취소되었습니다. Free 플랜으로 변경되었습니다.",
+      "cancelFailed": "구독 취소에 실패했습니다. 다시 시도해 주세요.",
+      "downgradeToBasic": "Basic으로 다운그레이드",
+      "downgradeConfirmTitle": "Basic 플랜으로 다운그레이드하시겠습니까?",
+      "downgradeConfirmDesc": "Basic 플랜으로 변경하면 Pro 플랜의 일부 혜택(무제한 프로젝트, 이미지 분석, 추가 AI 쿼리 등)을 이용할 수 없습니다.",
+      "downgradeConfirmAction": "다운그레이드",
+      "downgradeSuccess": "Basic 플랜으로 변경되었습니다.",
+      "downgradeFailed": "다운그레이드에 실패했습니다. 다시 시도해 주세요."
     }
   }
 }
