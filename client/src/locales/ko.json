@@ -1704,8 +1704,18 @@
     "apps": {
       "title": "앱 및 확장프로그램 받기",
       "desktop": "데스크탑 프로그램 설치",
+      "desktopHint": "브라우저 주소창의 설치 아이콘을 클릭하거나, 메뉴 > '앱 설치'를 선택해주세요.",
+      "installed": "설치됨",
       "chrome": "크롬 익스텐션 설치",
-      "googleDocs": "구글 Docs 연동하기"
+      "googleDocs": "구글 Docs 연동하기",
+      "googleDocsTitle": "Google Docs 연동 설정",
+      "googleDocsDesc": "Google Docs에서 바로 WiseQuery에 질문할 수 있는 애드온을 설치합니다.",
+      "googleDocsStep1": "Google Docs에서 '확장 프로그램 > Apps Script'를 클릭합니다.",
+      "googleDocsStep2": "기존 코드를 모두 삭제하고, 아래 코드를 붙여넣습니다.",
+      "googleDocsStep3": "저장 버튼(💾)을 클릭합니다.",
+      "googleDocsStep4": "Google Docs를 새로고침하면 메뉴에 'WiseQuery'가 추가됩니다.",
+      "copyCode": "코드 복사",
+      "codeCopied": "Apps Script 코드가 클립보드에 복사되었습니다."
     }
   }
 }

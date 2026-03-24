@@ -41,6 +41,37 @@ export function SettingsPanel({ onClose }: SettingsPanelProps) {
     const [downgradeDialogOpen, setDowngradeDialogOpen] = useState(false);
     const [deleteAccountDialogOpen, setDeleteAccountDialogOpen] = useState(false);
     const [deleteConfirmText, setDeleteConfirmText] = useState("");
+    const [googleDocsDialogOpen, setGoogleDocsDialogOpen] = useState(false);
+    const [pwaInstallPrompt, setPwaInstallPrompt] = useState<any>(null);
+    const [pwaInstalled, setPwaInstalled] = useState(false);
+
+    // Listen for PWA install prompt
+    useState(() => {
+        const handler = (e: Event) => {
+            e.preventDefault();
+            setPwaInstallPrompt(e);
+        };
+        window.addEventListener("beforeinstallprompt", handler);
+        window.addEventListener("appinstalled", () => setPwaInstalled(true));
+        // Check if already in standalone mode
+        if (window.matchMedia("(display-mode: standalone)").matches) {
+            setPwaInstalled(true);
+        }
+    });
+
+    const handleInstallPWA = async () => {
+        if (pwaInstallPrompt) {
+            pwaInstallPrompt.prompt();
+            const result = await pwaInstallPrompt.userChoice;
+            if (result.outcome === "accepted") {
+                setPwaInstalled(true);
+            }
+            setPwaInstallPrompt(null);
+        } else {
+            // Fallback: open in new window for manual add
+            toast({ title: t("settings.apps.desktopHint") });
+        }
+    };
 
     const { data: subscriptionData } = useQuery<{
         subscription: { plan: string };
@@ -629,24 +660,33 @@ export function SettingsPanel({ onClose }: SettingsPanelProps) {
                 <div className="rounded-lg border p-4 space-y-3">
                     <span className="font-medium text-sm">{t("settings.apps.title")}</span>
                     <div className="space-y-1">
+                        {/* Desktop PWA Install */}
                         <button
-                            onClick={() => window.open("#", "_blank")}
+                            onClick={handleInstallPWA}
                             className="w-full flex items-center gap-3 rounded-md px-3 py-2.5 text-sm hover:bg-muted/50 transition-colors text-left"
                         >
                             <Monitor className="h-4 w-4 text-primary flex-shrink-0" />
                             <span className="flex-1">{t("settings.apps.desktop")}</span>
-                            <ExternalLink className="h-3.5 w-3.5 text-muted-foreground" />
+                            {pwaInstalled ? (
+                                <Badge variant="outline" className="text-xs">{t("settings.apps.installed")}</Badge>
+                            ) : (
+                                <Download className="h-3.5 w-3.5 text-muted-foreground" />
+                            )}
                         </button>
+
+                        {/* Chrome Extension Download */}
                         <button
-                            onClick={() => window.open("#", "_blank")}
+                            onClick={() => window.location.href = "/api/extensions/chrome/download"}
                             className="w-full flex items-center gap-3 rounded-md px-3 py-2.5 text-sm hover:bg-muted/50 transition-colors text-left"
                         >
                             <Chrome className="h-4 w-4 text-primary flex-shrink-0" />
                             <span className="flex-1">{t("settings.apps.chrome")}</span>
-                            <ExternalLink className="h-3.5 w-3.5 text-muted-foreground" />
+                            <Download className="h-3.5 w-3.5 text-muted-foreground" />
                         </button>
+
+                        {/* Google Docs Integration */}
                         <button
-                            onClick={() => window.open("#", "_blank")}
+                            onClick={() => setGoogleDocsDialogOpen(true)}
                             className="w-full flex items-center gap-3 rounded-md px-3 py-2.5 text-sm hover:bg-muted/50 transition-colors text-left"
                         >
                             <FileText className="h-4 w-4 text-primary flex-shrink-0" />
@@ -655,6 +695,67 @@ export function SettingsPanel({ onClose }: SettingsPanelProps) {
                         </button>
                     </div>
                 </div>
+
+                {/* Google Docs Integration Dialog */}
+                <AlertDialog open={googleDocsDialogOpen} onOpenChange={setGoogleDocsDialogOpen}>
+                    <AlertDialogContent className="max-w-lg">
+                        <AlertDialogHeader>
+                            <AlertDialogTitle className="flex items-center gap-2">
+                                <FileText className="h-5 w-5 text-primary" />
+                                {t("settings.apps.googleDocsTitle")}
+                            </AlertDialogTitle>
+                            <AlertDialogDescription asChild>
+                                <div className="space-y-4">
+                                    <p>{t("settings.apps.googleDocsDesc")}</p>
+                                    <ol className="space-y-2 text-sm list-decimal list-inside">
+                                        <li>{t("settings.apps.googleDocsStep1")}</li>
+                                        <li>{t("settings.apps.googleDocsStep2")}</li>
+                                        <li>{t("settings.apps.googleDocsStep3")}</li>
+                                        <li>{t("settings.apps.googleDocsStep4")}</li>
+                                    </ol>
+                                    <div className="rounded-md bg-muted p-3">
+                                        <div className="flex items-center justify-between mb-2">
+                                            <span className="text-xs font-medium text-muted-foreground">Apps Script Code</span>
+                                            <Button
+                                                variant="ghost"
+                                                size="sm"
+                                                className="h-6 text-xs"
+                                                onClick={() => {
+                                                    fetch("/extensions/google-docs-addon.gs")
+                                                        .then(r => r.text())
+                                                        .then(code => {
+                                                            navigator.clipboard.writeText(code);
+                                                            toast({ title: t("settings.apps.codeCopied") });
+                                                        });
+                                                }}
+                                            >
+                                                {t("settings.apps.copyCode")}
+                                            </Button>
+                                        </div>
+                                        <p className="text-xs text-muted-foreground font-mono">
+                                            // WiseQuery Google Docs Add-on ...
+                                        </p>
+                                    </div>
+                                </div>
+                            </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                            <AlertDialogCancel>{t("common.cancel")}</AlertDialogCancel>
+                            <AlertDialogAction
+                                onClick={() => {
+                                    fetch("/extensions/google-docs-addon.gs")
+                                        .then(r => r.text())
+                                        .then(code => {
+                                            navigator.clipboard.writeText(code);
+                                            toast({ title: t("settings.apps.codeCopied") });
+                                        });
+                                }}
+                            >
+                                {t("settings.apps.copyCode")}
+                            </AlertDialogAction>
+                        </AlertDialogFooter>
+                    </AlertDialogContent>
+                </AlertDialog>
             </div>
         </div>
     );

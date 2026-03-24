@@ -2,6 +2,7 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { promises as fs } from "fs";
 import path from "path";
+import AdmZip from "adm-zip";
 import { setupAuth, isAuthenticated } from "./sessionAuth";
 import { setupSocialAuth } from "./socialAuth";
 import { expirationScheduler } from "./scheduler";
@@ -48,6 +49,29 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Chat SSE streaming
   app.use("/api", chatRouter);
+
+  // Chrome Extension zip download
+  app.get("/api/extensions/chrome/download", async (_req, res) => {
+    try {
+      const extDir = path.join(process.cwd(), "dist", "public", "extensions", "chrome");
+      const files = await fs.readdir(extDir);
+      const zip = new AdmZip();
+      for (const file of files) {
+        const filePath = path.join(extDir, file);
+        const stat = await fs.stat(filePath);
+        if (stat.isFile()) {
+          zip.addLocalFile(filePath);
+        }
+      }
+      const zipBuffer = zip.toBuffer();
+      res.setHeader("Content-Type", "application/zip");
+      res.setHeader("Content-Disposition", "attachment; filename=wisequery-chrome-extension.zip");
+      res.send(zipBuffer);
+    } catch (error) {
+      console.error("Error creating extension zip:", error);
+      res.status(500).json({ error: "Failed to download extension" });
+    }
+  });
 
   // Serve uploaded files — path traversal 방어
   const uploadDir = path.join(process.cwd(), "uploads");

@@ -1704,8 +1704,18 @@
     "apps": {
       "title": "Get Apps & Extensions",
       "desktop": "Install Desktop App",
+      "desktopHint": "Click the install icon in the address bar, or go to Menu > 'Install App'.",
+      "installed": "Installed",
       "chrome": "Install Chrome Extension",
-      "googleDocs": "Connect Google Docs"
+      "googleDocs": "Connect Google Docs",
+      "googleDocsTitle": "Google Docs Integration Setup",
+      "googleDocsDesc": "Install an add-on to ask WiseQuery questions directly from Google Docs.",
+      "googleDocsStep1": "In Google Docs, click 'Extensions > Apps Script'.",
+      "googleDocsStep2": "Delete all existing code and paste the code below.",
+      "googleDocsStep3": "Click the Save button (💾).",
+      "googleDocsStep4": "Refresh Google Docs and 'WiseQuery' will appear in the menu.",
+      "copyCode": "Copy Code",
+      "codeCopied": "Apps Script code copied to clipboard."
     }
   }
 }
