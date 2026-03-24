@@ -7,6 +7,44 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Crown, ArrowLeft, Loader2, ShieldCheck } from "lucide-react";
 
+declare global {
+  interface Window {
+    TossPayments?: (clientKey: string) => any;
+  }
+}
+
+function loadTossScript(): Promise<void> {
+  return new Promise((resolve, reject) => {
+    // Already loaded
+    if (typeof window.TossPayments === "function") {
+      resolve();
+      return;
+    }
+    // Script tag already in DOM — wait for its load event
+    const existing = document.querySelector<HTMLScriptElement>(
+      'script[src="https://js.tosspayments.com/v2/standard"]'
+    );
+    if (existing) {
+      const onLoad = () => {
+        if (typeof window.TossPayments === "function") resolve();
+        else reject(new Error("TossPayments not defined after script load"));
+      };
+      existing.addEventListener("load", onLoad, { once: true });
+      existing.addEventListener("error", () => reject(new Error("TossPayments script error")), { once: true });
+      return;
+    }
+    // Fresh load
+    const script = document.createElement("script");
+    script.src = "https://js.tosspayments.com/v2/standard";
+    script.onload = () => {
+      if (typeof window.TossPayments === "function") resolve();
+      else reject(new Error("TossPayments not defined after script load"));
+    };
+    script.onerror = () => reject(new Error("Failed to load TossPayments script"));
+    document.head.appendChild(script);
+  });
+}
+
 const TOSS_CLIENT_KEY =
   import.meta.env.VITE_TOSS_CLIENT_KEY ||
   "test_gck_docs_Ovk5rk1EwkEbP0W43n75lmeaxYG5";
@@ -79,11 +117,11 @@ export default function Checkout() {
     setDebugError(null);
 
     try {
-      // dynamic import → Vite 번들링 충돌 없이 런타임에서만 로드
-      const { loadTossPayments } = await import("@tosspayments/tosspayments-sdk");
-      const tossPayments = await loadTossPayments(TOSS_CLIENT_KEY);
+      // CDN 스크립트로 TossPayments 로드 (번들링 충돌 방지)
+      await loadTossScript();
+      const tossPayments = window.TossPayments!(TOSS_CLIENT_KEY);
 
-      const customerKey = (user as any)?.id ?? "@@ANONYMOUS";
+      const customerKey = String((user as any)?.id ?? "anonymous");
       const widgets = tossPayments.widgets({ customerKey });
 
       await widgets.setAmount({ currency: "KRW", value: planInfo.priceKRW });
