@@ -121,7 +121,7 @@ export default function Checkout() {
       await loadTossScript();
       const tossPayments = window.TossPayments!(TOSS_CLIENT_KEY);
 
-      const customerKey = String((user as any)?.id ?? "anonymous");
+      const customerKey = `wq_user_${(user as any)?.id ?? "guest"}`;
       const widgets = tossPayments.widgets({ customerKey });
 
       await widgets.setAmount({ currency: "KRW", value: planInfo.priceKRW });
