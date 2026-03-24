@@ -20,7 +20,7 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { User, CreditCard, Crown, Camera, AlertTriangle, ArrowDown, X, Trash2, Download, Shield } from "lucide-react";
+import { User, CreditCard, Crown, Camera, AlertTriangle, ArrowDown, X, Trash2, Download, Shield, Calendar, Clock } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 interface SettingsPanelProps {
@@ -28,7 +28,7 @@ interface SettingsPanelProps {
 }
 
 export function SettingsPanel({ onClose }: SettingsPanelProps) {
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
     const { user } = useAuth();
     const { toast } = useToast();
     const fileInputRef = useRef<HTMLInputElement>(null);
@@ -90,10 +90,14 @@ export function SettingsPanel({ onClose }: SettingsPanelProps) {
             const res = await apiRequest("POST", "/api/subscription/cancel");
             return res.json();
         },
-        onSuccess: () => {
+        onSuccess: (data) => {
             queryClient.invalidateQueries({ queryKey: ["/api/subscription"] });
             setCancelDialogOpen(false);
-            toast({ title: t("settings.membership.cancelSuccess") });
+            if (data.scheduled) {
+                toast({ title: t("settings.membership.cancelScheduled", { date: new Date(data.effectiveDate).toLocaleDateString() }) });
+            } else {
+                toast({ title: t("settings.membership.cancelSuccess") });
+            }
         },
         onError: () => {
             toast({ title: t("settings.membership.cancelFailed"), variant: "destructive" });
@@ -105,10 +109,14 @@ export function SettingsPanel({ onClose }: SettingsPanelProps) {
             const res = await apiRequest("POST", "/api/subscription/downgrade", { targetPlan });
             return res.json();
         },
-        onSuccess: () => {
+        onSuccess: (data) => {
             queryClient.invalidateQueries({ queryKey: ["/api/subscription"] });
             setDowngradeDialogOpen(false);
-            toast({ title: t("settings.membership.downgradeSuccess") });
+            if (data.scheduled) {
+                toast({ title: t("settings.membership.downgradeScheduled", { date: new Date(data.effectiveDate).toLocaleDateString() }) });
+            } else {
+                toast({ title: t("settings.membership.downgradeSuccess") });
+            }
         },
         onError: () => {
             toast({ title: t("settings.membership.downgradeFailed"), variant: "destructive" });
@@ -135,6 +143,37 @@ export function SettingsPanel({ onClose }: SettingsPanelProps) {
     const plan = subscriptionData?.subscription?.plan || "free";
     const usage = subscriptionData?.usage;
     const limits = subscriptionData?.limits;
+    const subscription = subscriptionData?.subscription;
+
+    const billingCycleStart = subscription?.billingCycleStart ? new Date(subscription.billingCycleStart) : null;
+    const billingCycleEnd = subscription?.billingCycleEnd ? new Date(subscription.billingCycleEnd) : null;
+    const pendingPlan = subscription?.pendingPlan || null;
+
+    const formatDate = (date: Date) => {
+        return date.toLocaleDateString(i18n.language === "ko" ? "ko-KR" : "en-US", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+        });
+    };
+
+    const getRemainingDays = () => {
+        if (!billingCycleEnd) return 0;
+        const now = new Date();
+        const diff = billingCycleEnd.getTime() - now.getTime();
+        return Math.max(0, Math.ceil(diff / (1000 * 60 * 60 * 24)));
+    };
+
+    const cancelPendingMutation = useMutation({
+        mutationFn: async () => {
+            const res = await apiRequest("POST", "/api/subscription/cancel-pending");
+            return res.json();
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["/api/subscription"] });
+            toast({ title: t("settings.membership.cancelPendingSuccess") });
+        },
+    });
 
     const planLabel = (p: string) => {
         const labels: Record<string, string> = { free: "Free", basic: "Basic", pro: "Pro", custom: "Custom" };
@@ -299,6 +338,57 @@ export function SettingsPanel({ onClose }: SettingsPanelProps) {
                                     {planLabel(plan)}
                                 </Badge>
                             </div>
+
+                            {/* Billing Period Info */}
+                            {plan !== "free" && billingCycleStart && billingCycleEnd && (
+                                <div className="space-y-2 pt-2 border-t">
+                                    <div className="flex items-center justify-between text-sm">
+                                        <span className="flex items-center gap-1.5 text-muted-foreground">
+                                            <Calendar className="h-3.5 w-3.5" />
+                                            {t("settings.membership.billingStart")}
+                                        </span>
+                                        <span>{formatDate(billingCycleStart)}</span>
+                                    </div>
+                                    <div className="flex items-center justify-between text-sm">
+                                        <span className="flex items-center gap-1.5 text-muted-foreground">
+                                            <Calendar className="h-3.5 w-3.5" />
+                                            {t("settings.membership.billingEnd")}
+                                        </span>
+                                        <span>{formatDate(billingCycleEnd)}</span>
+                                    </div>
+                                    <div className="flex items-center justify-between text-sm">
+                                        <span className="flex items-center gap-1.5 text-muted-foreground">
+                                            <Clock className="h-3.5 w-3.5" />
+                                            {t("settings.membership.remainingDays")}
+                                        </span>
+                                        <Badge variant={getRemainingDays() <= 7 ? "destructive" : "outline"}>
+                                            {t("settings.membership.daysLeft", { days: getRemainingDays() })}
+                                        </Badge>
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Pending Plan Change Notice */}
+                            {pendingPlan && (
+                                <div className="rounded-md bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 p-3 space-y-2">
+                                    <p className="text-sm text-amber-800 dark:text-amber-200">
+                                        <AlertTriangle className="h-4 w-4 inline mr-1" />
+                                        {t("settings.membership.pendingChange", {
+                                            plan: planLabel(pendingPlan),
+                                            date: billingCycleEnd ? formatDate(billingCycleEnd) : "",
+                                        })}
+                                    </p>
+                                    <Button
+                                        variant="outline"
+                                        size="sm"
+                                        onClick={() => cancelPendingMutation.mutate()}
+                                        disabled={cancelPendingMutation.isPending}
+                                        className="text-xs h-7"
+                                    >
+                                        {t("settings.membership.cancelPending")}
+                                    </Button>
+                                </div>
+                            )}
                         </div>
 
                         {/* Usage */}
@@ -382,8 +472,15 @@ export function SettingsPanel({ onClose }: SettingsPanelProps) {
                             <AlertDialogContent>
                                 <AlertDialogHeader>
                                     <AlertDialogTitle>{t("settings.membership.cancelConfirmTitle")}</AlertDialogTitle>
-                                    <AlertDialogDescription>
-                                        {t("settings.membership.cancelConfirmDesc")}
+                                    <AlertDialogDescription asChild>
+                                        <div className="space-y-2">
+                                            <p>{t("settings.membership.cancelConfirmDesc")}</p>
+                                            {billingCycleEnd && (
+                                                <p className="text-sm font-medium">
+                                                    {t("settings.membership.cancelScheduledNote", { date: formatDate(billingCycleEnd) })}
+                                                </p>
+                                            )}
+                                        </div>
                                     </AlertDialogDescription>
                                 </AlertDialogHeader>
                                 <AlertDialogFooter>
@@ -406,8 +503,15 @@ export function SettingsPanel({ onClose }: SettingsPanelProps) {
                             <AlertDialogContent>
                                 <AlertDialogHeader>
                                     <AlertDialogTitle>{t("settings.membership.downgradeConfirmTitle")}</AlertDialogTitle>
-                                    <AlertDialogDescription>
-                                        {t("settings.membership.downgradeConfirmDesc")}
+                                    <AlertDialogDescription asChild>
+                                        <div className="space-y-2">
+                                            <p>{t("settings.membership.downgradeConfirmDesc")}</p>
+                                            {billingCycleEnd && (
+                                                <p className="text-sm font-medium">
+                                                    {t("settings.membership.downgradeScheduledNote", { date: formatDate(billingCycleEnd) })}
+                                                </p>
+                                            )}
+                                        </div>
                                     </AlertDialogDescription>
                                 </AlertDialogHeader>
                                 <AlertDialogFooter>

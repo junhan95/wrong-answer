@@ -48,7 +48,7 @@ router.get("/subscription", isAuthenticated, async (req, res) => {
     }
 });
 
-// Cancel subscription (downgrade to free)
+// Cancel subscription (schedule downgrade to free at end of billing cycle)
 router.post("/subscription/cancel", isAuthenticated, async (req, res) => {
     try {
         const user = req.user as any;
@@ -62,22 +62,57 @@ router.post("/subscription/cancel", isAuthenticated, async (req, res) => {
             return res.status(400).json({ error: "No active paid subscription to cancel" });
         }
 
-        const freeLimits = PLAN_LIMITS.free;
-        await storage.updateSubscription(userId, {
-            plan: "free",
-            monthlyAiQueriesAllowed: freeLimits.aiQueries,
-            monthlyAiQueriesUsed: 0,
-            billingCycleStart: new Date(),
-        });
-
-        res.json({ success: true, plan: "free" });
+        // If billing cycle end exists, schedule the change for end of cycle
+        if (subscription.billingCycleEnd && new Date() < new Date(subscription.billingCycleEnd)) {
+            await storage.updateSubscription(userId, {
+                pendingPlan: "free",
+            });
+            res.json({
+                success: true,
+                scheduled: true,
+                pendingPlan: "free",
+                effectiveDate: subscription.billingCycleEnd,
+            });
+        } else {
+            // No active billing cycle, apply immediately
+            const freeLimits = PLAN_LIMITS.free;
+            await storage.updateSubscription(userId, {
+                plan: "free",
+                monthlyAiQueriesAllowed: freeLimits.aiQueries,
+                monthlyAiQueriesUsed: 0,
+                billingCycleStart: new Date(),
+                billingCycleEnd: null,
+                pendingPlan: null,
+            });
+            res.json({ success: true, plan: "free" });
+        }
     } catch (error) {
         console.error("Error cancelling subscription:", error);
         res.status(500).json({ error: "Failed to cancel subscription" });
     }
 });
 
-// Downgrade subscription (e.g., pro -> basic)
+// Cancel pending plan change
+router.post("/subscription/cancel-pending", isAuthenticated, async (req, res) => {
+    try {
+        const user = req.user as any;
+        const userId = user?.id;
+        if (!userId) {
+            return res.status(401).json({ error: "Not authenticated" });
+        }
+
+        await storage.updateSubscription(userId, {
+            pendingPlan: null,
+        });
+
+        res.json({ success: true });
+    } catch (error) {
+        console.error("Error cancelling pending change:", error);
+        res.status(500).json({ error: "Failed to cancel pending change" });
+    }
+});
+
+// Downgrade subscription (schedule for end of billing cycle)
 router.post("/subscription/downgrade", isAuthenticated, async (req, res) => {
     try {
         const user = req.user as any;
@@ -100,15 +135,30 @@ router.post("/subscription/downgrade", isAuthenticated, async (req, res) => {
             return res.status(400).json({ error: "Target plan must be lower than current plan" });
         }
 
-        const targetLimits = PLAN_LIMITS[targetPlan as keyof typeof PLAN_LIMITS];
-        await storage.updateSubscription(userId, {
-            plan: targetPlan,
-            monthlyAiQueriesAllowed: targetLimits.aiQueries,
-            monthlyAiQueriesUsed: 0,
-            billingCycleStart: new Date(),
-        });
-
-        res.json({ success: true, plan: targetPlan });
+        // If billing cycle end exists, schedule the change
+        if (subscription?.billingCycleEnd && new Date() < new Date(subscription.billingCycleEnd)) {
+            await storage.updateSubscription(userId, {
+                pendingPlan: targetPlan,
+            });
+            res.json({
+                success: true,
+                scheduled: true,
+                pendingPlan: targetPlan,
+                effectiveDate: subscription.billingCycleEnd,
+            });
+        } else {
+            // No active billing cycle, apply immediately
+            const targetLimits = PLAN_LIMITS[targetPlan as keyof typeof PLAN_LIMITS];
+            await storage.updateSubscription(userId, {
+                plan: targetPlan,
+                monthlyAiQueriesAllowed: targetLimits.aiQueries,
+                monthlyAiQueriesUsed: 0,
+                billingCycleStart: new Date(),
+                billingCycleEnd: null,
+                pendingPlan: null,
+            });
+            res.json({ success: true, plan: targetPlan });
+        }
     } catch (error) {
         console.error("Error downgrading subscription:", error);
         res.status(500).json({ error: "Failed to downgrade subscription" });

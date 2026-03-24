@@ -197,6 +197,8 @@ export const subscriptions = pgTable("subscriptions", {
   monthlyAiQueriesAllowed: integer("monthly_ai_queries_allowed").notNull().default(50),
   monthlyAiQueriesUsed: integer("monthly_ai_queries_used").notNull().default(0),
   billingCycleStart: timestamp("billing_cycle_start").notNull().defaultNow(),
+  billingCycleEnd: timestamp("billing_cycle_end"),
+  pendingPlan: varchar("pending_plan"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });

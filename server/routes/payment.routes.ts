@@ -54,13 +54,17 @@ router.post("/payments/toss/confirm", isAuthenticated, async (req, res) => {
 
     const payment = await tossRes.json();
 
-    // 구독 플랜 업데이트
+    // 구독 플랜 업데이트 (결제일로부터 1개월 유지)
     const planLimits = PLAN_LIMITS[plan as keyof typeof PLAN_LIMITS] ?? PLAN_LIMITS.free;
+    const billingStart = new Date();
+    const billingEnd = new Date(billingStart.getTime() + 30 * 24 * 60 * 60 * 1000);
     await storage.updateSubscription(userId, {
       plan,
       monthlyAiQueriesAllowed: planLimits.aiQueries,
       monthlyAiQueriesUsed: 0,
-      billingCycleStart: new Date(),
+      billingCycleStart: billingStart,
+      billingCycleEnd: billingEnd,
+      pendingPlan: null,
     });
 
     res.json({ success: true, payment });
