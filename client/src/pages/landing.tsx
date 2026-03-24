@@ -5,6 +5,7 @@ import {
   FolderTree,
   Menu,
   X,
+  Download,
 } from "lucide-react";
 import { LanguageToggle } from "@/components/language-toggle";
 import { ThemeToggle } from "@/components/theme-toggle";
@@ -26,6 +27,27 @@ export default function Landing() {
   const searchString = useSearch();
   const [, setLocation] = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [pwaInstallPrompt, setPwaInstallPrompt] = useState<any>(null);
+
+  useEffect(() => {
+    const handler = (e: Event) => {
+      e.preventDefault();
+      setPwaInstallPrompt(e);
+    };
+    window.addEventListener("beforeinstallprompt", handler);
+    return () => window.removeEventListener("beforeinstallprompt", handler);
+  }, []);
+
+  const handleDownload = async () => {
+    if (pwaInstallPrompt) {
+      pwaInstallPrompt.prompt();
+      await pwaInstallPrompt.userChoice;
+      setPwaInstallPrompt(null);
+    } else {
+      // Fallback: scroll to or navigate so user knows it's a PWA
+      window.open(window.location.origin, '_blank');
+    }
+  };
 
   useEffect(() => {
     const params = new URLSearchParams(searchString);
@@ -70,9 +92,10 @@ export default function Landing() {
             <PrefetchLink href="/login" data-testid="link-sign-in">
               <Button variant="ghost" data-testid="button-sign-in">{t('landing.nav.signIn')}</Button>
             </PrefetchLink>
-            <PrefetchLink href="/login" data-testid="link-get-started">
-              <Button data-testid="button-get-started">{t('landing.nav.getStarted')}</Button>
-            </PrefetchLink>
+            <Button data-testid="button-download" onClick={handleDownload}>
+              <Download className="h-4 w-4 mr-2" />
+              {t('landing.nav.download')}
+            </Button>
           </nav>
           <button
             className="md:hidden p-2 rounded-md hover:bg-muted"
@@ -101,9 +124,10 @@ export default function Landing() {
               <PrefetchLink href="/login">
                 <Button variant="ghost" className="w-full justify-start">{t('landing.nav.signIn')}</Button>
               </PrefetchLink>
-              <PrefetchLink href="/login">
-                <Button className="w-full">{t('landing.nav.getStarted')}</Button>
-              </PrefetchLink>
+              <Button className="w-full" onClick={() => { setMobileMenuOpen(false); handleDownload(); }}>
+                <Download className="h-4 w-4 mr-2" />
+                {t('landing.nav.download')}
+              </Button>
             </div>
           </div>
         )}
