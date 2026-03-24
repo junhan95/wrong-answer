@@ -406,14 +406,6 @@ export function SettingsPanel({ onClose }: SettingsPanelProps) {
                                     )}
 
                                     <div className="flex items-center justify-between text-sm">
-                                        <span>{t("settings.membership.conversations")}</span>
-                                        <span className="text-muted-foreground">{usage.conversations} / {formatLimit(limits.conversations)}</span>
-                                    </div>
-                                    {limits.conversations > 0 && (
-                                        <Progress value={Math.min((usage.conversations / limits.conversations) * 100, 100)} className="h-1.5" />
-                                    )}
-
-                                    <div className="flex items-center justify-between text-sm">
                                         <span>{t("settings.membership.aiQueries")}</span>
                                         <span className="text-muted-foreground">{usage.aiQueries} / {formatLimit(limits.aiQueries)}</span>
                                     </div>
