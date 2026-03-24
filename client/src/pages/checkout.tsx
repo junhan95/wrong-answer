@@ -1,15 +1,15 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import { useLocation } from "wouter";
 import { useAuth } from "@/hooks/useAuth";
 import { useTranslation } from "react-i18next";
-import { loadTossPayments, ANONYMOUS } from "@tosspayments/tosspayments-sdk";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Crown, ArrowLeft, Loader2, ShieldCheck } from "lucide-react";
 
 const TOSS_CLIENT_KEY =
-  import.meta.env.VITE_TOSS_CLIENT_KEY || "test_gck_docs_Ovk5rk1EwkEbP0W43n75lmeaxYG5";
+  (import.meta as any).env?.VITE_TOSS_CLIENT_KEY ||
+  "test_gck_docs_Ovk5rk1EwkEbP0W43n75lmeaxYG5";
 
 const PLAN_INFO: Record<string, { name: string; priceKRW: number; features: string[] }> = {
   basic: {
@@ -32,6 +32,28 @@ const PLAN_INFO: Record<string, { name: string; priceKRW: number; features: stri
   },
 };
 
+// CDN 방식으로 Toss Payments SDK를 로드
+function loadTossSDK(): Promise<void> {
+  return new Promise((resolve, reject) => {
+    if ((window as any).TossPayments) {
+      resolve();
+      return;
+    }
+    const existing = document.getElementById("toss-payments-sdk");
+    if (existing) {
+      existing.addEventListener("load", () => resolve());
+      existing.addEventListener("error", () => reject(new Error("SDK 로드 실패")));
+      return;
+    }
+    const script = document.createElement("script");
+    script.id = "toss-payments-sdk";
+    script.src = "https://js.tosspayments.com/v2/standard";
+    script.onload = () => resolve();
+    script.onerror = () => reject(new Error("토스페이먼츠 SDK를 불러올 수 없습니다."));
+    document.head.appendChild(script);
+  });
+}
+
 export default function Checkout() {
   const [, setLocation] = useLocation();
   const { user, isAuthenticated, isLoading: authLoading } = useAuth();
@@ -43,6 +65,7 @@ export default function Checkout() {
   const [error, setError] = useState<string | null>(null);
 
   const widgetsRef = useRef<any>(null);
+  const initializedRef = useRef(false);
 
   // URL query에서 plan 추출
   useEffect(() => {
@@ -62,46 +85,67 @@ export default function Checkout() {
     }
   }, [authLoading, isAuthenticated, setLocation]);
 
-  // Toss Payments 위젯 초기화
-  useEffect(() => {
-    if (!plan || !user) return;
+  // Toss Payments 위젯 초기화 (CDN 방식)
+  const initWidget = useCallback(async () => {
+    if (!plan || !user || initializedRef.current) return;
     const planInfo = PLAN_INFO[plan];
     if (!planInfo) return;
 
-    let mounted = true;
+    // DOM 요소가 실제로 존재하는지 확인
+    const methodEl = document.getElementById("payment-method-widget");
+    const agreementEl = document.getElementById("agreement-widget");
+    if (!methodEl || !agreementEl) return;
 
-    async function initWidget() {
-      try {
-        const tossPayments = await loadTossPayments(TOSS_CLIENT_KEY);
-        const customerKey = (user as any)?.id || ANONYMOUS;
-        const widgets = tossPayments.widgets({ customerKey });
+    initializedRef.current = true;
+    setError(null);
 
-        await widgets.setAmount({ currency: "KRW", value: planInfo.priceKRW });
+    try {
+      // CDN 스크립트 로드
+      await loadTossSDK();
 
-        await Promise.all([
-          widgets.renderPaymentMethods({
-            selector: "#payment-method-widget",
-            variantKey: "DEFAULT",
-          }),
-          widgets.renderAgreement({
-            selector: "#agreement-widget",
-            variantKey: "AGREEMENT",
-          }),
-        ]);
+      const TossPayments = (window as any).TossPayments;
+      if (!TossPayments) throw new Error("TossPayments 객체를 찾을 수 없습니다.");
 
-        if (mounted) {
-          widgetsRef.current = widgets;
-          setWidgetReady(true);
-        }
-      } catch (err) {
-        console.error("[Checkout] Widget init error:", err);
-        if (mounted) setError("결제 위젯을 불러오는 데 실패했습니다. 잠시 후 다시 시도해 주세요.");
-      }
+      const tossPayments = TossPayments(TOSS_CLIENT_KEY);
+      const customerKey = (user as any)?.id ?? "@@ANONYMOUS";
+
+      const widgets = tossPayments.widgets({ customerKey });
+
+      await widgets.setAmount({ currency: "KRW", value: planInfo.priceKRW });
+
+      await Promise.all([
+        widgets.renderPaymentMethods({
+          selector: "#payment-method-widget",
+          variantKey: "DEFAULT",
+        }),
+        widgets.renderAgreement({
+          selector: "#agreement-widget",
+          variantKey: "AGREEMENT",
+        }),
+      ]);
+
+      widgetsRef.current = widgets;
+      setWidgetReady(true);
+    } catch (err: any) {
+      console.error("[Checkout] Widget init error:", err);
+      initializedRef.current = false; // 재시도 허용
+      setError(
+        err?.message?.includes("SDK")
+          ? "네트워크 오류로 결제 위젯을 불러오지 못했습니다. 페이지를 새로고침 해주세요."
+          : "결제 위젯 초기화에 실패했습니다. 잠시 후 다시 시도해 주세요."
+      );
     }
-
-    initWidget();
-    return () => { mounted = false; };
   }, [plan, user]);
+
+  // plan과 user가 모두 준비됐을 때 약간의 지연 후 위젯 초기화
+  useEffect(() => {
+    if (!plan || !user) return;
+    // DOM 렌더 이후 실행을 보장하기 위해 requestAnimationFrame 사용
+    const raf = requestAnimationFrame(() => {
+      initWidget();
+    });
+    return () => cancelAnimationFrame(raf);
+  }, [plan, user, initWidget]);
 
   const handlePay = async () => {
     if (!widgetsRef.current || !plan) return;
@@ -112,7 +156,6 @@ export default function Checkout() {
       const orderId = crypto.randomUUID().replace(/-/g, "").slice(0, 20);
       const planInfo = PLAN_INFO[plan];
 
-      // plan을 successUrl에 포함해 성공 페이지에서 참조
       await widgetsRef.current.requestPayment({
         orderId,
         orderName: `WiseQuery ${planInfo.name} 플랜`,
@@ -120,15 +163,28 @@ export default function Checkout() {
         failUrl: `${window.location.origin}/payment/fail`,
         customerEmail: (user as any)?.email,
         customerName:
-          [(user as any)?.firstName, (user as any)?.lastName].filter(Boolean).join(" ") || "사용자",
+          [(user as any)?.firstName, (user as any)?.lastName].filter(Boolean).join(" ") ||
+          "사용자",
       });
     } catch (err: any) {
-      // 사용자가 결제창을 닫은 경우 등 무시
       if (err?.code !== "USER_CANCEL") {
         setError(err?.message || "결제 요청 중 오류가 발생했습니다.");
       }
       setPaying(false);
     }
+  };
+
+  const handleRetry = () => {
+    initializedRef.current = false;
+    setError(null);
+    setWidgetReady(false);
+    widgetsRef.current = null;
+    // 위젯 컨테이너 초기화
+    const methodEl = document.getElementById("payment-method-widget");
+    const agreementEl = document.getElementById("agreement-widget");
+    if (methodEl) methodEl.innerHTML = "";
+    if (agreementEl) agreementEl.innerHTML = "";
+    initWidget();
   };
 
   if (authLoading) {
@@ -197,11 +253,17 @@ export default function Checkout() {
           )}
 
           {error && (
-            <div className="rounded-md bg-destructive/10 border border-destructive/20 p-4 text-sm text-destructive text-center">
-              {error}
+            <div className="space-y-3">
+              <div className="rounded-md bg-destructive/10 border border-destructive/20 p-4 text-sm text-destructive text-center">
+                {error}
+              </div>
+              <Button variant="outline" onClick={handleRetry} className="w-full">
+                다시 시도
+              </Button>
             </div>
           )}
 
+          {/* 위젯 컨테이너: 항상 DOM에 존재해야 함 */}
           <div id="payment-method-widget" />
           <div id="agreement-widget" />
 
