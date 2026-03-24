@@ -3,12 +3,6 @@ import { useTranslation } from "react-i18next";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { queryClient, apiRequest } from "@/lib/queryClient";
 import { useAuth } from "@/hooks/useAuth";
-import {
-    Dialog,
-    DialogContent,
-    DialogHeader,
-    DialogTitle,
-} from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -26,15 +20,14 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { User, CreditCard, Crown, Camera, AlertTriangle, ArrowDown } from "lucide-react";
+import { User, CreditCard, Crown, Camera, AlertTriangle, ArrowDown, X } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
-interface SettingsDialogProps {
-    open: boolean;
-    onOpenChange: (open: boolean) => void;
+interface SettingsPanelProps {
+    onClose?: () => void;
 }
 
-export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
+export function SettingsPanel({ onClose }: SettingsPanelProps) {
     const { t } = useTranslation();
     const { user } = useAuth();
     const { toast } = useToast();
@@ -53,7 +46,6 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
         limits: { projects: number; conversations: number; aiQueries: number; storageMB: number };
     }>({
         queryKey: ["/api/subscription"],
-        enabled: open,
     });
 
     const updateProfileMutation = useMutation({
@@ -150,13 +142,19 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
     };
 
     return (
-        <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent className="sm:max-w-[500px] max-h-[85vh] overflow-y-auto">
-                <DialogHeader>
-                    <DialogTitle>{t("settings.title")}</DialogTitle>
-                </DialogHeader>
+        <div className="flex-1 flex flex-col overflow-y-auto">
+            <div className="w-full max-w-xl mx-auto p-6 space-y-6">
+                {/* Header */}
+                <div className="flex items-center justify-between">
+                    <h2 className="text-2xl font-semibold">{t("settings.title")}</h2>
+                    {onClose && (
+                        <Button variant="ghost" size="icon" onClick={onClose}>
+                            <X className="h-5 w-5" />
+                        </Button>
+                    )}
+                </div>
 
-                <Tabs defaultValue="profile" className="mt-2">
+                <Tabs defaultValue="profile">
                     <TabsList className="grid w-full grid-cols-2">
                         <TabsTrigger value="profile" className="flex items-center gap-2">
                             <User className="h-4 w-4" />
@@ -404,7 +402,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                         </AlertDialog>
                     </TabsContent>
                 </Tabs>
-            </DialogContent>
-        </Dialog>
+            </div>
+        </div>
     );
 }

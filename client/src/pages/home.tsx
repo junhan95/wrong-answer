@@ -35,6 +35,7 @@ const CreateConversationDialog = lazy(() => import("@/components/create-conversa
 const EditConversationDialog = lazy(() => import("@/components/edit-conversation-dialog").then(m => ({ default: m.EditConversationDialog })));
 const UpgradeLimitDialog = lazy(() => import("@/components/upgrade-limit-dialog").then(m => ({ default: m.UpgradeLimitDialog })));
 const OnboardingTutorial = lazy(() => import("@/components/onboarding-tutorial").then(m => ({ default: m.OnboardingTutorial })));
+const SettingsPanel = lazy(() => import("@/components/settings-dialog").then(m => ({ default: m.SettingsPanel })));
 
 function SidebarSkeleton() {
   return (
@@ -147,6 +148,7 @@ export default function Home() {
   const [upgradeLimitOpen, setUpgradeLimitOpen] = useState(false);
   const [upgradeLimitType, setUpgradeLimitType] = useState<"projects" | "conversations" | "aiQueries" | "storage">("projects");
   const [showTutorial, setShowTutorial] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
   const [taggedFiles, setTaggedFiles] = useState<Array<{
     id: string;
     originalName: string;
@@ -286,6 +288,7 @@ export default function Home() {
     setNavigationHistory((prev) => [...prev.slice(0, historyIndex + 1), conversationId]);
     setHistoryIndex((prev) => prev + 1);
     setSelectedConversationId(conversationId);
+    setShowSettings(false);
   };
 
   const handleBack = () => {
@@ -603,6 +606,10 @@ export default function Home() {
                   moveFolderMutation.mutate({ id: folderId, projectId, parentFolderId })
                 }
                 onReorderProjects={handleReorderProjects}
+                onOpenSettings={() => {
+                  setSelectedConversationId(null);
+                  setShowSettings(true);
+                }}
               />
             )}
           </Suspense>
@@ -697,7 +704,11 @@ export default function Home() {
               />
             </Suspense>
 
-            {selectedConversationId ? (
+            {showSettings ? (
+              <Suspense fallback={null}>
+                <SettingsPanel onClose={() => setShowSettings(false)} />
+              </Suspense>
+            ) : selectedConversationId ? (
               <Suspense fallback={<ChatSkeleton />}>
                 <>
                   <ChatInterface
