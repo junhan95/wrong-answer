@@ -28,24 +28,56 @@ export default function Landing() {
   const [, setLocation] = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [pwaInstallPrompt, setPwaInstallPrompt] = useState<any>(null);
+  const [isStandalone, setIsStandalone] = useState(false);
 
   useEffect(() => {
+    // Check if already running as installed PWA
+    setIsStandalone(
+      window.matchMedia("(display-mode: standalone)").matches ||
+      (window.navigator as any).standalone === true
+    );
+
     const handler = (e: Event) => {
       e.preventDefault();
       setPwaInstallPrompt(e);
     };
     window.addEventListener("beforeinstallprompt", handler);
-    return () => window.removeEventListener("beforeinstallprompt", handler);
+
+    const installedHandler = () => {
+      setPwaInstallPrompt(null);
+      setIsStandalone(true);
+    };
+    window.addEventListener("appinstalled", installedHandler);
+
+    return () => {
+      window.removeEventListener("beforeinstallprompt", handler);
+      window.removeEventListener("appinstalled", installedHandler);
+    };
   }, []);
 
   const handleDownload = async () => {
     if (pwaInstallPrompt) {
+      // PWA install prompt available → install app (creates desktop shortcut with icon)
       pwaInstallPrompt.prompt();
-      await pwaInstallPrompt.userChoice;
-      setPwaInstallPrompt(null);
+      const result = await pwaInstallPrompt.userChoice;
+      if (result.outcome === "accepted") {
+        setPwaInstallPrompt(null);
+        setIsStandalone(true);
+      }
+    } else if (isStandalone) {
+      // Already installed → just navigate to home
+      window.location.href = "/home";
     } else {
-      // Fallback: scroll to or navigate so user knows it's a PWA
-      window.open(window.location.origin, '_blank');
+      // Fallback: open in standalone-like new window (simulates app experience)
+      const width = 1200;
+      const height = 800;
+      const left = (screen.width - width) / 2;
+      const top = (screen.height - height) / 2;
+      window.open(
+        window.location.origin + "/home",
+        "WiseQuery",
+        `width=${width},height=${height},left=${left},top=${top},menubar=no,toolbar=no,location=no,status=no`
+      );
     }
   };
 
