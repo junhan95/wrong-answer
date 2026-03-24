@@ -1655,7 +1655,20 @@
       "aiQueries": "AI Queries (this month)",
       "storage": "Storage",
       "upgrade": "Upgrade Plan",
-      "manageSubscription": "Manage Subscription"
+      "viewPlans": "View Plans",
+      "manageSubscription": "Manage Subscription",
+      "cancelSubscription": "Cancel Subscription",
+      "cancelConfirmTitle": "Cancel your subscription?",
+      "cancelConfirmDesc": "Your plan will be downgraded to Free. You will lose access to benefits like additional projects, AI queries, and storage.",
+      "cancelConfirmAction": "Cancel Subscription",
+      "cancelSuccess": "Subscription cancelled. You are now on the Free plan.",
+      "cancelFailed": "Failed to cancel subscription. Please try again.",
+      "downgradeToBasic": "Downgrade to Basic",
+      "downgradeConfirmTitle": "Downgrade to Basic plan?",
+      "downgradeConfirmDesc": "You will lose access to Pro features such as unlimited projects, image analysis, and additional AI queries.",
+      "downgradeConfirmAction": "Downgrade",
+      "downgradeSuccess": "Your plan has been changed to Basic.",
+      "downgradeFailed": "Failed to downgrade. Please try again."
     }
   }
 }
