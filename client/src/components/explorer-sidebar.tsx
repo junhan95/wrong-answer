@@ -17,7 +17,7 @@ import { useQuery } from "@tanstack/react-query";
 import type { Project, Conversation, Folder } from "@shared/schema";
 import { useAuth } from "@/hooks/useAuth";
 import { TrashView } from "@/components/trash-view";
-import { SettingsDialog } from "@/components/settings-dialog";
+import { SettingsPanel } from "@/components/settings-dialog";
 
 interface ExplorerSidebarProps {
   projects: Project[];
@@ -46,6 +46,7 @@ interface ExplorerSidebarProps {
   onMoveConversation: (conversationId: string, newProjectId: string, folderId?: string | null) => void;
   onMoveFolder: (folderId: string, newProjectId: string, parentFolderId?: string | null) => void;
   onReorderProjects: (fromIndex: number, toIndex: number) => void;
+  onOpenSettings?: () => void;
 }
 
 function DraggableConversation({
@@ -497,6 +498,7 @@ export function ExplorerSidebar({
   onMoveConversation,
   onMoveFolder,
   onReorderProjects,
+  onOpenSettings,
 }: ExplorerSidebarProps) {
   const { t } = useTranslation();
   const { user, isAuthenticated, isLoading } = useAuth();
@@ -512,7 +514,6 @@ export function ExplorerSidebar({
 
   const [activeId, setActiveId] = useState<string | null>(null);
   const [overId, setOverId] = useState<string | null>(null);
-  const [settingsOpen, setSettingsOpen] = useState(false);
 
   // 드래그 활성화 조건: 10px 이상 이동해야 드래그 시작
   const pointerSensor = useSensor(PointerSensor, {
@@ -783,7 +784,7 @@ export function ExplorerSidebar({
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-48">
                   <DropdownMenuItem
-                    onClick={() => setSettingsOpen(true)}
+                    onClick={() => onOpenSettings?.()}
                     data-testid="menu-settings"
                   >
                     <Settings className="h-4 w-4 mr-2" />
@@ -798,7 +799,6 @@ export function ExplorerSidebar({
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
-              <SettingsDialog open={settingsOpen} onOpenChange={setSettingsOpen} />
             </>
           ) : (
             <Button
