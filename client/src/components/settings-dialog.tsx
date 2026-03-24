@@ -23,6 +23,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { User, CreditCard, Crown, Camera, AlertTriangle, ArrowDown, X, Trash2, Download, Upload, Shield, Calendar, Clock, Monitor, Chrome, FileText, ExternalLink, Gift } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { GoogleDocsSetupWizard } from "./google-docs-setup-wizard";
 
 interface SettingsPanelProps {
     onClose?: () => void;
@@ -824,66 +825,8 @@ export function SettingsPanel({ onClose }: SettingsPanelProps) {
                     </div>
                 </div>
 
-                {/* Google Docs Integration Dialog */}
-                <AlertDialog open={googleDocsDialogOpen} onOpenChange={setGoogleDocsDialogOpen}>
-                    <AlertDialogContent className="max-w-lg">
-                        <AlertDialogHeader>
-                            <AlertDialogTitle className="flex items-center gap-2">
-                                <FileText className="h-5 w-5 text-primary" />
-                                {t("settings.apps.googleDocsTitle")}
-                            </AlertDialogTitle>
-                            <AlertDialogDescription asChild>
-                                <div className="space-y-4">
-                                    <p>{t("settings.apps.googleDocsDesc")}</p>
-                                    <ol className="space-y-2 text-sm list-decimal list-inside">
-                                        <li>{t("settings.apps.googleDocsStep1")}</li>
-                                        <li>{t("settings.apps.googleDocsStep2")}</li>
-                                        <li>{t("settings.apps.googleDocsStep3")}</li>
-                                        <li>{t("settings.apps.googleDocsStep4")}</li>
-                                    </ol>
-                                    <div className="rounded-md bg-muted p-3">
-                                        <div className="flex items-center justify-between mb-2">
-                                            <span className="text-xs font-medium text-muted-foreground">Apps Script Code</span>
-                                            <Button
-                                                variant="ghost"
-                                                size="sm"
-                                                className="h-6 text-xs"
-                                                onClick={() => {
-                                                    fetch("/extensions/google-docs-addon.gs")
-                                                        .then(r => r.text())
-                                                        .then(code => {
-                                                            navigator.clipboard.writeText(code);
-                                                            toast({ title: t("settings.apps.codeCopied") });
-                                                        });
-                                                }}
-                                            >
-                                                {t("settings.apps.copyCode")}
-                                            </Button>
-                                        </div>
-                                        <p className="text-xs text-muted-foreground font-mono">
-                                            // WiseQuery Google Docs Add-on ...
-                                        </p>
-                                    </div>
-                                </div>
-                            </AlertDialogDescription>
-                        </AlertDialogHeader>
-                        <AlertDialogFooter>
-                            <AlertDialogCancel>{t("common.cancel")}</AlertDialogCancel>
-                            <AlertDialogAction
-                                onClick={() => {
-                                    fetch("/extensions/google-docs-addon.gs")
-                                        .then(r => r.text())
-                                        .then(code => {
-                                            navigator.clipboard.writeText(code);
-                                            toast({ title: t("settings.apps.codeCopied") });
-                                        });
-                                }}
-                            >
-                                {t("settings.apps.copyCode")}
-                            </AlertDialogAction>
-                        </AlertDialogFooter>
-                    </AlertDialogContent>
-                </AlertDialog>
+                {/* Google Docs Integration Wizard */}
+                <GoogleDocsSetupWizard open={googleDocsDialogOpen} onOpenChange={setGoogleDocsDialogOpen} />
             </div>
         </div>
     );
