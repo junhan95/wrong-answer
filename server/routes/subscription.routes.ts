@@ -20,7 +20,7 @@ router.get("/subscription", isAuthenticated, async (req, res) => {
 
         const projectCount = (await storage.getProjects(userId)).length;
         const conversationCount = (await storage.getConversations(userId)).length;
-        const aiQueryCount = await storage.getAIQueryCount(userId);
+        const aiQuota = await storage.checkAiQuota(userId);
 
         const files = await storage.getFilesByUser(userId);
         const storageUsedBytes = files.reduce((total, file) => total + (file.size || 0), 0);
@@ -31,11 +31,12 @@ router.get("/subscription", isAuthenticated, async (req, res) => {
             usage: {
                 projects: projectCount,
                 conversations: conversationCount,
-                aiQueries: aiQueryCount,
+                aiQueries: aiQuota.used,
                 storageMB: Math.round(storageUsedMB * 100) / 100,
             },
             limits: {
                 projects: planLimits.projects,
+                conversations: planLimits.conversations,
                 aiQueries: planLimits.aiQueries,
                 storageMB: planLimits.storageMB,
                 imageGeneration: planLimits.imageGeneration,

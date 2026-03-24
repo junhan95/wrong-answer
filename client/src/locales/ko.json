@@ -1652,6 +1652,7 @@
       "usage": "사용량",
       "projects": "프로젝트",
       "conversations": "대화",
+      "aiQueries": "AI 쿼리 (이번 달)",
       "storage": "저장공간",
       "upgrade": "플랜 업그레이드",
       "manageSubscription": "구독 관리"

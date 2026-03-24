@@ -38,7 +38,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
     const { data: subscriptionData } = useQuery<{
         subscription: { plan: string };
         usage: { projects: number; conversations: number; aiQueries: number; storageMB: number };
-        limits: { projects: number; conversations?: number; aiQueries: number; storageMB: number };
+        limits: { projects: number; conversations: number; aiQueries: number; storageMB: number };
     }>({
         queryKey: ["/api/subscription"],
         enabled: open,
@@ -254,10 +254,18 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
 
                                     <div className="flex items-center justify-between text-sm">
                                         <span>{t("settings.membership.conversations")}</span>
-                                        <span className="text-muted-foreground">{usage.conversations} / {formatLimit(limits.conversations ?? -1)}</span>
+                                        <span className="text-muted-foreground">{usage.conversations} / {formatLimit(limits.conversations)}</span>
                                     </div>
-                                    {(limits.conversations ?? -1) > 0 && (
-                                        <Progress value={Math.min((usage.conversations / (limits.conversations ?? -1)) * 100, 100)} className="h-1.5" />
+                                    {limits.conversations > 0 && (
+                                        <Progress value={Math.min((usage.conversations / limits.conversations) * 100, 100)} className="h-1.5" />
+                                    )}
+
+                                    <div className="flex items-center justify-between text-sm">
+                                        <span>{t("settings.membership.aiQueries")}</span>
+                                        <span className="text-muted-foreground">{usage.aiQueries} / {formatLimit(limits.aiQueries)}</span>
+                                    </div>
+                                    {limits.aiQueries > 0 && (
+                                        <Progress value={Math.min((usage.aiQueries / limits.aiQueries) * 100, 100)} className="h-1.5" />
                                     )}
 
                                     <div className="flex items-center justify-between text-sm">
