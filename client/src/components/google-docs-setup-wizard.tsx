@@ -12,12 +12,14 @@ import {
     ArrowRight,
     ArrowLeft,
     CheckCircle2,
-    Sparkles,
     MousePointerClick,
     Menu,
-    MessageSquareText,
     FileSearch,
     Zap,
+    Save,
+    RefreshCw,
+    Puzzle,
+    AlertCircle,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
@@ -30,11 +32,14 @@ export function GoogleDocsSetupWizard({ open, onOpenChange }: GoogleDocsSetupWiz
     const { t } = useTranslation();
     const { toast } = useToast();
     const [currentStep, setCurrentStep] = useState(0);
+    const [docsOpened, setDocsOpened] = useState(false);
     const [codeCopied, setCodeCopied] = useState(false);
-    const [appsScriptOpened, setAppsScriptOpened] = useState(false);
     const [setupComplete, setSetupComplete] = useState(false);
 
-    const totalSteps = 3;
+    const handleOpenGoogleDocs = () => {
+        window.open("https://docs.google.com/document/create", "_blank");
+        setDocsOpened(true);
+    };
 
     const handleCopyCode = async () => {
         try {
@@ -48,29 +53,23 @@ export function GoogleDocsSetupWizard({ open, onOpenChange }: GoogleDocsSetupWiz
         }
     };
 
-    const handleOpenAppsScript = () => {
-        window.open("https://script.google.com/home/start", "_blank");
-        setAppsScriptOpened(true);
-    };
-
     const handleComplete = () => {
         setSetupComplete(true);
     };
 
     const handleClose = () => {
         onOpenChange(false);
-        // Reset state after close animation
         setTimeout(() => {
             setCurrentStep(0);
+            setDocsOpened(false);
             setCodeCopied(false);
-            setAppsScriptOpened(false);
             setSetupComplete(false);
         }, 300);
     };
 
     const canProceed = () => {
-        if (currentStep === 0) return codeCopied;
-        if (currentStep === 1) return appsScriptOpened;
+        if (currentStep === 0) return docsOpened;
+        if (currentStep === 1) return codeCopied;
         return true;
     };
 
@@ -144,11 +143,9 @@ export function GoogleDocsSetupWizard({ open, onOpenChange }: GoogleDocsSetupWiz
                                 </div>
                             </div>
 
-                            {/* How to Use Section */}
+                            {/* How to Use */}
                             <div>
                                 <p className="text-sm font-medium mb-3">{t("settings.apps.googleDocsWizard.howToUseTitle")}</p>
-
-                                {/* Step: Open Menu */}
                                 <div className="rounded-lg border bg-muted/30 p-3 mb-2">
                                     <div className="flex items-start gap-3">
                                         <div className="flex items-center justify-center w-7 h-7 rounded-full bg-primary/10 flex-shrink-0 mt-0.5">
@@ -168,7 +165,6 @@ export function GoogleDocsSetupWizard({ open, onOpenChange }: GoogleDocsSetupWiz
                             <div>
                                 <p className="text-xs font-medium text-muted-foreground mb-2">{t("settings.apps.googleDocsWizard.availableFeatures")}</p>
                                 <div className="space-y-2">
-                                    {/* Feature 1: Ask about selection */}
                                     <div className="flex items-start gap-2.5 rounded-md border bg-muted/20 p-2.5">
                                         <div className="flex items-center justify-center w-6 h-6 rounded-md bg-blue-500/10 flex-shrink-0 mt-0.5">
                                             <MousePointerClick className="h-3 w-3 text-blue-400" />
@@ -178,8 +174,6 @@ export function GoogleDocsSetupWizard({ open, onOpenChange }: GoogleDocsSetupWiz
                                             <p className="text-[11px] text-muted-foreground mt-0.5">{t("settings.apps.googleDocsWizard.feature1Desc")}</p>
                                         </div>
                                     </div>
-
-                                    {/* Feature 2: Summarize document */}
                                     <div className="flex items-start gap-2.5 rounded-md border bg-muted/20 p-2.5">
                                         <div className="flex items-center justify-center w-6 h-6 rounded-md bg-purple-500/10 flex-shrink-0 mt-0.5">
                                             <FileSearch className="h-3 w-3 text-purple-400" />
@@ -189,8 +183,6 @@ export function GoogleDocsSetupWizard({ open, onOpenChange }: GoogleDocsSetupWiz
                                             <p className="text-[11px] text-muted-foreground mt-0.5">{t("settings.apps.googleDocsWizard.feature2Desc")}</p>
                                         </div>
                                     </div>
-
-                                    {/* Feature 3: Open WiseQuery */}
                                     <div className="flex items-start gap-2.5 rounded-md border bg-muted/20 p-2.5">
                                         <div className="flex items-center justify-center w-6 h-6 rounded-md bg-primary/10 flex-shrink-0 mt-0.5">
                                             <Zap className="h-3 w-3 text-primary" />
@@ -203,12 +195,73 @@ export function GoogleDocsSetupWizard({ open, onOpenChange }: GoogleDocsSetupWiz
                                 </div>
                             </div>
 
+                            {/* Note about per-document */}
+                            <div className="flex items-start gap-2.5 rounded-md bg-amber-500/5 border border-amber-500/20 p-2.5">
+                                <AlertCircle className="h-3.5 w-3.5 text-amber-500 flex-shrink-0 mt-0.5" />
+                                <p className="text-[11px] text-muted-foreground">{t("settings.apps.googleDocsWizard.perDocNote")}</p>
+                            </div>
+
                             <Button onClick={handleClose} className="w-full">
                                 {t("settings.apps.googleDocsWizard.done")}
                             </Button>
                         </div>
                     ) : currentStep === 0 ? (
-                        /* Step 1: Copy Code */
+                        /* Step 1: Open Google Docs */
+                        <div className="space-y-4">
+                            <div className="rounded-lg border bg-muted/30 p-4 space-y-3">
+                                <div className="flex items-start gap-3">
+                                    <div className="flex items-center justify-center w-8 h-8 rounded-md bg-muted flex-shrink-0 mt-0.5">
+                                        <FileText className="h-4 w-4 text-muted-foreground" />
+                                    </div>
+                                    <div>
+                                        <p className="text-sm font-medium">{t("settings.apps.googleDocsWizard.step1Title")}</p>
+                                        <p className="text-xs text-muted-foreground mt-0.5">
+                                            {t("settings.apps.googleDocsWizard.step1Desc")}
+                                        </p>
+                                    </div>
+                                </div>
+                                <Button
+                                    onClick={handleOpenGoogleDocs}
+                                    variant={docsOpened ? "outline" : "default"}
+                                    className="w-full"
+                                    size="sm"
+                                >
+                                    {docsOpened ? (
+                                        <>
+                                            <Check className="h-4 w-4 mr-2 text-green-500" />
+                                            {t("settings.apps.googleDocsWizard.docsOpened")}
+                                        </>
+                                    ) : (
+                                        <>
+                                            <ExternalLink className="h-4 w-4 mr-2" />
+                                            {t("settings.apps.googleDocsWizard.openGoogleDocs")}
+                                        </>
+                                    )}
+                                </Button>
+                                {docsOpened && (
+                                    <div className="rounded-md bg-primary/5 border border-primary/10 p-2.5">
+                                        <div className="flex items-start gap-2">
+                                            <Puzzle className="h-3.5 w-3.5 text-primary flex-shrink-0 mt-0.5" />
+                                            <p className="text-xs text-muted-foreground">
+                                                {t("settings.apps.googleDocsWizard.step1Hint")}
+                                            </p>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                            <div className="flex justify-end">
+                                <Button
+                                    onClick={() => setCurrentStep(1)}
+                                    disabled={!canProceed()}
+                                    size="sm"
+                                >
+                                    {t("settings.apps.googleDocsWizard.next")}
+                                    <ArrowRight className="h-3.5 w-3.5 ml-1.5" />
+                                </Button>
+                            </div>
+                        </div>
+                    ) : currentStep === 1 ? (
+                        /* Step 2: Copy Code */
                         <div className="space-y-4">
                             <div className="rounded-lg border bg-muted/30 p-4 space-y-3">
                                 <div className="flex items-start gap-3">
@@ -216,9 +269,9 @@ export function GoogleDocsSetupWizard({ open, onOpenChange }: GoogleDocsSetupWiz
                                         <Copy className="h-4 w-4 text-muted-foreground" />
                                     </div>
                                     <div>
-                                        <p className="text-sm font-medium">{t("settings.apps.googleDocsWizard.step1Title")}</p>
+                                        <p className="text-sm font-medium">{t("settings.apps.googleDocsWizard.step2Title")}</p>
                                         <p className="text-xs text-muted-foreground mt-0.5">
-                                            {t("settings.apps.googleDocsWizard.step1Desc")}
+                                            {t("settings.apps.googleDocsWizard.step2Desc")}
                                         </p>
                                     </div>
                                 </div>
@@ -241,58 +294,6 @@ export function GoogleDocsSetupWizard({ open, onOpenChange }: GoogleDocsSetupWiz
                                     )}
                                 </Button>
                             </div>
-                            <div className="flex justify-end">
-                                <Button
-                                    onClick={() => setCurrentStep(1)}
-                                    disabled={!canProceed()}
-                                    size="sm"
-                                >
-                                    {t("settings.apps.googleDocsWizard.next")}
-                                    <ArrowRight className="h-3.5 w-3.5 ml-1.5" />
-                                </Button>
-                            </div>
-                        </div>
-                    ) : currentStep === 1 ? (
-                        /* Step 2: Open Apps Script */
-                        <div className="space-y-4">
-                            <div className="rounded-lg border bg-muted/30 p-4 space-y-3">
-                                <div className="flex items-start gap-3">
-                                    <div className="flex items-center justify-center w-8 h-8 rounded-md bg-muted flex-shrink-0 mt-0.5">
-                                        <ExternalLink className="h-4 w-4 text-muted-foreground" />
-                                    </div>
-                                    <div>
-                                        <p className="text-sm font-medium">{t("settings.apps.googleDocsWizard.step2Title")}</p>
-                                        <p className="text-xs text-muted-foreground mt-0.5">
-                                            {t("settings.apps.googleDocsWizard.step2Desc")}
-                                        </p>
-                                    </div>
-                                </div>
-                                <Button
-                                    onClick={handleOpenAppsScript}
-                                    variant={appsScriptOpened ? "outline" : "default"}
-                                    className="w-full"
-                                    size="sm"
-                                >
-                                    {appsScriptOpened ? (
-                                        <>
-                                            <Check className="h-4 w-4 mr-2 text-green-500" />
-                                            {t("settings.apps.googleDocsWizard.opened")}
-                                        </>
-                                    ) : (
-                                        <>
-                                            <ExternalLink className="h-4 w-4 mr-2" />
-                                            {t("settings.apps.googleDocsWizard.openAppsScript")}
-                                        </>
-                                    )}
-                                </Button>
-                                {appsScriptOpened && (
-                                    <div className="rounded-md bg-primary/5 border border-primary/10 p-2.5">
-                                        <p className="text-xs text-muted-foreground">
-                                            {t("settings.apps.googleDocsWizard.step2Hint")}
-                                        </p>
-                                    </div>
-                                )}
-                            </div>
                             <div className="flex justify-between">
                                 <Button
                                     onClick={() => setCurrentStep(0)}
@@ -313,7 +314,7 @@ export function GoogleDocsSetupWizard({ open, onOpenChange }: GoogleDocsSetupWiz
                             </div>
                         </div>
                     ) : (
-                        /* Step 3: Paste, Save & Verify */
+                        /* Step 3: Paste in Apps Script & Save */
                         <div className="space-y-4">
                             <div className="rounded-lg border bg-muted/30 p-4 space-y-3">
                                 <div className="flex items-start gap-3">
@@ -327,7 +328,7 @@ export function GoogleDocsSetupWizard({ open, onOpenChange }: GoogleDocsSetupWiz
                                         </p>
                                     </div>
                                 </div>
-                                <ol className="space-y-2 ml-1">
+                                <ol className="space-y-2.5 ml-1">
                                     <li className="flex items-start gap-2.5 text-xs text-muted-foreground">
                                         <Badge variant="outline" className="h-5 w-5 p-0 flex items-center justify-center text-[10px] flex-shrink-0 mt-0.5 rounded-full">1</Badge>
                                         <span>{t("settings.apps.googleDocsWizard.step3Sub1")}</span>
@@ -339,6 +340,10 @@ export function GoogleDocsSetupWizard({ open, onOpenChange }: GoogleDocsSetupWiz
                                     <li className="flex items-start gap-2.5 text-xs text-muted-foreground">
                                         <Badge variant="outline" className="h-5 w-5 p-0 flex items-center justify-center text-[10px] flex-shrink-0 mt-0.5 rounded-full">3</Badge>
                                         <span>{t("settings.apps.googleDocsWizard.step3Sub3")}</span>
+                                    </li>
+                                    <li className="flex items-start gap-2.5 text-xs text-muted-foreground">
+                                        <Badge variant="outline" className="h-5 w-5 p-0 flex items-center justify-center text-[10px] flex-shrink-0 mt-0.5 rounded-full">4</Badge>
+                                        <span>{t("settings.apps.googleDocsWizard.step3Sub4")}</span>
                                     </li>
                                 </ol>
                             </div>
