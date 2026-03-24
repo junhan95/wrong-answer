@@ -1,5 +1,6 @@
 import { drizzle } from "drizzle-orm/node-postgres";
-import { Pool } from "pg";
+import pg, { type Pool } from "pg";
+const { Pool: PgPool } = pg;
 import * as schema from "@shared/schema";
 
 // Singleton Pool for pgvector operations - prevents connection exhaustion
@@ -7,7 +8,7 @@ let pgVectorPool: Pool | null = null;
 
 export function getPgVectorPool(): Pool {
     if (!pgVectorPool) {
-        pgVectorPool = new Pool({
+        pgVectorPool = new PgPool({
             connectionString: process.env.DATABASE_URL,
             max: 10,  // Maximum 10 connections in pool
             idleTimeoutMillis: 30000,  // Close idle connections after 30 seconds
@@ -16,7 +17,7 @@ export function getPgVectorPool(): Pool {
         });
 
         // Handle pool errors gracefully
-        pgVectorPool.on('error', (err) => {
+        pgVectorPool.on('error', (err: any) => {
             console.error('[PgVector Pool] Unexpected error:', err);
         });
     }
@@ -37,7 +38,7 @@ export class BaseStorage {
         if (!connectionString) {
             throw new Error("DATABASE_URL environment variable is not set");
         }
-        const pool = new Pool({ connectionString });
+        const pool = new PgPool({ connectionString });
         this.db = drizzle(pool, { schema });
     }
 }

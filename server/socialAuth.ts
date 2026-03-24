@@ -60,6 +60,34 @@ async function findOrCreateUser(profile: OAuthProfile) {
 export function setupSocialAuth(app: Express) {
     const callbackBaseUrl = process.env.APP_URL || "http://localhost:5000";
 
+    // 개발 환경 전용 모의 로그인 (테스트용)
+    if (process.env.NODE_ENV === "development") {
+        app.get("/api/auth/mock-login", async (req, res) => {
+            try {
+                // 강제로 테스트 유저를 생성하거나 조회
+                const email = "test@wisequery.local";
+                let user = await storage.getUserByEmail(email);
+                if (!user) {
+                    user = await storage.createUser({
+                        email,
+                        firstName: "Test",
+                        lastName: "User",
+                        authProvider: "mock",
+                    });
+                    await storage.createSubscription({ plan: "pro" }, user.id);
+                }
+                // 세션에 강제 로그인
+                req.login(user, (err: any) => {
+                    if (err) return res.status(500).json({ error: "Mock login failed" });
+                    return res.redirect("/");
+                });
+            } catch (error) {
+                console.error("[Mock Login] Error creating test user:", error);
+                res.status(500).json({ error: "Failed to create mock user" });
+            }
+        });
+    }
+
     // =====================
     // Google OAuth Strategy
     // =====================

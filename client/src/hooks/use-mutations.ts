@@ -23,6 +23,13 @@ export function useMutations({
       queryClient.invalidateQueries({ queryKey: ["/api/subscription"] });
       toast({ title: t('home.projectCreated') });
     },
+    onError: (error: any) => {
+      toast({
+        title: t('home.unknownError', { defaultValue: '프로젝트 생성 실패' }),
+        description: error.message || '요금제 제한에 도달했거나 알 수 없는 에러가 발생했습니다.',
+        variant: "destructive"
+      });
+    }
   });
 
   const updateProjectMutation = useMutation({
