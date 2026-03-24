@@ -20,7 +20,7 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { User, CreditCard, Crown, Camera, AlertTriangle, ArrowDown, X, Trash2, Download, Shield, Calendar, Clock } from "lucide-react";
+import { User, CreditCard, Crown, Camera, AlertTriangle, ArrowDown, X, Trash2, Download, Shield, Calendar, Clock, Monitor, Chrome, FileText, ExternalLink } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 interface SettingsPanelProps {
@@ -624,6 +624,37 @@ export function SettingsPanel({ onClose }: SettingsPanelProps) {
                         </AlertDialog>
                     </TabsContent>
                 </Tabs>
+
+                {/* Apps & Extensions */}
+                <div className="rounded-lg border p-4 space-y-3">
+                    <span className="font-medium text-sm">{t("settings.apps.title")}</span>
+                    <div className="space-y-1">
+                        <button
+                            onClick={() => window.open("#", "_blank")}
+                            className="w-full flex items-center gap-3 rounded-md px-3 py-2.5 text-sm hover:bg-muted/50 transition-colors text-left"
+                        >
+                            <Monitor className="h-4 w-4 text-primary flex-shrink-0" />
+                            <span className="flex-1">{t("settings.apps.desktop")}</span>
+                            <ExternalLink className="h-3.5 w-3.5 text-muted-foreground" />
+                        </button>
+                        <button
+                            onClick={() => window.open("#", "_blank")}
+                            className="w-full flex items-center gap-3 rounded-md px-3 py-2.5 text-sm hover:bg-muted/50 transition-colors text-left"
+                        >
+                            <Chrome className="h-4 w-4 text-primary flex-shrink-0" />
+                            <span className="flex-1">{t("settings.apps.chrome")}</span>
+                            <ExternalLink className="h-3.5 w-3.5 text-muted-foreground" />
+                        </button>
+                        <button
+                            onClick={() => window.open("#", "_blank")}
+                            className="w-full flex items-center gap-3 rounded-md px-3 py-2.5 text-sm hover:bg-muted/50 transition-colors text-left"
+                        >
+                            <FileText className="h-4 w-4 text-primary flex-shrink-0" />
+                            <span className="flex-1">{t("settings.apps.googleDocs")}</span>
+                            <ExternalLink className="h-3.5 w-3.5 text-muted-foreground" />
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
     );

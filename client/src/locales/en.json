@@ -1700,6 +1700,12 @@
       "deleteConfirmText": "DELETE",
       "deleteConfirmAction": "Permanently Delete Account",
       "deleteFailed": "Failed to delete account. Please try again."
+    },
+    "apps": {
+      "title": "Get Apps & Extensions",
+      "desktop": "Install Desktop App",
+      "chrome": "Install Chrome Extension",
+      "googleDocs": "Connect Google Docs"
     }
   }
 }

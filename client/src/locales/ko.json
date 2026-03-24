@@ -1700,6 +1700,12 @@
       "deleteConfirmText": "회원탈퇴",
       "deleteConfirmAction": "계정 영구 삭제",
       "deleteFailed": "회원 탈퇴에 실패했습니다. 다시 시도해 주세요."
+    },
+    "apps": {
+      "title": "앱 및 확장프로그램 받기",
+      "desktop": "데스크탑 프로그램 설치",
+      "chrome": "크롬 익스텐션 설치",
+      "googleDocs": "구글 Docs 연동하기"
     }
   }
 }
