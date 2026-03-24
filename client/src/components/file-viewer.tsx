@@ -245,8 +245,8 @@ export function FileViewer({
   // Subscription data for storage limit checking
   interface SubscriptionData {
     subscription: { plan: string; stripeStatus: string | null };
-    usage: { projects: number; conversations: number; aiQueries: number; storageGB: number };
-    limits: { projects: number; conversations: number; aiQueries: number; storageGB: number };
+    usage: { projects: number; conversations: number; aiQueries: number; storageMB: number };
+    limits: { projects: number; conversations?: number; aiQueries: number; storageMB: number };
   }
 
   const { data: subscriptionData } = useQuery<SubscriptionData>({
@@ -1080,10 +1080,10 @@ export function FileViewer({
       }
 
       // Check storage limit (skip for unlimited plans where limit is -1)
-      const currentStorageGB = subscriptionData?.usage?.storageGB ?? 0;
-      const storageLimit = subscriptionData?.limits?.storageGB ?? 10;
-      const totalUploadSizeGB = droppedFiles.reduce((sum, f) => sum + f.size, 0) / (1024 * 1024 * 1024);
-      if (storageLimit > 0 && currentStorageGB + totalUploadSizeGB > storageLimit) {
+      const currentStorageMB = subscriptionData?.usage?.storageMB ?? 0;
+      const storageLimit = subscriptionData?.limits?.storageMB ?? 250;
+      const totalUploadSizeMB = droppedFiles.reduce((sum, f) => sum + f.size, 0) / (1024 * 1024);
+      if (storageLimit > 0 && currentStorageMB + totalUploadSizeMB > storageLimit) {
         setStorageLimitDialogOpen(true);
         return;
       }
@@ -1116,10 +1116,10 @@ export function FileViewer({
       }
 
       // Check storage limit (skip for unlimited plans where limit is -1)
-      const currentStorageGB = subscriptionData?.usage?.storageGB ?? 0;
-      const storageLimit = subscriptionData?.limits?.storageGB ?? 10;
-      const totalUploadSizeGB = selectedFiles.reduce((sum, f) => sum + f.size, 0) / (1024 * 1024 * 1024);
-      if (storageLimit > 0 && currentStorageGB + totalUploadSizeGB > storageLimit) {
+      const currentStorageMB = subscriptionData?.usage?.storageMB ?? 0;
+      const storageLimit = subscriptionData?.limits?.storageMB ?? 250;
+      const totalUploadSizeMB = selectedFiles.reduce((sum, f) => sum + f.size, 0) / (1024 * 1024);
+      if (storageLimit > 0 && currentStorageMB + totalUploadSizeMB > storageLimit) {
         setStorageLimitDialogOpen(true);
         if (fileInputRef.current) {
           fileInputRef.current.value = "";
@@ -2701,8 +2701,8 @@ export function FileViewer({
         open={storageLimitDialogOpen}
         onOpenChange={setStorageLimitDialogOpen}
         limitType="storage"
-        currentCount={`${(subscriptionData?.usage?.storageGB ?? 0).toFixed(2)} GB`}
-        maxLimit={`${subscriptionData?.limits?.storageGB ?? 10} GB`}
+        currentCount={`${(subscriptionData?.usage?.storageMB ?? 0).toFixed(2)} MB`}
+        maxLimit={`${subscriptionData?.limits?.storageMB ?? 250} MB`}
         currentPlan={subscriptionData?.subscription?.plan}
       />
 

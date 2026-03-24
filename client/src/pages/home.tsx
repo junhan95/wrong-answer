@@ -172,8 +172,8 @@ export default function Home() {
   // Subscription data for limit checking
   interface SubscriptionData {
     subscription: { plan: string; stripeStatus: string | null };
-    usage: { projects: number; conversations: number; aiQueries: number; storageGB: number };
-    limits: { projects: number; conversations: number; aiQueries: number; storageGB: number };
+    usage: { projects: number; conversations: number; aiQueries: number; storageMB: number };
+    limits: { projects: number; conversations?: number; aiQueries: number; storageMB: number };
   }
 
   const { data: subscriptionData } = useQuery<SubscriptionData>({
@@ -942,18 +942,18 @@ export default function Home() {
                 : upgradeLimitType === "aiQueries"
                   ? (subscriptionData?.usage?.aiQueries ?? 0)
                   : upgradeLimitType === "storage"
-                    ? (subscriptionData?.usage?.storageGB ?? 0) + " GB"
+                    ? (subscriptionData?.usage?.storageMB ?? 0) + " MB"
                     : 0
           }
           maxLimit={
             upgradeLimitType === "projects"
               ? (subscriptionData?.limits?.projects ?? 3)
               : upgradeLimitType === "conversations"
-                ? (subscriptionData?.limits?.conversations ?? 50)
+                ? (subscriptionData?.limits?.conversations ?? -1)
                 : upgradeLimitType === "aiQueries"
-                  ? (subscriptionData?.limits?.aiQueries ?? 30)
+                  ? (subscriptionData?.limits?.aiQueries ?? 50)
                   : upgradeLimitType === "storage"
-                    ? (subscriptionData?.limits?.storageGB ?? 10) + " GB"
+                    ? (subscriptionData?.limits?.storageMB ?? 250) + " MB"
                     : 0
           }
           currentPlan={subscriptionData?.subscription?.plan}

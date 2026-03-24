@@ -31,22 +31,22 @@ interface SubscriptionData {
     projects: number;
     conversations: number;
     aiQueries: number;
-    storageGB: number;
+    storageMB: number;
   };
   limits: {
     projects: number;
-    conversations: number;
+    conversations?: number;
     aiQueries: number;
-    storageGB: number;
+    storageMB: number;
     imageGeneration: boolean;
   };
 }
 
-function formatStorage(gb: number): string {
-  if (gb < 1) {
-    return `${Math.round(gb * 1024)} MB`;
+function formatStorage(mb: number): string {
+  if (mb >= 1024) {
+    return `${(mb / 1024).toFixed(2)} GB`;
   }
-  return `${gb.toFixed(2)} GB`;
+  return `${Math.round(mb)} MB`;
 }
 
 export default function Pricing() {
@@ -277,14 +277,14 @@ export default function Pricing() {
                   <div className="flex justify-between mb-2">
                     <span className="text-sm text-muted-foreground">{t("pricing.current_plan.storage")}</span>
                     <span className="text-sm font-medium" data-testid="text-storage-usage">
-                      {formatStorage(subscriptionData.usage.storageGB)} / {subscriptionData.limits.storageGB === -1 ? "∞" : `${subscriptionData.limits.storageGB} GB`}
+                      {formatStorage(subscriptionData.usage.storageMB)} / {subscriptionData.limits.storageMB === -1 ? "∞" : formatStorage(subscriptionData.limits.storageMB)}
                     </span>
                   </div>
                   <Progress
                     value={
-                      subscriptionData.limits.storageGB === -1
+                      subscriptionData.limits.storageMB === -1
                         ? 0
-                        : (subscriptionData.usage.storageGB / subscriptionData.limits.storageGB) * 100
+                        : (subscriptionData.usage.storageMB / subscriptionData.limits.storageMB) * 100
                     }
                   />
                 </div>

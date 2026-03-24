@@ -6,8 +6,8 @@ import type { SearchResult } from "@shared/schema";
 
 interface SubscriptionData {
   subscription: { plan: string; stripeStatus: string | null };
-  usage: { projects: number; conversations: number; aiQueries: number; storageGB: number };
-  limits: { projects: number; conversations: number; aiQueries: number; storageGB: number };
+  usage: { projects: number; conversations: number; aiQueries: number; storageMB: number };
+  limits: { projects: number; conversations?: number; aiQueries: number; storageMB: number };
 }
 
 interface UseWebSocketChatOptions {

@@ -37,8 +37,8 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
 
     const { data: subscriptionData } = useQuery<{
         subscription: { plan: string };
-        usage: { projects: number; conversations: number; aiQueries: number; storageGB: number };
-        limits: { projects: number; conversations: number; aiQueries: number; storageGB: number };
+        usage: { projects: number; conversations: number; aiQueries: number; storageMB: number };
+        limits: { projects: number; conversations?: number; aiQueries: number; storageMB: number };
     }>({
         queryKey: ["/api/subscription"],
         enabled: open,
@@ -254,18 +254,18 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
 
                                     <div className="flex items-center justify-between text-sm">
                                         <span>{t("settings.membership.conversations")}</span>
-                                        <span className="text-muted-foreground">{usage.conversations} / {formatLimit(limits.conversations)}</span>
+                                        <span className="text-muted-foreground">{usage.conversations} / {formatLimit(limits.conversations ?? -1)}</span>
                                     </div>
-                                    {limits.conversations > 0 && (
-                                        <Progress value={Math.min((usage.conversations / limits.conversations) * 100, 100)} className="h-1.5" />
+                                    {(limits.conversations ?? -1) > 0 && (
+                                        <Progress value={Math.min((usage.conversations / (limits.conversations ?? -1)) * 100, 100)} className="h-1.5" />
                                     )}
 
                                     <div className="flex items-center justify-between text-sm">
                                         <span>{t("settings.membership.storage")}</span>
-                                        <span className="text-muted-foreground">{usage.storageGB}GB / {formatLimit(limits.storageGB)}GB</span>
+                                        <span className="text-muted-foreground">{usage.storageMB}MB / {formatLimit(limits.storageMB)}{limits.storageMB > 0 ? "MB" : ""}</span>
                                     </div>
-                                    {limits.storageGB > 0 && (
-                                        <Progress value={Math.min((usage.storageGB / limits.storageGB) * 100, 100)} className="h-1.5" />
+                                    {limits.storageMB > 0 && (
+                                        <Progress value={Math.min((usage.storageMB / limits.storageMB) * 100, 100)} className="h-1.5" />
                                     )}
                                 </div>
                             </div>
