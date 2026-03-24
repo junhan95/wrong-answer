@@ -1,5 +1,6 @@
 import { BaseStorage, schema, eq, and, isNull } from "./base";
 import type { Subscription, InsertSubscription, FileChunk, InsertFileChunk } from "@shared/schema";
+import { PLAN_LIMITS } from "../plans";
 
 export class SubscriptionsMixin extends BaseStorage {
     async getSubscription(userId: string): Promise<Subscription | undefined> {
@@ -7,6 +8,35 @@ export class SubscriptionsMixin extends BaseStorage {
             .select()
             .from(schema.subscriptions)
             .where(eq(schema.subscriptions.userId, userId));
+
+        if (!subscription) return undefined;
+
+        // Auto-apply pending plan change when billing cycle has ended
+        if (subscription.pendingPlan && subscription.billingCycleEnd) {
+            const now = new Date();
+            if (now >= new Date(subscription.billingCycleEnd)) {
+                const targetPlan = subscription.pendingPlan as keyof typeof PLAN_LIMITS;
+                const targetLimits = PLAN_LIMITS[targetPlan] ?? PLAN_LIMITS.free;
+                const newStart = new Date();
+                const newEnd = targetPlan === "free" ? null : new Date(newStart.getTime() + 30 * 24 * 60 * 60 * 1000);
+
+                const [updated] = await this.db
+                    .update(schema.subscriptions)
+                    .set({
+                        plan: subscription.pendingPlan,
+                        pendingPlan: null,
+                        monthlyAiQueriesAllowed: targetLimits.aiQueries,
+                        monthlyAiQueriesUsed: 0,
+                        billingCycleStart: newStart,
+                        billingCycleEnd: newEnd,
+                        updatedAt: newStart,
+                    })
+                    .where(eq(schema.subscriptions.userId, userId))
+                    .returning();
+                return updated;
+            }
+        }
+
         return subscription;
     }
 
