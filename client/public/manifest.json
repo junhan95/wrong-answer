@@ -2,7 +2,7 @@
   "name": "WiseQuery - AI 기반 지식 관리 플랫폼",
   "short_name": "WiseQuery",
   "description": "프로젝트별로 대화를 정리하고, 어디서든 질문하세요.",
-  "start_url": "/home",
+  "start_url": "/",
   "display": "standalone",
   "background_color": "#0a0a0b",
   "theme_color": "#7c3aed",
@@ -24,7 +24,7 @@
     {
       "name": "새 대화",
       "short_name": "새 대화",
-      "url": "/home",
+      "url": "/",
       "icons": [
         {
           "src": "/favicon.png",

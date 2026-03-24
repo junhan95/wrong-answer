@@ -66,7 +66,7 @@ export default function Landing() {
       }
     } else if (isStandalone) {
       // Already installed → just navigate to home
-      window.location.href = "/home";
+      window.location.href = "/";
     } else {
       // Fallback: open in standalone-like new window (simulates app experience)
       const width = 1200;
@@ -74,7 +74,7 @@ export default function Landing() {
       const left = (screen.width - width) / 2;
       const top = (screen.height - height) / 2;
       window.open(
-        window.location.origin + "/home",
+        window.location.origin + "/",
         "WiseQuery",
         `width=${width},height=${height},left=${left},top=${top},menubar=no,toolbar=no,location=no,status=no`
       );
