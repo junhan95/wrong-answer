@@ -26,11 +26,16 @@ async function findOrCreateUser(profile: OAuthProfile) {
     let user = await storage.getUserByEmail(profile.email);
 
     if (user) {
-        // Update auth provider and profile (including names) if needed
+        // Update auth provider if needed, but preserve custom profile image
+        const hasCustomImage = user.profileImageUrl && user.profileImageUrl.startsWith("/uploads/");
         const updateData: Record<string, any> = {
             authProvider: profile.provider,
-            profileImageUrl: profile.profileImageUrl || user.profileImageUrl,
         };
+
+        // Only update profile image if user hasn't uploaded a custom one
+        if (!hasCustomImage) {
+            updateData.profileImageUrl = profile.profileImageUrl || user.profileImageUrl;
+        }
 
         if (profile.firstName) updateData.firstName = profile.firstName;
         if (profile.lastName) updateData.lastName = profile.lastName;
