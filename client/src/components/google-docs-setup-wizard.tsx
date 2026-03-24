@@ -12,8 +12,12 @@ import {
     ArrowRight,
     ArrowLeft,
     CheckCircle2,
-    Circle,
     Sparkles,
+    MousePointerClick,
+    Menu,
+    MessageSquareText,
+    FileSearch,
+    Zap,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
@@ -127,35 +131,79 @@ export function GoogleDocsSetupWizard({ open, onOpenChange }: GoogleDocsSetupWiz
                 {/* Step Content */}
                 <div className="px-6 pb-6">
                     {setupComplete ? (
-                        /* Success State */
-                        <div className="flex flex-col items-center text-center py-6 gap-4">
-                            <div className="flex items-center justify-center w-16 h-16 rounded-full bg-green-500/10">
-                                <CheckCircle2 className="h-8 w-8 text-green-500" />
+                        /* Success State with Usage Guide */
+                        <div className="flex flex-col gap-4">
+                            {/* Success Header */}
+                            <div className="flex items-center gap-3 rounded-lg bg-green-500/10 border border-green-500/20 p-3">
+                                <CheckCircle2 className="h-5 w-5 text-green-500 flex-shrink-0" />
+                                <div>
+                                    <p className="text-sm font-semibold text-green-400">{t("settings.apps.googleDocsWizard.successTitle")}</p>
+                                    <p className="text-xs text-muted-foreground mt-0.5">
+                                        {t("settings.apps.googleDocsWizard.successDesc")}
+                                    </p>
+                                </div>
                             </div>
+
+                            {/* How to Use Section */}
                             <div>
-                                <h3 className="font-semibold text-lg">{t("settings.apps.googleDocsWizard.successTitle")}</h3>
-                                <p className="text-sm text-muted-foreground mt-1.5 max-w-xs">
-                                    {t("settings.apps.googleDocsWizard.successDesc")}
-                                </p>
+                                <p className="text-sm font-medium mb-3">{t("settings.apps.googleDocsWizard.howToUseTitle")}</p>
+
+                                {/* Step: Open Menu */}
+                                <div className="rounded-lg border bg-muted/30 p-3 mb-2">
+                                    <div className="flex items-start gap-3">
+                                        <div className="flex items-center justify-center w-7 h-7 rounded-full bg-primary/10 flex-shrink-0 mt-0.5">
+                                            <Menu className="h-3.5 w-3.5 text-primary" />
+                                        </div>
+                                        <div>
+                                            <p className="text-xs font-medium">{t("settings.apps.googleDocsWizard.howToStep1")}</p>
+                                            <p className="text-[11px] text-muted-foreground mt-0.5">
+                                                {t("settings.apps.googleDocsWizard.howToStep1Desc")}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            <div className="w-full rounded-lg border bg-muted/30 p-3 text-left">
+
+                            {/* Available Features */}
+                            <div>
                                 <p className="text-xs font-medium text-muted-foreground mb-2">{t("settings.apps.googleDocsWizard.availableFeatures")}</p>
-                                <ul className="space-y-1.5">
-                                    <li className="flex items-center gap-2 text-sm">
-                                        <Sparkles className="h-3.5 w-3.5 text-primary flex-shrink-0" />
-                                        {t("settings.apps.googleDocsWizard.feature1")}
-                                    </li>
-                                    <li className="flex items-center gap-2 text-sm">
-                                        <Sparkles className="h-3.5 w-3.5 text-primary flex-shrink-0" />
-                                        {t("settings.apps.googleDocsWizard.feature2")}
-                                    </li>
-                                    <li className="flex items-center gap-2 text-sm">
-                                        <Sparkles className="h-3.5 w-3.5 text-primary flex-shrink-0" />
-                                        {t("settings.apps.googleDocsWizard.feature3")}
-                                    </li>
-                                </ul>
+                                <div className="space-y-2">
+                                    {/* Feature 1: Ask about selection */}
+                                    <div className="flex items-start gap-2.5 rounded-md border bg-muted/20 p-2.5">
+                                        <div className="flex items-center justify-center w-6 h-6 rounded-md bg-blue-500/10 flex-shrink-0 mt-0.5">
+                                            <MousePointerClick className="h-3 w-3 text-blue-400" />
+                                        </div>
+                                        <div>
+                                            <p className="text-xs font-medium">{t("settings.apps.googleDocsWizard.feature1Title")}</p>
+                                            <p className="text-[11px] text-muted-foreground mt-0.5">{t("settings.apps.googleDocsWizard.feature1Desc")}</p>
+                                        </div>
+                                    </div>
+
+                                    {/* Feature 2: Summarize document */}
+                                    <div className="flex items-start gap-2.5 rounded-md border bg-muted/20 p-2.5">
+                                        <div className="flex items-center justify-center w-6 h-6 rounded-md bg-purple-500/10 flex-shrink-0 mt-0.5">
+                                            <FileSearch className="h-3 w-3 text-purple-400" />
+                                        </div>
+                                        <div>
+                                            <p className="text-xs font-medium">{t("settings.apps.googleDocsWizard.feature2Title")}</p>
+                                            <p className="text-[11px] text-muted-foreground mt-0.5">{t("settings.apps.googleDocsWizard.feature2Desc")}</p>
+                                        </div>
+                                    </div>
+
+                                    {/* Feature 3: Open WiseQuery */}
+                                    <div className="flex items-start gap-2.5 rounded-md border bg-muted/20 p-2.5">
+                                        <div className="flex items-center justify-center w-6 h-6 rounded-md bg-primary/10 flex-shrink-0 mt-0.5">
+                                            <Zap className="h-3 w-3 text-primary" />
+                                        </div>
+                                        <div>
+                                            <p className="text-xs font-medium">{t("settings.apps.googleDocsWizard.feature3Title")}</p>
+                                            <p className="text-[11px] text-muted-foreground mt-0.5">{t("settings.apps.googleDocsWizard.feature3Desc")}</p>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            <Button onClick={handleClose} className="w-full mt-2">
+
+                            <Button onClick={handleClose} className="w-full">
                                 {t("settings.apps.googleDocsWizard.done")}
                             </Button>
                         </div>
