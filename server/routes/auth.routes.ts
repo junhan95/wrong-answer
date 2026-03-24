@@ -123,6 +123,115 @@ router.get("/auth/export", isAuthenticated, async (req, res) => {
     }
 });
 
+// Import user data (restore from backup)
+router.post("/auth/import", isAuthenticated, async (req, res) => {
+    try {
+        const user = req.user as any;
+        const userId = user.id;
+        const backupData = req.body;
+
+        if (!backupData || !backupData.exportedAt) {
+            return res.status(400).json({ error: "Invalid backup file format" });
+        }
+
+        let projectsImported = 0;
+        let conversationsImported = 0;
+        let messagesImported = 0;
+
+        // Map old project names to new project IDs
+        const projectMap = new Map<string, string>();
+
+        // Import projects
+        if (Array.isArray(backupData.projects)) {
+            for (const p of backupData.projects) {
+                try {
+                    const project = await storage.createProject(
+                        { name: p.name || "Imported Project" },
+                        userId,
+                    );
+                    projectMap.set(p.name, project.id);
+                    projectsImported++;
+                } catch (err) {
+                    console.error("Error importing project:", err);
+                }
+            }
+        }
+
+        // Import conversations and messages
+        if (Array.isArray(backupData.conversations)) {
+            // Get first available project ID as fallback
+            const existingProjects = await storage.getProjects(userId);
+            const fallbackProjectId = existingProjects.length > 0 ? existingProjects[0].id : null;
+
+            for (const c of backupData.conversations) {
+                try {
+                    // Resolve project ID from project name or projectId
+                    let projectId = projectMap.get(c.projectName) || null;
+                    if (!projectId && c.projectId) {
+                        // Try to find by original projectId in map values
+                        projectId = fallbackProjectId;
+                    }
+                    if (!projectId) {
+                        projectId = fallbackProjectId;
+                    }
+                    if (!projectId) {
+                        // Create a default project if none exists
+                        const defaultProject = await storage.createProject(
+                            { name: "Imported" },
+                            userId,
+                        );
+                        projectId = defaultProject.id;
+                        projectMap.set("Imported", projectId);
+                    }
+
+                    const conversation = await storage.createConversation(
+                        {
+                            name: c.title || c.name || "Imported Conversation",
+                            projectId,
+                        },
+                        userId,
+                    );
+                    conversationsImported++;
+
+                    // Import messages for this conversation
+                    if (Array.isArray(c.messages)) {
+                        for (const m of c.messages) {
+                            try {
+                                await storage.createMessage(
+                                    {
+                                        conversationId: conversation.id,
+                                        role: m.role || "user",
+                                        content: m.content || "",
+                                    },
+                                    userId,
+                                );
+                                messagesImported++;
+                            } catch (err) {
+                                console.error("Error importing message:", err);
+                            }
+                        }
+                    }
+                } catch (err) {
+                    console.error("Error importing conversation:", err);
+                }
+            }
+        }
+
+        // Invalidate any caches if needed
+        res.json({
+            success: true,
+            imported: {
+                projects: projectsImported,
+                conversations: conversationsImported,
+                messages: messagesImported,
+            },
+        });
+    } catch (error) {
+        console.error("Error importing user data:", error);
+        res.status(500).json({ error: "Failed to import user data" });
+    }
+});
+
 // Delete user account
 router.delete("/auth/account", isAuthenticated, async (req, res) => {
     try {

@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { queryClient, apiRequest } from "@/lib/queryClient";
 import { useAuth } from "@/hooks/useAuth";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -20,7 +21,7 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { User, CreditCard, Crown, Camera, AlertTriangle, ArrowDown, X, Trash2, Download, Shield, Calendar, Clock, Monitor, Chrome, FileText, ExternalLink, Gift } from "lucide-react";
+import { User, CreditCard, Crown, Camera, AlertTriangle, ArrowDown, X, Trash2, Download, Upload, Shield, Calendar, Clock, Monitor, Chrome, FileText, ExternalLink, Gift } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 interface SettingsPanelProps {
@@ -197,6 +198,48 @@ export function SettingsPanel({ onClose }: SettingsPanelProps) {
 
     const handleExportData = () => {
         window.open("/api/auth/export", "_blank");
+    };
+
+    const importFileRef = useRef<HTMLInputElement>(null);
+    const [importLoading, setImportLoading] = useState(false);
+
+    const handleImportData = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        try {
+            setImportLoading(true);
+            const text = await file.text();
+            const data = JSON.parse(text);
+
+            if (!data.exportedAt) {
+                toast({ title: t("settings.account.importInvalidFile"), variant: "destructive" });
+                return;
+            }
+
+            const res = await apiRequest("POST", "/api/auth/import", data);
+            const result = await res.json();
+
+            if (result.success) {
+                toast({
+                    title: t("settings.account.importSuccess", {
+                        projects: result.imported.projects,
+                        conversations: result.imported.conversations,
+                        messages: result.imported.messages,
+                    }),
+                });
+                queryClient.invalidateQueries();
+            } else {
+                toast({ title: t("settings.account.importFailed"), variant: "destructive" });
+            }
+        } catch (err) {
+            toast({ title: t("settings.account.importFailed"), variant: "destructive" });
+        } finally {
+            setImportLoading(false);
+            if (importFileRef.current) {
+                importFileRef.current.value = "";
+            }
+        }
     };
 
     const plan = subscriptionData?.subscription?.plan || "free";
@@ -627,6 +670,33 @@ export function SettingsPanel({ onClose }: SettingsPanelProps) {
                             </Button>
                         </div>
 
+                        {/* Data Import */}
+                        <div className="rounded-lg border p-4 space-y-3">
+                            <div className="flex items-center gap-2">
+                                <Upload className="h-5 w-5 text-primary" />
+                                <span className="font-medium">{t("settings.account.importTitle")}</span>
+                            </div>
+                            <p className="text-sm text-muted-foreground">
+                                {t("settings.account.importDesc")}
+                            </p>
+                            <input
+                                ref={importFileRef}
+                                type="file"
+                                accept=".json"
+                                className="hidden"
+                                onChange={handleImportData}
+                            />
+                            <Button
+                                variant="outline"
+                                className="w-full"
+                                disabled={importLoading}
+                                onClick={() => importFileRef.current?.click()}
+                            >
+                                <Upload className="h-4 w-4 mr-2" />
+                                {importLoading ? t("common.loading") : t("settings.account.importButton")}
+                            </Button>
+                        </div>
+
                         {/* Delete Account */}
                         <div className="rounded-lg border border-destructive/30 p-4 space-y-3">
                             <div className="flex items-center gap-2">
@@ -816,5 +886,24 @@ export function SettingsPanel({ onClose }: SettingsPanelProps) {
                 </AlertDialog>
             </div>
         </div>
+    );
+}
+
+interface SettingsDialogProps {
+    open: boolean;
+    onOpenChange: (open: boolean) => void;
+}
+
+export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
+    const { t } = useTranslation();
+    return (
+        <Dialog open={open} onOpenChange={onOpenChange}>
+            <DialogContent className="sm:max-w-[600px] max-h-[85vh] overflow-y-auto p-0">
+                <DialogHeader className="sr-only">
+                    <DialogTitle>{t("settings.title")}</DialogTitle>
+                </DialogHeader>
+                <SettingsPanel onClose={() => onOpenChange(false)} />
+            </DialogContent>
+        </Dialog>
     );
 }
