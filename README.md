@@ -86,7 +86,7 @@
 ### 2. Installation
 ```bash
 git clone https://github.com/junhan95/wrong-answer.git
-cd wrong-answer/Wisequery
+cd wrong-answer
 npm install
 ```
 

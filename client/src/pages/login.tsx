@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { FolderTree } from "lucide-react";
+import { CheckSquare } from "lucide-react";
 import { SiGoogle, SiNaver, SiKakaotalk } from "react-icons/si";
 import { PrefetchLink } from "@/components/prefetch-link";
 
@@ -46,8 +46,8 @@ export default function LoginPage() {
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-1 text-center">
           <div className="flex items-center justify-center gap-2 mb-4">
-            <FolderTree className="h-8 w-8 text-primary" />
-            <span className="text-2xl font-bold">WiseQuery</span>
+            <CheckSquare className="h-8 w-8 text-primary" />
+            <span className="text-2xl font-bold">오답노트</span>
           </div>
           <CardTitle className="text-2xl font-bold">
             {t("auth.login.title")}

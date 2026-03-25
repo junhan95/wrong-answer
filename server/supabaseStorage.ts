@@ -4,7 +4,7 @@ import { randomUUID } from "crypto";
 
 const SUPABASE_URL = process.env.SUPABASE_URL;
 const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
-const STORAGE_BUCKET = process.env.SUPABASE_STORAGE_BUCKET || "wisequery-files";
+const STORAGE_BUCKET = process.env.SUPABASE_STORAGE_BUCKET || "odabnote-files";
 
 let supabaseClient: SupabaseClient | null = null;
 

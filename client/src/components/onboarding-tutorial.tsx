@@ -4,7 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { FolderTree, MessageSquare, FileText, Sparkles, X } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
-const TUTORIAL_KEY = "wisequery_tutorial_completed";
+const TUTORIAL_KEY = "odabnote_tutorial_completed";
 
 interface TutorialStep {
     icon: React.ReactNode;

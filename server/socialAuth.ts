@@ -70,7 +70,7 @@ export function setupSocialAuth(app: Express) {
         app.get("/api/auth/mock-login", async (req, res) => {
             try {
                 // 강제로 테스트 유저를 생성하거나 조회
-                const email = "test@wisequery.local";
+                const email = "test@wrong-answer.local";
                 let user = await storage.getUserByEmail(email);
                 if (!user) {
                     user = await storage.createUser({

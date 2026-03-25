@@ -1073,13 +1073,13 @@
     }
   },
   "about": {
-    "title": "About WiseQuery",
+    "title": "About 오답노트 AI",
     "subtitle": "We're building the AI assistant that truly remembers and understands your work",
     "story": {
       "title": "Our Story",
-      "paragraph1": "WiseQuery was founded with a simple yet powerful vision: to create an AI assistant that doesn't just respond to queries, but truly understands and remembers the context of your work.",
+      "paragraph1": "오답노트 AI was founded with a simple yet powerful vision: to create an AI assistant that doesn't just respond to queries, but truly understands and remembers the context of your work.",
       "paragraph2": "We noticed that despite the advances in AI technology, most tools still treated each conversation as isolated. Knowledge from past discussions was lost, and users found themselves repeatedly explaining context. We knew there had to be a better way.",
-      "paragraph3": "Today, WiseQuery's RAG-powered platform helps thousands of professionals organize their knowledge, maintain context across projects, and work more efficiently with AI that actually remembers."
+      "paragraph3": "Today, 오답노트 AI's RAG-powered platform helps thousands of professionals organize their knowledge, maintain context across projects, and work more efficiently with AI that actually remembers."
     },
     "values": {
       "title": "Our Values",
@@ -1109,7 +1109,7 @@
   },
   "blog": {
     "title": "Blog",
-    "subtitle": "Insights, tutorials, and updates from the WiseQuery team",
+    "subtitle": "Insights, tutorials, and updates from the 오답노트 AI team",
     "readMore": "Read More",
     "readTime": "{{minutes}} min read",
     "moreComingSoon": "More articles coming soon. Stay tuned!",
@@ -1124,7 +1124,7 @@
     "posts": {
       "ragExplained": {
         "title": "Understanding RAG: How AI Remembers Your Conversations",
-        "excerpt": "Deep dive into Retrieval-Augmented Generation and how it powers WiseQuery's contextual memory."
+        "excerpt": "Deep dive into Retrieval-Augmented Generation and how it powers 오답노트 AI's contextual memory."
       },
       "productivityTips": {
         "title": "5 Tips to Maximize Your Productivity with AI Assistants",
@@ -1143,7 +1143,7 @@
         "excerpt": "Understanding data privacy and security when working with AI assistants."
       },
       "gettingStarted": {
-        "title": "Getting Started with WiseQuery: A Complete Guide",
+        "title": "Getting Started with 오답노트 AI: A Complete Guide",
         "excerpt": "Step-by-step tutorial to set up your first project and start chatting with context."
       }
     }
@@ -1154,7 +1154,7 @@
     "openPositions": "Open Positions",
     "applyNow": "Apply Now",
     "benefits": {
-      "title": "Why Work at WiseQuery?",
+      "title": "Why Work at 오답노트 AI?",
       "health": {
         "title": "Health & Wellness",
         "description": "Comprehensive health insurance and wellness programs"
@@ -1257,7 +1257,7 @@
     "title": "Privacy Policy",
     "lastUpdated": "Last Updated",
     "updateDate": "December 2024",
-    "intro": "At WiseQuery, we are committed to protecting your privacy and ensuring the security of your personal information. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our AI-powered knowledge management platform.",
+    "intro": "At 오답노트 AI, we are committed to protecting your privacy and ensuring the security of your personal information. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our AI-powered knowledge management platform.",
     "questions": "If you have any questions about this Privacy Policy, please contact us.",
     "sections": {
       "collection": {
@@ -1286,7 +1286,7 @@
       },
       "rights": {
         "title": "Your Rights",
-        "content": "You have the right to:\n\n• Access and receive a copy of your personal data\n• Correct inaccurate or incomplete information\n• Request deletion of your personal data\n• Object to processing of your personal data\n• Withdraw consent at any time\n• Export your data in a portable format\n\nTo exercise these rights, please contact us at privacy@wisequery.app."
+        "content": "You have the right to:\n\n• Access and receive a copy of your personal data\n• Correct inaccurate or incomplete information\n• Request deletion of your personal data\n• Object to processing of your personal data\n• Withdraw consent at any time\n• Export your data in a portable format\n\nTo exercise these rights, please contact us at privacy@wrong-answer.ai."
       },
       "children": {
         "title": "Children's Privacy",
@@ -1298,7 +1298,7 @@
       },
       "contact": {
         "title": "Contact Us",
-        "content": "If you have any questions about this Privacy Policy or our data practices, please contact us at:\n\nWiseQuery\nEmail: privacy@wisequery.app\nGeneral Inquiries: info@wisequery.app"
+        "content": "If you have any questions about this Privacy Policy or our data practices, please contact us at:\n\n오답노트 AI\nEmail: privacy@wrong-answer.ai\nGeneral Inquiries: info@wrong-answer.ai"
       }
     }
   },
@@ -1306,16 +1306,16 @@
     "title": "Terms of Service",
     "lastUpdated": "Last Updated",
     "updateDate": "December 2024",
-    "intro": "Welcome to WiseQuery. These Terms of Service (\"Terms\") govern your access to and use of WiseQuery's AI-powered knowledge management platform. By accessing or using our services, you agree to be bound by these Terms. If you do not agree to these Terms, do not use our services.",
+    "intro": "Welcome to 오답노트 AI. These Terms of Service (\"Terms\") govern your access to and use of 오답노트 AI's AI-powered knowledge management platform. By accessing or using our services, you agree to be bound by these Terms. If you do not agree to these Terms, do not use our services.",
     "questions": "If you have any questions about these Terms, please contact us.",
     "sections": {
       "acceptance": {
         "title": "Acceptance of Terms",
-        "content": "By creating an account or using WiseQuery, you confirm that you are at least 18 years old (or the legal age of majority in your jurisdiction) and have the legal capacity to enter into these Terms. If you are using WiseQuery on behalf of an organization, you represent that you have the authority to bind that organization to these Terms."
+        "content": "By creating an account or using 오답노트 AI, you confirm that you are at least 18 years old (or the legal age of majority in your jurisdiction) and have the legal capacity to enter into these Terms. If you are using 오답노트 AI on behalf of an organization, you represent that you have the authority to bind that organization to these Terms."
       },
       "description": {
         "title": "Description of Services",
-        "content": "WiseQuery provides an AI-powered knowledge management platform that allows users to:\n\n• Create and organize conversations within project hierarchies\n• Interact with AI assistants for information retrieval and analysis\n• Use semantic search powered by RAG (Retrieval-Augmented Generation) technology\n• Store and manage knowledge across multiple projects\n\nWe reserve the right to modify, suspend, or discontinue any part of our services at any time with reasonable notice."
+        "content": "오답노트 AI provides an AI-powered knowledge management platform that allows users to:\n\n• Create and organize conversations within project hierarchies\n• Interact with AI assistants for information retrieval and analysis\n• Use semantic search powered by RAG (Retrieval-Augmented Generation) technology\n• Store and manage knowledge across multiple projects\n\nWe reserve the right to modify, suspend, or discontinue any part of our services at any time with reasonable notice."
       },
       "accounts": {
         "title": "User Accounts",
@@ -1327,11 +1327,11 @@
       },
       "content": {
         "title": "User Content",
-        "content": "You retain ownership of the content you create and upload to WiseQuery. By using our services, you grant us a limited license to:\n\n• Store, process, and display your content to provide our services\n• Create embeddings and indexes for search functionality\n• Use anonymized data to improve our AI models and services\n\nYou are solely responsible for the content you upload and must ensure it does not violate any laws or third-party rights."
+        "content": "You retain ownership of the content you create and upload to 오답노트 AI. By using our services, you grant us a limited license to:\n\n• Store, process, and display your content to provide our services\n• Create embeddings and indexes for search functionality\n• Use anonymized data to improve our AI models and services\n\nYou are solely responsible for the content you upload and must ensure it does not violate any laws or third-party rights."
       },
       "intellectual": {
         "title": "Intellectual Property",
-        "content": "All rights, title, and interest in WiseQuery, including our software, design, logos, and content, are owned by WiseQuery and protected by intellectual property laws. You may not use our trademarks, logos, or brand elements without prior written consent.\n\nThe AI responses generated by our platform are provided for informational purposes only and should not be considered professional advice."
+        "content": "All rights, title, and interest in 오답노트 AI, including our software, design, logos, and content, are owned by 오답노트 AI and protected by intellectual property laws. You may not use our trademarks, logos, or brand elements without prior written consent.\n\nThe AI responses generated by our platform are provided for informational purposes only and should not be considered professional advice."
       },
       "payment": {
         "title": "Payment Terms",
@@ -1362,7 +1362,7 @@
   "security": {
     "title": "Security",
     "subtitle": "Your data security is our top priority. Learn about the measures we take to protect your information.",
-    "intro": "At WiseQuery, we implement industry-leading security practices to protect your data and ensure the confidentiality, integrity, and availability of our services. Our security framework is designed to meet the highest standards expected of AI and cloud-based platforms.",
+    "intro": "At 오답노트 AI, we implement industry-leading security practices to protect your data and ensure the confidentiality, integrity, and availability of our services. Our security framework is designed to meet the highest standards expected of AI and cloud-based platforms.",
     "featuresTitle": "Security Features",
     "practicesTitle": "Security Practices",
     "features": {
@@ -1410,7 +1410,7 @@
       },
       "vulnerability": {
         "title": "Vulnerability Disclosure",
-        "content": "We welcome responsible disclosure of security vulnerabilities:\n\n• Please report security issues to security@wisequery.app\n\n• Include detailed steps to reproduce the vulnerability\n\n• Allow reasonable time for us to address the issue before public disclosure\n\n• Do not access or modify other users' data during research\n\n• Do not access or modify other users' data during research\n\nWe appreciate the security research community's help in keeping WiseQuery safe."
+        "content": "We welcome responsible disclosure of security vulnerabilities:\n\n• Please report security issues to security@wrong-answer.ai\n\n• Include detailed steps to reproduce the vulnerability\n\n• Allow reasonable time for us to address the issue before public disclosure\n\n• Do not access or modify other users' data during research\n\n• Do not access or modify other users' data during research\n\nWe appreciate the security research community's help in keeping 오답노트 AI safe."
       }
     },
     "report": {
@@ -1447,7 +1447,7 @@
       "free": {
         "name": "Free",
         "tagline": "Get started for free.",
-        "description": "Perfect for trying out WiseQuery.",
+        "description": "Perfect for trying out 오답노트 AI.",
         "features": {
           "projects": "3 projects",
           "conversations": "Unlimited conversations (50 AI queries/mo)",
@@ -1577,8 +1577,8 @@
     "editTitle": "Edit Document",
     "sessionActive": "Edit session active",
     "editInstructions": "Your document is open in {{editor}}. Make your changes and click 'Sync & Close' when done.",
-    "syncReminder": "Remember to click 'Sync & Close' to save your changes back to WiseQuery.",
-    "instructions": "Upload this document to {{editor}} for editing. Your changes will be synced back to WiseQuery.",
+    "syncReminder": "Remember to click 'Sync & Close' to save your changes back to 오답노트 AI.",
+    "instructions": "Upload this document to {{editor}} for editing. Your changes will be synced back to 오답노트 AI.",
     "step1": "Click 'Start Editing' to upload the file",
     "step2": "Edit your document in {{editor}}",
     "step3": "Click 'Sync & Close' to save changes",
@@ -1640,7 +1640,7 @@
   "tutorial": {
     "steps": {
       "welcome": {
-        "title": "Welcome to WiseQuery! 👋",
+        "title": "Welcome to 오답노트 AI! 👋",
         "description": "Upload documents, ask AI questions, and organize knowledge by project on our AI-powered knowledge management platform. Let's get started with a quick tour."
       },
       "sidebar": {
@@ -1736,7 +1736,7 @@
       "importButton": "Select Backup File",
       "importSuccess": "Data imported successfully. ({{projects}} projects, {{conversations}} conversations, {{messages}} messages)",
       "importFailed": "Failed to import data. Please try again.",
-      "importInvalidFile": "Invalid backup file. Please select a WiseQuery backup JSON file.",
+      "importInvalidFile": "Invalid backup file. Please select a 오답노트 AI backup JSON file.",
       "deleteTitle": "Delete Account",
       "deleteDesc": "Deleting your account will permanently remove all your data and cannot be undone.",
       "deleteButton": "Delete Account",
@@ -1761,17 +1761,17 @@
       "googleDocs": "Connect Google Docs",
       "googleDocsWizard": {
         "title": "Google Docs Integration",
-        "desc": "Set up WiseQuery in Google Docs in 3 simple steps.",
+        "desc": "Set up 오답노트 AI in Google Docs in 3 simple steps.",
         "stepLabel1": "Open Doc",
         "stepLabel2": "Copy Code",
         "stepLabel3": "Paste & Save",
         "step1Title": "Open a Google Docs document",
-        "step1Desc": "Open the Google Docs document where you want to use WiseQuery. You can create a new one or use an existing document.",
+        "step1Desc": "Open the Google Docs document where you want to use 오답노트 AI. You can create a new one or use an existing document.",
         "openGoogleDocs": "Open New Google Doc",
         "docsOpened": "Document Opened",
         "step1Hint": "Once the document is open, click 'Extensions > Apps Script' in the top menu bar to open the script editor.",
         "step2Title": "Copy Integration Code",
-        "step2Desc": "Click the button below to automatically copy the WiseQuery integration code.",
+        "step2Desc": "Click the button below to automatically copy the 오답노트 AI integration code.",
         "copyCode": "Copy Code to Clipboard",
         "copied": "Copied!",
         "codeCopied": "Apps Script code copied to clipboard.",
@@ -1779,22 +1779,22 @@
         "step3Title": "Paste Code & Save",
         "step3Desc": "In the Apps Script editor (opened from Google Docs), follow these steps.",
         "step3Sub1": "Select all existing code (Ctrl+A) and delete it.",
-        "step3Sub2": "Paste the copied WiseQuery code (Ctrl+V).",
+        "step3Sub2": "Paste the copied 오답노트 AI code (Ctrl+V).",
         "step3Sub3": "Click the Save button (Ctrl+S).",
         "step3Sub4": "Go back to the Google Docs tab and refresh the page (F5).",
         "complete": "Complete Setup",
         "successTitle": "Setup Complete!",
-        "successDesc": "Refresh your Google Doc and you'll see 'WiseQuery' in the menu bar.",
+        "successDesc": "Refresh your Google Doc and you'll see '오답노트 AI' in the menu bar.",
         "howToUseTitle": "How to Use",
-        "howToStep1": "Click 'WiseQuery' in the Google Docs menu bar",
-        "howToStep1Desc": "A 'WiseQuery' menu will appear in the top menu bar (next to File, Edit, View...). Click it to access features.",
+        "howToStep1": "Click '오답노트 AI' in the Google Docs menu bar",
+        "howToStep1Desc": "A '오답노트 AI' menu will appear in the top menu bar (next to File, Edit, View...). Click it to access features.",
         "availableFeatures": "Available Features",
         "feature1Title": "Ask about selected text",
-        "feature1Desc": "Select text, then click WiseQuery > 'Ask about selected text'. AI will answer based on the content.",
+        "feature1Desc": "Select text, then click 오답노트 AI > 'Ask about selected text'. AI will answer based on the content.",
         "feature2Title": "Summarize document",
-        "feature2Desc": "Click WiseQuery > 'Summarize document' to get an AI summary of the entire document.",
-        "feature3Title": "Open WiseQuery",
-        "feature3Desc": "Click WiseQuery > 'Open WiseQuery' to launch the web app in a new tab.",
+        "feature2Desc": "Click 오답노트 AI > 'Summarize document' to get an AI summary of the entire document.",
+        "feature3Title": "Open 오답노트 AI",
+        "feature3Desc": "Click 오답노트 AI > 'Open 오답노트 AI' to launch the web app in a new tab.",
         "perDocNote": "This script only works in the document where it was installed. To use it in other documents, repeat the same process.",
         "done": "Done",
         "next": "Next",

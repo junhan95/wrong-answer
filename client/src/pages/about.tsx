@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { SEO } from "@/components/seo";
 import { Card, CardContent } from "@/components/ui/card";
-import { FolderTree, ArrowLeft, Target, Users, Lightbulb, Heart } from "lucide-react";
+import { CheckSquare, ArrowLeft, Target, Users, Lightbulb, Heart } from "lucide-react";
 import { LanguageToggle } from "@/components/language-toggle";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { useTranslation } from "react-i18next";
@@ -35,7 +35,7 @@ export default function About() {
 
   return (
     <div className="min-h-screen">
-      <SEO title="회사 소개" description="WiseQuery의 미션과 비전 — AI 기반 지식 관리의 미래를 만듭니다." path="/about" />
+      <SEO title="서비스 소개" description="오답노트 AI의 미션과 비전 — AI 맞춤형 학습 솔루션의 미래를 만듭니다." path="/about" />
       <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container mx-auto flex h-16 items-center justify-between px-6 lg:px-12">
           <PrefetchLink
@@ -43,7 +43,7 @@ export default function About() {
             className="flex items-center gap-2 hover-elevate px-2 py-1 rounded-md"
             data-testid="link-logo-home"
           >
-            <FolderTree className="h-6 w-6" />
+            <CheckSquare className="h-6 w-6 text-primary" />
             <span className="text-xl font-semibold">{t("landing.nav.appName")}</span>
           </PrefetchLink>
           <nav className="flex items-center gap-4">

@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { FolderTree, ArrowLeft, BookOpen, Rocket, Settings, Search, MessageSquare, CreditCard, Shield, HelpCircle } from "lucide-react";
+import { CheckSquare, ArrowLeft, BookOpen, Rocket, Settings, Search, MessageSquare, CreditCard, Shield, HelpCircle } from "lucide-react";
 import { LanguageToggle } from "@/components/language-toggle";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { useTranslation } from "react-i18next";
@@ -88,7 +88,7 @@ export default function Documentation() {
             className="flex items-center gap-2 hover-elevate px-2 py-1 rounded-md"
             data-testid="link-logo-home"
           >
-            <FolderTree className="h-6 w-6" />
+            <CheckSquare className="h-6 w-6 text-primary" />
             <span className="text-xl font-semibold">{t("landing.nav.appName")}</span>
           </PrefetchLink>
           <nav className="flex items-center gap-4">
@@ -168,7 +168,7 @@ export default function Documentation() {
                   <p className="text-sm text-muted-foreground">{t("docs.help.description")}</p>
                 </div>
               </div>
-              <a href="mailto:support@wisequery.app">
+              <a href="mailto:support@wrong-answer.ai">
                 <Button data-testid="button-contact-support">
                   {t("docs.help.contactSupport")}
                 </Button>

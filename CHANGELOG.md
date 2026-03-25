@@ -1,4 +1,4 @@
-# WiseQuery Changelog
+# 오답노트 Changelog
 
 All notable changes to this project will be documented in this file.
 
@@ -38,7 +38,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ## [2024-12-03]
 
 ### Added
-- Initial WiseQuery application with Windows Explorer-style AI chat interface
+- Initial 오답노트 application with Windows Explorer-style AI chat interface
 - Project-based RAG knowledge management system
 - 4-tier Stripe subscription system (Free/Basic/Pro/Custom)
 - Dual authentication (session-based + email/password with SendGrid verification)

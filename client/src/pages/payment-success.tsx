@@ -88,7 +88,7 @@ export default function PaymentSuccess() {
       <div className="text-center">
         <h1 className="text-3xl font-bold mb-2">결제 완료!</h1>
         <p className="text-muted-foreground">
-          WiseQuery <strong>{planName}</strong> 플랜으로 업그레이드되었습니다.
+          오답노트 <strong>{planName}</strong> 플랜으로 업그레이드되었습니다.
         </p>
         <p className="text-sm text-muted-foreground mt-1">
           새로운 기능을 지금 바로 이용해보세요.

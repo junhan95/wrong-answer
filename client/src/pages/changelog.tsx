@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { FolderTree, ArrowLeft, Sparkles, Bug, Zap, Shield } from "lucide-react";
+import { CheckSquare, ArrowLeft, Sparkles, Bug, Zap, Shield } from "lucide-react";
 import { LanguageToggle } from "@/components/language-toggle";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { useTranslation } from "react-i18next";
@@ -184,7 +184,7 @@ export default function Changelog() {
             className="flex items-center gap-2 hover-elevate px-2 py-1 rounded-md"
             data-testid="link-logo-home"
           >
-            <FolderTree className="h-6 w-6" />
+            <CheckSquare className="h-6 w-6 text-primary" />
             <span className="text-xl font-semibold">{t("landing.nav.appName")}</span>
           </PrefetchLink>
           <nav className="flex items-center gap-4">

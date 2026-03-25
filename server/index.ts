@@ -25,9 +25,9 @@ app.use(helmet({
 
 // CORS: Allow only trusted origins
 const allowedOrigins = [
-  'https://wisequery.app',
-  'https://www.wisequery.app',
-  'https://wisequery.onrender.com',
+  'https://wrong-answer.ai',
+  'https://www.wrong-answer.ai',
+  'https://wrong-answer.onrender.com',
   'http://localhost:5000',
   'http://localhost:3000',
 ];
