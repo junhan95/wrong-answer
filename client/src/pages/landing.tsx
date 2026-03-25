@@ -2,14 +2,12 @@ import { lazy, Suspense, useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { SEO } from "@/components/seo";
 import {
-  BookOpen,
+  CheckSquare,
   Menu,
   X,
-  Download,
 } from "lucide-react";
 import { LanguageToggle } from "@/components/language-toggle";
 import { ThemeToggle } from "@/components/theme-toggle";
-import { useTranslation } from "react-i18next";
 import { PrefetchLink } from "@/components/prefetch-link";
 import { useSearch, useLocation } from "wouter";
 import { SectionSkeleton } from "@/components/landing/section-skeleton";
@@ -26,7 +24,6 @@ import { LandingFooter } from "@/components/landing/landing-footer";
 const FAQSection = lazy(() => import("@/components/landing/faq-section"));
 
 export default function Landing() {
-  const { t } = useTranslation();
   const searchString = useSearch();
   const [, setLocation] = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -109,28 +106,28 @@ export default function Landing() {
             }}
             data-testid="link-logo-home"
           >
-            <BookOpen className="h-6 w-6" />
-            <span className="text-xl font-semibold">{t('landing.nav.appName')}</span>
+            <CheckSquare className="h-6 w-6 text-primary" />
+            <span className="text-xl font-bold tracking-tight">오답노트</span>
           </a>
           <nav className="hidden md:flex items-center gap-6">
-            <a href="#features" className="text-sm font-medium hover-elevate px-3 py-2 rounded-md" data-testid="link-features">
-              {t('landing.nav.features')}
+            <a href="#features" className="text-sm font-medium hover-elevate px-3 py-2 rounded-md transition-colors hover:text-primary">
+              기능 소개
             </a>
-            <a href="#how-it-works" className="text-sm font-medium hover-elevate px-3 py-2 rounded-md" data-testid="link-how-it-works">
-              {t('landing.nav.howItWorks')}
+            <a href="#pricing" className="text-sm font-medium hover-elevate px-3 py-2 rounded-md transition-colors hover:text-primary">
+              요금 안내
             </a>
-            <a href="#pricing" className="text-sm font-medium hover-elevate px-3 py-2 rounded-md" data-testid="link-pricing">
-              {t('landing.nav.pricing')}
-            </a>
-            <ThemeToggle />
-            <LanguageToggle />
-            <PrefetchLink href="/login" data-testid="link-sign-in">
-              <Button variant="ghost" data-testid="button-sign-in">{t('landing.nav.signIn')}</Button>
+            <PrefetchLink href="/login" className="text-sm font-medium hover-elevate px-3 py-2 rounded-md transition-colors hover:text-primary">
+              로그인
             </PrefetchLink>
-            <Button data-testid="button-download" onClick={handleDownload}>
-              <Download className="h-4 w-4 mr-2" />
-              {t('landing.nav.download')}
-            </Button>
+            <div className="flex items-center gap-2 ml-2">
+              <ThemeToggle />
+              <LanguageToggle />
+            </div>
+            <PrefetchLink href="/login">
+              <Button className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold px-6 shadow-md transition-transform hover:scale-105">
+                무료로 시작하기
+              </Button>
+            </PrefetchLink>
           </nav>
           <button
             className="md:hidden p-2 rounded-md hover:bg-muted"
@@ -143,26 +140,26 @@ export default function Landing() {
         {mobileMenuOpen && (
           <div className="md:hidden border-t bg-background px-6 py-4 space-y-3">
             <a href="#features" className="block text-sm font-medium py-2" onClick={() => setMobileMenuOpen(false)}>
-              {t('landing.nav.features')}
-            </a>
-            <a href="#how-it-works" className="block text-sm font-medium py-2" onClick={() => setMobileMenuOpen(false)}>
-              {t('landing.nav.howItWorks')}
+              기능 소개
             </a>
             <a href="#pricing" className="block text-sm font-medium py-2" onClick={() => setMobileMenuOpen(false)}>
-              {t('landing.nav.pricing')}
+              요금 안내
             </a>
+            <PrefetchLink href="/login">
+              <a className="block text-sm font-medium py-2" onClick={() => setMobileMenuOpen(false)}>
+                로그인
+              </a>
+            </PrefetchLink>
             <div className="flex items-center gap-3 py-2">
               <ThemeToggle />
               <LanguageToggle />
             </div>
-            <div className="flex flex-col gap-2 pt-2 border-t">
+            <div className="pt-4 border-t">
               <PrefetchLink href="/login">
-                <Button variant="ghost" className="w-full justify-start">{t('landing.nav.signIn')}</Button>
+                <Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold shadow-md" onClick={() => setMobileMenuOpen(false)}>
+                  무료로 시작하기
+                </Button>
               </PrefetchLink>
-              <Button className="w-full" onClick={() => { setMobileMenuOpen(false); handleDownload(); }}>
-                <Download className="h-4 w-4 mr-2" />
-                {t('landing.nav.download')}
-              </Button>
             </div>
           </div>
         )}

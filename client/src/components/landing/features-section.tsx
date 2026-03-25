@@ -5,8 +5,6 @@ import {
   Target,
   BarChart3,
 } from "lucide-react";
-import { useTranslation } from "react-i18next";
-
 const featuresData = [
   {
     key: 'step1',
