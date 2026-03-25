@@ -1,18 +1,18 @@
 <p align="center">
-  <img src="https://img.shields.io/badge/WiseQuery-AI%20Knowledge%20Platform-6366f1?style=for-the-badge&logoColor=white" alt="WiseQuery" />
+  <img src="https://img.shields.io/badge/Wrong%20Answer%20AI-Personalized%20Learning-10b981?style=for-the-badge&logoColor=white" alt="Wrong Answer AI" />
 </p>
 
-<h1 align="center">🧠 WiseQuery</h1>
+<h1 align="center">📝 오답노트 (Wrong Answer AI)</h1>
 
 <p align="center">
-  <strong>AI 기반 지식 관리 플랫폼</strong><br/>
-  프로젝트별로 대화를 정리하고, 어디서든 질문하세요.<br/>
-  고급 RAG 기술로 전체 지식 베이스에서 답변을 얻으세요.
+  <strong>"틀린 이유 속에 정답이 있습니다."</strong><br/>
+  단순히 정답만 외우는 양치기 공부는 이제 그만!<br/>
+  AI 전담 선생님과 함께 진짜 내 실력을 키우는 오답 분석 솔루션.
 </p>
 
 <p align="center">
-  <a href="https://wisequery.app">
-    <img src="https://img.shields.io/badge/🌐_Live_Demo-wisequery.app-6366f1?style=for-the-badge" alt="Live Demo" />
+  <a href="https://wrong-answer.ai">
+    <img src="https://img.shields.io/badge/🌐_Live_Demo-wrong--answer.ai-10b981?style=for-the-badge" alt="Live Demo" />
   </a>
 </p>
 
@@ -24,263 +24,93 @@
   <img src="https://img.shields.io/badge/PostgreSQL-4169E1?style=flat-square&logo=postgresql&logoColor=white" />
   <img src="https://img.shields.io/badge/Supabase-3FCF8E?style=flat-square&logo=supabase&logoColor=white" />
   <img src="https://img.shields.io/badge/OpenAI-412991?style=flat-square&logo=openai&logoColor=white" />
-  <img src="https://img.shields.io/badge/Stripe-635BFF?style=flat-square&logo=stripe&logoColor=white" />
-  <img src="https://img.shields.io/badge/Render-46E3B7?style=flat-square&logo=render&logoColor=black" />
+</p>
+
+<p align="center">
+  <img src="https://via.placeholder.com/800x400/10b981/ffffff?text=Wrong+Answer+AI+Dashboard" alt="Hero Interface" style="border-radius: 12px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);" />
 </p>
 
 ---
 
 ## ✨ Overview
 
-**WiseQuery**는 Windows Explorer 스타일의 AI 채팅 애플리케이션입니다. 프로젝트 → 폴더 → 대화의 계층 구조로 지식을 정리하고, 업로드한 문서를 기반으로 AI와 대화할 수 있습니다. 시맨틱 검색(RAG)으로 전체 지식 베이스에서 관련 맥락을 찾아 정확한 답변을 제공합니다.
+**오답노트 (Wrong Answer AI)**는 학생의 시험지나 문제집에서 틀린 문제를 사진으로 찍어 올리면, AI가 문제와 프리 과정을 분석해 **'오답의 진짜 원인'**을 찾아주고 맞춤형 유사 문제를 통해 취약점을 완벽히 보완해주는 AI 학습 플랫폼입니다.
 
 ---
 
 ## 🎯 Key Features
 
-### 💬 AI 대화 & RAG
-- **OpenAI GPT** 기반 실시간 스트리밍 채팅
-- **시맨틱 검색 (RAG)**: pgvector + 코사인 유사도로 업로드 문서에서 관련 컨텍스트 자동 검색
-- **문서 청킹 & 임베딩**: 업로드 파일을 자동으로 청크 분할 → 벡터 임베딩 생성
-- **멀티모달 지원**: 이미지, PDF, Word, Excel, PowerPoint 파일 분석
+### 📸 똑똑한 문제 스캔 및 분석
+- **AI 비전 인식**: 스마트폰으로 수학/과학 등 틀린 문제와 내 풀이과정을 찍어 올리면 텍스트와 수식을 추출합니다.
+- **다양한 포맷 지원**: 이미지(png, jpeg) 외에도 PDF, Word 구조까지 완벽히 파악합니다.
 
-### 📁 Explorer 스타일 UI
-- **프로젝트 → 폴더 → 대화** 3단계 계층형 파일 트리
-- **드래그 앤 드롭** 폴더/대화 이동 (dnd-kit)
-- **우클릭 컨텍스트 메뉴** 지원
-- **휴지통** 및 파일 복원 기능
+### 🤖 1:1 AI 튜터 챗봇
+- 단순히 해설을 뱉어내는 AI가 아닙니다. 학생과 대화하며 **단계적 힌트**를 제공하여 스스로 생각하는 힘을 길러줍니다.
+- **원인 정밀 진단**: 단순 연산 실수인지, 개념의 부재인지, 출제 의도 파악 오류인지 AI가 패턴을 분석합니다.
 
-### 🔐 인증 & 보안
-- **소셜 로그인**: Google · 네이버 · 카카오 OAuth 2.0
-- **세션 기반 인증**: Passport.js + PostgreSQL 세션 스토어
-- **bcrypt** 비밀번호 해싱
+### 🎯 무제한 유사 문제 (RAG)
+- **변형 문제 자동 생성**: 벡터 스토어에 축적된 지식을 기반으로, 학생이 틀렸던 난이도와 개념 요소가 일치하는 유사/변형 문제를 즉시 제공합니다.
+- "이해한 것이 맞는지 다시 한 번 확인해 볼까요?"
 
-### 💳 SaaS 구독 (Stripe)
-| Plan | Projects | Conversations | Storage | AI Features |
-|------|----------|--------------|---------|-------------|
-| **Free** | 3 | 30 | 10 GB | Basic |
-| **Basic** | 10 | Unlimited | 50 GB | Enhanced |
-| **Pro** | Unlimited | Unlimited | 100 GB | Full + Image Gen |
-| **Custom** | Unlimited | Unlimited | Unlimited | Enterprise |
-
-### 🌍 다국어 & UX
-- **한국어 / English** i18n 지원 (i18next)
-- **다크 모드 / 라이트 모드** 토글 (next-themes)
-- **반응형 디자인** (모바일 최적화)
+### 📊 취약점 대시보드
+- 최근 학습 기록 및 과목별/단원별 정답률 추이를 시각적 차트(Recharts)로 제공합니다.
+- 약점이 강점으로 바뀌는 과정을 직관적으로 확인할 수 있습니다.
 
 ---
 
-## 🏗️ Architecture
-
-```
-WiseQuery/
-├── client/                 # 🎨 Frontend (React + Vite)
-│   ├── src/
-│   │   ├── pages/          # Landing, Home, Pricing, Login...
-│   │   ├── components/     # UI Components (shadcn/ui)
-│   │   ├── hooks/          # Custom React Hooks
-│   │   └── lib/            # Utilities & API client
-│   └── index.html
-│
-├── server/                 # ⚙️ Backend (Express + TypeScript)
-│   ├── routes/             # Modular API routes
-│   │   ├── auth.routes.ts
-│   │   ├── files.routes.ts
-│   │   ├── stripe.routes.ts
-│   │   └── ...
-│   ├── storage/            # Data access layer (Drizzle ORM)
-│   │   ├── users.storage.ts
-│   │   ├── files.storage.ts
-│   │   ├── vector.storage.ts
-│   │   └── ...
-│   ├── sessionAuth.ts      # Session authentication
-│   ├── socialAuth.ts       # OAuth (Google, Naver, Kakao)
-│   ├── stripe.ts           # Payment integration
-│   ├── openai.ts           # AI & Embedding
-│   └── supabaseStorage.ts  # File storage (Supabase)
-│
-├── shared/                 # 📦 Shared types & schema
-│   └── schema.ts           # Drizzle ORM schema + Zod types
-│
-└── package.json
-```
-
----
-
-## 🛠️ Tech Stack
+## 🏗️ Architecture & Stack
 
 ### Frontend
-| Technology | Purpose |
-|------------|---------|
-| **React 18** | UI Framework (SPA) |
-| **Vite** | Build tool & dev server |
-| **TypeScript** | Type safety |
-| **Tailwind CSS** | Styling |
-| **shadcn/ui** | UI component library |
-| **Wouter** | Client-side routing |
-| **TanStack Query** | Server state management |
-| **Framer Motion** | Animations |
-| **i18next** | Internationalization |
-| **Recharts** | Data visualization |
+- **React 18 + Vite** 기반의 초고속 SPA
+- **Tailwind CSS & shadcn/ui**를 활용한 깔끔하고 미니멀한 UI
+- **i18next** (한국어/영어 지원), **next-themes** (다크/라이트 모드)
 
 ### Backend
-| Technology | Purpose |
-|------------|---------|
-| **Express** | HTTP server |
-| **Passport.js** | Authentication (Session + OAuth) |
-| **Drizzle ORM** | Database ORM (type-safe) |
-| **OpenAI API** | GPT chat + text-embedding-3-small |
-| **Stripe** | Subscription billing |
-| **Supabase Storage** | File upload & storage |
-| **node-cron** | Scheduled tasks |
+- **Express + TypeScript** 구조의 안정적인 API 서버
+- **Drizzle ORM**을 통한 타입 안전 데이터베이스 접근
+- **Passport.js** 세션 및 OAuth 기반 소셜 로그인(구글, 카카오, 네이버) 호환
 
-### Infrastructure
-| Service | Purpose |
-|---------|---------|
-| **Neon PostgreSQL** | Primary database (pgvector) |
-| **Supabase** | File storage & pooling |
-| **Render** | Hosting & deployment |
-| **GitHub** | Version control & CI/CD |
+### AI & Data
+- **OpenAI API**: `gpt-4o` 기반 챗봇, `text-embedding-3-small` 활용 벡터 변환
+- **PostgreSQL (pgvector)**: 업로드된 문서나 텍스트 데이터의 시맨틱 검색 엔진 역할 담당 (Neon / Supabase 연동)
+- **Stripe** 연동을 통한 유료 구독 결제 시스템 내장
 
 ---
 
 ## 🚀 Getting Started
 
-### Prerequisites
-
+### 1. Prerequisites
 - **Node.js** 20+ 
-- **PostgreSQL** 15+ (with pgvector extension)
-- **npm** 9+
+- **PostgreSQL** 15+ (with `pgvector` extension)
 
-### 1. Clone & Install
-
+### 2. Installation
 ```bash
-git clone https://github.com/junhan95/Wisequery.git
-cd Wisequery
+git clone https://github.com/junhan95/wrong-answer.git
+cd wrong-answer/Wisequery
 npm install
 ```
 
-### 2. Environment Variables
-
-`.env` 파일을 프로젝트 루트에 생성합니다:
-
+### 3. Environment Variables
+프로젝트 루트(`.env`)에 환경변수를 설정합니다. (`.env.example` 포맷 참고)
 ```env
-# Database
-DATABASE_URL=postgresql://user:password@host:5432/dbname
-
-# Session
-SESSION_SECRET=your-secret-key
-
-# OpenAI
+DATABASE_URL=postgresql://...
+SESSION_SECRET=your_secret
 OPENAI_API_KEY=sk-...
-
-# Supabase Storage
-SUPABASE_URL=https://your-project.supabase.co
-SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
-SUPABASE_STORAGE_BUCKET=wisequery-files
-
-# App
-APP_URL=http://localhost:5000
-
-# OAuth - Google
-GOOGLE_CLIENT_ID=your-google-client-id
-GOOGLE_CLIENT_SECRET=your-google-client-secret
-
-# OAuth - Naver (optional)
-NAVER_CLIENT_ID=your-naver-client-id
-NAVER_CLIENT_SECRET=your-naver-client-secret
-
-# OAuth - Kakao (optional)
-KAKAO_CLIENT_ID=your-kakao-rest-api-key
-KAKAO_CLIENT_SECRET=your-kakao-client-secret
-
-# Stripe (optional)
-STRIPE_SECRET_KEY=sk_...
-STRIPE_WEBHOOK_SECRET=whsec_...
+SUPABASE_URL=...
+SUPABASE_SERVICE_ROLE_KEY=...
+# OAuth (Google, Kakao, Naver) etc...
 ```
 
-### 3. Database Setup
-
+### 4. Database Setup & Run
 ```bash
-npm run db:push     # Drizzle schema → PostgreSQL
+npm run db:push     # Drizzle schema 동기화
+npm run dev         # 로컬 개발 서버 실행 (http://localhost:5000)
 ```
-
-### 4. Run Development Server
-
-```bash
-npm run dev         # Starts on http://localhost:5000
-```
-
-### 5. Production Build
-
-```bash
-npm run build       # Vite frontend + esbuild backend
-npm start           # Runs production bundle
-```
-
----
-
-## 📡 API Endpoints
-
-| Module | Endpoints | Auth |
-|--------|-----------|------|
-| **Auth** | `GET /api/auth/user` `GET /api/auth/google\|naver\|kakao` | ✅ |
-| **Projects** | CRUD `/api/projects` | ✅ |
-| **Folders** | CRUD `/api/folders` | ✅ |
-| **Conversations** | CRUD `/api/conversations` | ✅ |
-| **Files** | Upload/Download/Delete `/api/files` | ✅ |
-| **Chat** | `POST /api/chat` (SSE streaming) | ✅ |
-| **Search** | `POST /api/search` (semantic) | ✅ |
-| **Stripe** | Subscription/Checkout/Webhook | ✅/🔓 |
-| **Admin** | User management `/api/admin` | ✅👑 |
-| **Trash** | Soft delete & restore | ✅ |
-
----
-
-## 🔍 RAG Pipeline
-
-```mermaid
-flowchart LR
-    A[📄 Upload] --> B[📝 Extract Text]
-    B --> C[✂️ Chunk]
-    C --> D[🧮 Embed<br/>text-embedding-3-small]
-    D --> E[(🗄️ pgvector)]
-    
-    F[💬 User Query] --> G[🧮 Query Embed]
-    G --> H{🔍 Cosine<br/>Similarity}
-    E --> H
-    H --> I[📋 Top-K Chunks]
-    I --> J[🤖 GPT + Context]
-    J --> K[💡 Answer]
-```
-
-1. **문서 업로드** → PDF/Word/Excel/PowerPoint 텍스트 추출
-2. **청킹** → 토큰 기반 청크 분할 (metadata 포함)
-3. **임베딩** → OpenAI `text-embedding-3-small` (1536차원)
-4. **저장** → PostgreSQL pgvector 확장
-5. **질의** → 코사인 유사도 Top-K → GPT 컨텍스트 주입
-
----
-
-## 🚢 Deployment
-
-### Render (Recommended)
-
-이 프로젝트는 `render.yaml`이 포함되어 있어 Render에 원클릭 배포가 가능합니다.
-
-| Setting | Value |
-|---------|-------|
-| **Build Command** | `npm install --include=dev; npm run build` |
-| **Start Command** | `npm start` |
-| **Node Version** | 20+ |
 
 ---
 
 ## 📄 License
-
 This project is licensed under the **MIT License**.
-
----
 
 <p align="center">
   <sub>Built with ❤️ by <a href="https://github.com/junhan95">junhan95</a></sub>
