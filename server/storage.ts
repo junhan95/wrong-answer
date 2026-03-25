@@ -75,6 +75,9 @@ export class MemStorage implements IStorage {
       phone: userData.phone ?? null,
       authProvider: userData.authProvider ?? "oauth",
       role: userData.role ?? "user",
+      credits: 100,
+      dailyFreeQueriesUsed: 0,
+      lastFreeQueryResetAt: now,
       createdAt: now,
       updatedAt: now,
     };
@@ -84,6 +87,7 @@ export class MemStorage implements IStorage {
 
   async upsertUser(userData: UpsertUser): Promise<User> {
     const now = new Date();
+    const existing = this.users.get(userData.id!);
     const user: User = {
       id: userData.id!,
       email: userData.email ?? null,
@@ -95,7 +99,10 @@ export class MemStorage implements IStorage {
       phone: userData.phone ?? null,
       authProvider: userData.authProvider ?? "oauth",
       role: userData.role ?? "user",
-      createdAt: this.users.get(userData.id!)?.createdAt ?? now,
+      credits: existing?.credits ?? 100,
+      dailyFreeQueriesUsed: existing?.dailyFreeQueriesUsed ?? 0,
+      lastFreeQueryResetAt: existing?.lastFreeQueryResetAt ?? now,
+      createdAt: existing?.createdAt ?? now,
       updatedAt: now,
     };
     this.users.set(user.id, user);
@@ -483,6 +490,8 @@ export class MemStorage implements IStorage {
         monthlyAiQueriesAllowed: 50,
         monthlyAiQueriesUsed: 0,
         billingCycleStart: now,
+        billingCycleEnd: null,
+        pendingPlan: null,
         createdAt: now,
         updatedAt: now,
       };

@@ -93,11 +93,10 @@ router.get("/auth/export", isAuthenticated, async (req, res) => {
             },
             projects: projects.map((p) => ({
                 name: p.name,
-                description: p.description,
                 createdAt: p.createdAt,
             })),
             conversations: conversationsWithMessages.map((c) => ({
-                title: c.title,
+                name: c.name,
                 projectId: c.projectId,
                 createdAt: c.createdAt,
                 messages: c.messages.map((m) => ({

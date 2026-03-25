@@ -7,31 +7,11 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Crown, ArrowLeft, Loader2, ShieldCheck } from "lucide-react";
 import { loadTossPayments } from "@tosspayments/tosspayments-sdk";
+import { CREDIT_PACKAGES, type CreditPackageId } from "@shared/plans";
 
-const TOSS_CLIENT_KEY =
-  import.meta.env.VITE_TOSS_CLIENT_KEY ||
-  "test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm";
+const TOSS_CLIENT_KEY = import.meta.env.VITE_TOSS_CLIENT_KEY as string;
 
-const PLAN_INFO: Record<string, { name: string; priceKRW: number; credits: number; features: string[] }> = {
-  starter: {
-    name: "Starter",
-    priceKRW: 9900,
-    credits: 100,
-    features: ["100 크레딧 충전", "유효기간 없음", "약 100회 오답 분석"],
-  },
-  plus: {
-    name: "Plus",
-    priceKRW: 28900,
-    credits: 330,
-    features: ["330 크레딧 (10% 보너스)", "학부모 안심 주간 리포트", "AI 튜터 최우선 답변"],
-  },
-  premium: {
-    name: "Premium",
-    priceKRW: 47900,
-    credits: 600,
-    features: ["600 크레딧 (20% 보너스)", "취약점 기반 모의고사 3장", "Plus 요금제 혜택 포함"],
-  },
-};
+const PLAN_INFO = CREDIT_PACKAGES as Record<string, typeof CREDIT_PACKAGES[CreditPackageId]>;
 
 function generateRandomString(): string {
   return btoa(Math.random().toString(36).slice(2) + Date.now().toString(36));

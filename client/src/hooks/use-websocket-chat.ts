@@ -5,9 +5,9 @@ import { useTranslation } from "react-i18next";
 import type { SearchResult } from "@shared/schema";
 
 interface SubscriptionData {
-  subscription: { plan: string; stripeStatus: string | null };
-  usage: { projects: number; conversations: number; aiQueries: number; storageMB: number };
-  limits: { projects: number; conversations?: number; aiQueries: number; storageMB: number };
+  subscription: { plan: string; billingCycleStart?: string; billingCycleEnd?: string | null; pendingPlan?: string | null };
+  usage: { projects: number; conversations: number; aiQueries: number; storageMB: number; dailyFreeUsed: number; credits: number };
+  limits: { projects: number; conversations?: number; aiQueries: number; storageMB: number; dailyFreeLimit: number };
 }
 
 interface UseWebSocketChatOptions {

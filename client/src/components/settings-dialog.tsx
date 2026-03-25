@@ -78,9 +78,9 @@ export function SettingsPanel({ onClose }: SettingsPanelProps) {
     };
 
     const { data: subscriptionData } = useQuery<{
-        subscription: { plan: string };
-        usage: { projects: number; conversations: number; aiQueries: number; storageMB: number };
-        limits: { projects: number; conversations: number; aiQueries: number; storageMB: number };
+        subscription: { plan: string; billingCycleStart?: string; billingCycleEnd?: string | null; pendingPlan?: string | null };
+        usage: { projects: number; conversations: number; aiQueries: number; storageMB: number; dailyFreeUsed: number; credits: number };
+        limits: { projects: number; conversations: number; aiQueries: number; storageMB: number; dailyFreeLimit: number };
     }>({
         queryKey: ["/api/subscription"],
     });
@@ -509,12 +509,15 @@ export function SettingsPanel({ onClose }: SettingsPanelProps) {
                                     )}
 
                                     <div className="flex items-center justify-between text-sm">
-                                        <span>{t("settings.membership.aiQueries")}</span>
-                                        <span className="text-muted-foreground">{usage.aiQueries} / {formatLimit(limits.aiQueries)}</span>
+                                        <span>오늘 무료 분석</span>
+                                        <span className="text-muted-foreground">{usage.dailyFreeUsed ?? usage.aiQueries} / {limits.dailyFreeLimit ?? 3}회</span>
                                     </div>
-                                    {limits.aiQueries > 0 && (
-                                        <Progress value={Math.min((usage.aiQueries / limits.aiQueries) * 100, 100)} className="h-1.5" />
-                                    )}
+                                    <Progress value={Math.min(((usage.dailyFreeUsed ?? usage.aiQueries) / (limits.dailyFreeLimit ?? 3)) * 100, 100)} className="h-1.5" />
+
+                                    <div className="flex items-center justify-between text-sm">
+                                        <span>보유 크레딧</span>
+                                        <span className="text-muted-foreground font-medium">{usage.credits ?? 0} 크레딧</span>
+                                    </div>
 
                                     <div className="flex items-center justify-between text-sm">
                                         <span>{t("settings.membership.storage")}</span>
