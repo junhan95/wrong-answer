@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: wisequery
+    name: wrong-answer
     runtime: node
     region: singapore
     plan: free

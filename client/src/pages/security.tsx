@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { FolderTree, ArrowLeft, Shield, Lock, Server, Eye, AlertTriangle, RefreshCw } from "lucide-react";
+import { CheckSquare, ArrowLeft, Shield, Lock, Server, Eye, AlertTriangle, RefreshCw } from "lucide-react";
 import { LanguageToggle } from "@/components/language-toggle";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { useTranslation } from "react-i18next";
@@ -74,7 +74,7 @@ export default function Security() {
             className="flex items-center gap-2 hover-elevate px-2 py-1 rounded-md"
             data-testid="link-logo-home"
           >
-            <FolderTree className="h-6 w-6" />
+            <CheckSquare className="h-6 w-6 text-primary" />
             <span className="text-xl font-semibold">{t("landing.nav.appName")}</span>
           </PrefetchLink>
           <nav className="flex items-center gap-4">
@@ -164,7 +164,7 @@ export default function Security() {
                 <p className="text-muted-foreground mb-4">
                   {t("security.report.description")}
                 </p>
-                <a href="mailto:security@wisequery.app">
+                <a href="mailto:security@wrong-answer.ai">
                   <Button data-testid="button-report-vulnerability">
                     {t("security.report.button")}
                   </Button>

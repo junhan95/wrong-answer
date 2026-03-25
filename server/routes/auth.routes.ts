@@ -115,7 +115,7 @@ router.get("/auth/export", isAuthenticated, async (req, res) => {
         };
 
         res.setHeader("Content-Type", "application/json");
-        res.setHeader("Content-Disposition", `attachment; filename="wisequery-backup-${new Date().toISOString().slice(0, 10)}.json"`);
+        res.setHeader("Content-Disposition", `attachment; filename="odabnote-backup-${new Date().toISOString().slice(0, 10)}.json"`);
         res.json(exportData);
     } catch (error) {
         console.error("Error exporting user data:", error);

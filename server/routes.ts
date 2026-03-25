@@ -65,7 +65,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
       const zipBuffer = zip.toBuffer();
       res.setHeader("Content-Type", "application/zip");
-      res.setHeader("Content-Disposition", "attachment; filename=wisequery-chrome-extension.zip");
+      res.setHeader("Content-Disposition", "attachment; filename=odabnote-chrome-extension.zip");
       res.send(zipBuffer);
     } catch (error) {
       console.error("Error creating extension zip:", error);

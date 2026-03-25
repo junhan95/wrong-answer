@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { FolderTree, ArrowLeft, MapPin, Briefcase, Clock, Heart, Zap, Users, Coffee } from "lucide-react";
+import { CheckSquare, ArrowLeft, MapPin, Briefcase, Clock, Heart, Zap, Users, Coffee } from "lucide-react";
 import { LanguageToggle } from "@/components/language-toggle";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { useTranslation } from "react-i18next";
@@ -70,7 +70,7 @@ export default function Careers() {
             className="flex items-center gap-2 hover-elevate px-2 py-1 rounded-md"
             data-testid="link-logo-home"
           >
-            <FolderTree className="h-6 w-6" />
+            <CheckSquare className="h-6 w-6 text-primary" />
             <span className="text-xl font-semibold">{t("landing.nav.appName")}</span>
           </PrefetchLink>
           <nav className="flex items-center gap-4">
@@ -128,7 +128,7 @@ export default function Careers() {
                         <CardTitle className="text-xl">{t(job.titleKey)}</CardTitle>
                         <CardDescription className="mt-1">{t(job.descriptionKey)}</CardDescription>
                       </div>
-                      <a href={`mailto:info@wisequery.app?subject=${encodeURIComponent(t(job.titleKey))}`}>
+                      <a href={`mailto:info@wrong-answer.ai?subject=${encodeURIComponent(t(job.titleKey))}`}>
                         <Button data-testid={`button-apply-${job.id}`}>
                           {t("careers.applyNow")}
                         </Button>
@@ -163,7 +163,7 @@ export default function Careers() {
                 <p className="text-muted-foreground mb-6 max-w-lg mx-auto">
                   {t("careers.noFit.description")}
                 </p>
-                <a href="mailto:info@wisequery.app?subject=General Application">
+                <a href="mailto:info@wrong-answer.ai?subject=General Application">
                   <Button variant="outline" data-testid="button-general-apply">
                     {t("careers.noFit.sendResume")}
                   </Button>

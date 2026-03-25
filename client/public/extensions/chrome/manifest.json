@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "WiseQuery - AI 지식 관리",
+  "name": "오답노트 - AI 지식 관리",
   "version": "1.0.0",
-  "description": "웹 페이지의 텍스트를 WiseQuery에 바로 전송하여 AI와 대화하세요.",
+  "description": "웹 페이지의 텍스트를 오답노트에 바로 전송하여 AI와 대화하세요.",
   "permissions": ["activeTab", "contextMenus", "storage"],
   "icons": {
     "16": "icon16.png",

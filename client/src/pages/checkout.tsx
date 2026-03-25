@@ -137,7 +137,7 @@ export default function Checkout() {
 
       await widgetsRef.current.requestPayment({
         orderId,
-        orderName: `WiseQuery ${planInfo.name} 플랜`,
+        orderName: `오답노트 ${planInfo.name} 플랜`,
         successUrl: `${window.location.origin}/payment/success?plan=${plan}`,
         failUrl: `${window.location.origin}/payment/fail`,
         customerEmail: (user as any)?.email,
@@ -202,7 +202,7 @@ export default function Checkout() {
           <Card className="mb-8">
             <CardHeader className="flex flex-row items-center justify-between pb-3">
               <div>
-                <CardTitle className="text-xl">WiseQuery {planInfo.name}</CardTitle>
+                <CardTitle className="text-xl">오답노트 {planInfo.name}</CardTitle>
                 <CardDescription>월간 구독</CardDescription>
               </div>
               <Badge variant="secondary" className="text-lg px-4 py-1">

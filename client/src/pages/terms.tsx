@@ -1,84 +1,28 @@
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { FolderTree, ArrowLeft } from "lucide-react";
-import { LanguageToggle } from "@/components/language-toggle";
+import { ArrowLeft, CheckSquare } from "lucide-react";
 import { ThemeToggle } from "@/components/theme-toggle";
-import { useTranslation } from "react-i18next";
 import { PrefetchLink } from "@/components/prefetch-link";
+import { SEO } from "@/components/seo";
 
 export default function Terms() {
-  const { t } = useTranslation();
-
-  const sections = [
-    {
-      titleKey: "terms.sections.acceptance.title",
-      contentKey: "terms.sections.acceptance.content",
-    },
-    {
-      titleKey: "terms.sections.description.title",
-      contentKey: "terms.sections.description.content",
-    },
-    {
-      titleKey: "terms.sections.accounts.title",
-      contentKey: "terms.sections.accounts.content",
-    },
-    {
-      titleKey: "terms.sections.usage.title",
-      contentKey: "terms.sections.usage.content",
-    },
-    {
-      titleKey: "terms.sections.content.title",
-      contentKey: "terms.sections.content.content",
-    },
-    {
-      titleKey: "terms.sections.intellectual.title",
-      contentKey: "terms.sections.intellectual.content",
-    },
-    {
-      titleKey: "terms.sections.payment.title",
-      contentKey: "terms.sections.payment.content",
-    },
-    {
-      titleKey: "terms.sections.termination.title",
-      contentKey: "terms.sections.termination.content",
-    },
-    {
-      titleKey: "terms.sections.disclaimer.title",
-      contentKey: "terms.sections.disclaimer.content",
-    },
-    {
-      titleKey: "terms.sections.limitation.title",
-      contentKey: "terms.sections.limitation.content",
-    },
-    {
-      titleKey: "terms.sections.governing.title",
-      contentKey: "terms.sections.governing.content",
-    },
-    {
-      titleKey: "terms.sections.changes.title",
-      contentKey: "terms.sections.changes.content",
-    },
-  ];
-
   return (
     <div className="min-h-screen">
+      <SEO title="이용약관" description="오답노트 AI 서비스 이용약관" path="/terms" />
       <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container mx-auto flex h-16 items-center justify-between px-6 lg:px-12">
           <PrefetchLink
             href="/"
             className="flex items-center gap-2 hover-elevate px-2 py-1 rounded-md"
-            data-testid="link-logo-home"
           >
-            <FolderTree className="h-6 w-6" />
-            <span className="text-xl font-semibold">{t("landing.nav.appName")}</span>
+            <CheckSquare className="h-6 w-6 text-primary" />
+            <span className="text-xl font-bold tracking-tight">오답노트 AI</span>
           </PrefetchLink>
           <nav className="flex items-center gap-4">
             <ThemeToggle />
-            <LanguageToggle />
-            <PrefetchLink href="/?scrollToBottom=true" data-testid="link-back-home">
-              <Button variant="ghost" data-testid="button-terms-back-home">
+            <PrefetchLink href="/?scrollToBottom=true">
+              <Button variant="ghost">
                 <ArrowLeft className="h-4 w-4 mr-2" />
-                {t("common.back_home")}
+                홈으로 돌아가기
               </Button>
             </PrefetchLink>
           </nav>
@@ -86,51 +30,38 @@ export default function Terms() {
       </header>
 
       <main className="container mx-auto px-6 lg:px-12 py-12 lg:py-20">
-        <div className="max-w-4xl mx-auto">
-          <div className="mb-8 text-center">
-            <h1 className="text-4xl font-bold mb-4" data-testid="text-terms-title">
-              {t("terms.title")}
-            </h1>
-            <p className="text-muted-foreground">
-              {t("terms.lastUpdated")}: {t("terms.updateDate")}
-            </p>
-          </div>
+        <div className="max-w-4xl mx-auto space-y-8">
+          <h1 className="text-4xl font-bold border-b pb-4">서비스 이용약관</h1>
+          <section className="space-y-4 text-muted-foreground leading-relaxed">
+            <h2 className="text-2xl font-semibold text-foreground">제1조 (목적)</h2>
+            <p>본 약관은 오답노트 AI(이하 '회사')가 제공하는 서비스 이용과 관련하여 회사와 이용자 간의 권리, 의무 및 책임사항 등을 규정함을 목적으로 합니다.</p>
 
-          <Card className="mb-8">
-            <CardContent className="pt-6">
-              <p className="text-muted-foreground leading-relaxed">
-                {t("terms.intro")}
-              </p>
-            </CardContent>
-          </Card>
+            <h2 className="text-2xl font-semibold text-foreground pt-4">제2조 (용어의 정의)</h2>
+            <p>1. '서비스'란 회사가 제공하는 오답 분석 및 AI 튜터 관련 모든 제반 서비스를 의미합니다.</p>
+            <p>2. '이용자'란 회사의 서비스에 접속하여 본 약관에 따라 회사가 제공하는 서비스를 받는 회원 및 비회원을 말합니다.</p>
 
-          <div className="space-y-6">
-            {sections.map((section, index) => (
-              <Card key={index}>
-                <CardHeader>
-                  <CardTitle className="text-xl">
-                    {index + 1}. {t(section.titleKey)}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-muted-foreground leading-relaxed whitespace-pre-line">
-                    {t(section.contentKey)}
-                  </p>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+            <h2 className="text-2xl font-semibold text-foreground pt-4">제3조 (약관의 효력과 변경)</h2>
+            <p>1. 회사는 본 약관의 내용을 이용자가 쉽게 알 수 있도록 서비스 초기 화면에 게시합니다.</p>
+            <p>2. 회사는 관련 법령을 위배하지 않는 범위 내에서 약관을 개정할 수 있으며, 개정 시에는 지체 없이 공지합니다.</p>
 
-          <div className="mt-12 text-center">
-            <p className="text-muted-foreground mb-4">
-              {t("terms.questions")}
-            </p>
-            <PrefetchLink href="/contact">
-              <Button data-testid="button-terms-contact">
-                {t("common.contactUs")}
-              </Button>
-            </PrefetchLink>
-          </div>
+            <h2 className="text-2xl font-semibold text-foreground pt-4">제4조 (서비스의 제공 및 변경)</h2>
+            <p>1. 회사는 AI 기반의 학습 편의 기능을 제공하며, 운영상 또는 기술상의 필요에 따라 서비스 내용을 변경할 수 있습니다.</p>
+            <p>2. 서비스의 변경이 이루어지는 경우, 회사는 사전에 공지사항 등을 통해 이용자에게 안내합니다.</p>
+
+            <h2 className="text-2xl font-semibold text-foreground pt-4">제5조 (사용자 의무)</h2>
+            <p>이용자는 다음 행위를 하여서는 안 됩니다.</p>
+            <ul className="list-disc pl-6 space-y-2">
+              <li>신청 또는 변경 시 허위 내용의 등록</li>
+              <li>타인의 정보 도용</li>
+              <li>회사가 정한 정보 이외의 정보(컴퓨터 프로그램 등)의 송신 또는 게시</li>
+              <li>회사 기타 제3자의 저작권 등 지적재산권에 대한 침해</li>
+              <li>외설 또는 폭력적인 메시지, 화상, 음성, 기타 공서양속에 반하는 정보를 서비스에 공개 또는 게시하는 행위</li>
+            </ul>
+            
+            <h2 className="text-2xl font-semibold text-foreground pt-4">제6조 (면책 조항)</h2>
+            <p>1. 회사는 천재지변 등 불가항력으로 인하여 서비스를 제공할 수 없는 경우에는 서비스 제공에 관한 책임이 면제됩니다.</p>
+            <p>2. AI 기술 특성상 발생할 수 있는 답변 오류에 대해 회사는 일체의 법적 책임을 지지 않으며, 최종 확인과 학습의 책임은 이용자에게 있습니다.</p>
+          </section>
         </div>
       </main>
     </div>

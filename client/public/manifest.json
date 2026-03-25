@@ -1,11 +1,11 @@
 {
-  "name": "WiseQuery - AI 기반 지식 관리 플랫폼",
-  "short_name": "WiseQuery",
-  "description": "프로젝트별로 대화를 정리하고, 어디서든 질문하세요.",
+  "name": "오답노트 - AI 맞춤형 학습 솔루션",
+  "short_name": "오답노트",
+  "description": "틀린 이유 속에 정답이 있다. AI가 제안하는 나만의 복습 파트너.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#0a0a0b",
-  "theme_color": "#7c3aed",
+  "background_color": "#ffffff",
+  "theme_color": "#2563eb",
   "orientation": "any",
   "icons": [
     {

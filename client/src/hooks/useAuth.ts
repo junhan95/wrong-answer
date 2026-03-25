@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useEffect, useMemo } from "react";
 import type { User } from "@shared/schema";
 
-const AUTH_CACHE_KEY = "wisequery_auth_cache";
+const AUTH_CACHE_KEY = "odabnote_auth_cache";
 
 interface AuthCache {
   isAuthenticated: boolean;

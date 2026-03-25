@@ -167,7 +167,7 @@ router.post("/subscription/downgrade", isAuthenticated, async (req, res) => {
 
 // Apply promotion code
 const PROMO_CODES: Record<string, { plan: string; durationDays: number }> = {
-    "Wisequery Open Beta": { plan: "pro", durationDays: 30 },
+    "오답노트 Open Beta": { plan: "pro", durationDays: 30 },
 };
 
 router.post("/subscription/promo", isAuthenticated, async (req, res) => {

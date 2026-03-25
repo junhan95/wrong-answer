@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { FolderTree, ArrowLeft, Mail, MessageSquare, HelpCircle, Building } from "lucide-react";
+import { CheckSquare, ArrowLeft, Mail, MessageSquare, HelpCircle, Building } from "lucide-react";
 import { LanguageToggle } from "@/components/language-toggle";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { useTranslation } from "react-i18next";
@@ -33,19 +33,19 @@ const contactOptions = [
     icon: HelpCircle,
     titleKey: "contact.options.support.title",
     descriptionKey: "contact.options.support.description",
-    email: "support@wisequery.app",
+    email: "support@wrong-answer.ai",
   },
   {
     icon: MessageSquare,
     titleKey: "contact.options.sales.title",
     descriptionKey: "contact.options.sales.description",
-    email: "sales@wisequery.app",
+    email: "sales@wrong-answer.ai",
   },
   {
     icon: Building,
     titleKey: "contact.options.partnership.title",
     descriptionKey: "contact.options.partnership.description",
-    email: "partnership@wisequery.app",
+    email: "partnership@wrong-answer.ai",
   },
 ];
 
@@ -66,7 +66,7 @@ export default function Contact() {
   });
 
   const onSubmit = (data: ContactFormData) => {
-    const mailtoLink = `mailto:info@wisequery.app?subject=${encodeURIComponent(data.subject)}&body=${encodeURIComponent(
+    const mailtoLink = `mailto:info@wrong-answer.ai?subject=${encodeURIComponent(data.subject)}&body=${encodeURIComponent(
       `Name: ${data.name}\nEmail: ${data.email}\n\n${data.message}`
     )}`;
     
@@ -87,7 +87,7 @@ export default function Contact() {
             className="flex items-center gap-2 hover-elevate px-2 py-1 rounded-md"
             data-testid="link-logo-home"
           >
-            <FolderTree className="h-6 w-6" />
+            <CheckSquare className="h-6 w-6 text-primary" />
             <span className="text-xl font-semibold">{t("landing.nav.appName")}</span>
           </PrefetchLink>
           <nav className="flex items-center gap-4">
@@ -221,8 +221,8 @@ export default function Contact() {
           <div className="mt-12 text-center">
             <p className="text-muted-foreground">
               {t("contact.generalInquiry")}{" "}
-              <a href="mailto:info@wisequery.app" className="text-primary hover:underline" data-testid="link-general-email">
-                info@wisequery.app
+              <a href="mailto:info@wrong-answer.ai" className="text-primary hover:underline" data-testid="link-general-email">
+                info@wrong-answer.ai
               </a>
             </p>
           </div>
