@@ -104,7 +104,7 @@
   },
   "landing": {
     "nav": {
-      "appName": "WiseQuery",
+      "appName": "Wrong Answer AI",
       "features": "Features",
       "howItWorks": "How It Works",
       "useCases": "Use Cases",
@@ -116,232 +116,269 @@
     "whatsNew": {
       "badge": "New",
       "title": "Latest Features",
-      "subtitle": "Powerful new capabilities to supercharge your knowledge work",
-      "googleDocs": {
-        "title": "Google Docs Integration",
-        "description": "Edit Word, Excel, and PowerPoint files directly in Google Docs, Sheets, and Slides. Changes sync back automatically.",
+      "subtitle": "Powerful new capabilities to supercharge your learning",
+      "ocrUpload": {
+        "title": "OCR Auto Recognition",
+        "description": "Take a photo of your problem sheet and AI will automatically recognize the text. Register wrong answers quickly without typing.",
         "badge": "Just Launched"
       },
-      "officeSupport": {
-        "title": "Full Office Suite Support",
-        "description": "Upload, preview, and manage DOCX, XLSX, PPTX files with intelligent parsing and AI-powered search."
+      "similarProblems": {
+        "title": "Auto Similar Problem Recommendations",
+        "description": "AI automatically generates and recommends similar problems matching your error type. Master concepts through repeated practice."
       },
       "multilingual": {
         "title": "Complete Bilingual UI",
-        "description": "Full Korean and English interface with automatic language detection. Work in your preferred language."
+        "description": "Full Korean and English interface with automatic language detection. Study in your preferred language."
       },
-      "folderSystem": {
-        "title": "Advanced Folder Organization",
-        "description": "Hierarchical folders with drag-and-drop, cut/copy/paste, and context menus. Organize like Windows Explorer."
+      "dashboard": {
+        "title": "Weakness Visualization Dashboard",
+        "description": "Charts show your weak areas by subject. Instantly see which topics need the most attention."
       }
     },
     "successStories": {
-      "title": "Real Results from Real Teams",
-      "subtitle": "See how organizations leverage RAG-powered knowledge management",
+      "title": "Real Results from Real Students",
+      "subtitle": "See how students conquered their weak areas with Wrong Answer AI",
       "consulting": {
-        "industry": "Consulting",
-        "title": "Strategic Consulting Firm",
-        "metric": "50%",
-        "metricLabel": "Faster Report Writing",
-        "description": "\"We reduced proposal creation time by half. The AI finds relevant case studies from hundreds of past projects instantly.\"",
-        "beforeAfter": "Before: 4 hours per proposal | After: 2 hours"
+        "industry": "College Prep",
+        "title": "High School Senior",
+        "metric": "30%",
+        "metricLabel": "Math Score Improvement",
+        "description": "\"AI analyzing my wrong answers showed me my error patterns. I stopped making the same mistakes and my mock exam scores improved.\"",
+        "beforeAfter": "Before: B grade | After: A grade"
       },
       "research": {
-        "industry": "Research",
-        "title": "Academic Research Lab",
-        "metric": "70%",
-        "metricLabel": "Less Time Searching",
-        "description": "\"Instead of digging through papers manually, I ask questions and get synthesized answers with citations in seconds.\"",
-        "beforeAfter": "Before: 30 min per search | After: Under 1 min"
+        "industry": "Mid-term Prep",
+        "title": "Middle School Student",
+        "metric": "50%",
+        "metricLabel": "Repeat Error Reduction",
+        "description": "\"I stopped making the same mistakes. AI explained why I was wrong and my understanding became much clearer.\"",
+        "beforeAfter": "Before: 5 repeat errors/week | After: Under 2"
       },
       "product": {
-        "industry": "Product",
-        "title": "Tech Startup Product Team",
+        "industry": "Parent",
+        "title": "Child's Learning Manager",
         "metric": "40%",
-        "metricLabel": "Faster Decisions",
-        "description": "\"All our specs, user research, and meeting notes are searchable. New team members ramp up in days, not weeks.\"",
-        "beforeAfter": "Before: 2-week onboarding | After: 3-day onboarding"
+        "metricLabel": "Weak Area Mastery Rate",
+        "description": "\"I can see where my child is struggling through the dashboard. Now I can discuss with tutors using actual data.\"",
+        "beforeAfter": "Before: Vague weaknesses | After: Clear pattern identification"
       }
     },
     "ragEngine": {
-      "title": "Semantic Intelligence Engine",
-      "subtitle": "Enterprise-grade RAG technology that understands meaning, not just keywords",
+      "title": "AI Wrong Answer Analysis Engine",
+      "subtitle": "Custom AI learning technology that understands WHY you got it wrong, not just that you did",
       "howItWorks": "How It Works",
       "step1": {
-        "title": "Smart Indexing",
-        "description": "Documents are automatically chunked and converted to vector embeddings for semantic understanding."
+        "title": "Error Recognition",
+        "description": "Register a wrong answer via photo or text, and AI automatically identifies the problem type and difficulty."
       },
       "step2": {
-        "title": "Context Retrieval",
-        "description": "When you ask a question, AI finds the most relevant context from all your projects and conversations."
+        "title": "Cause Analysis",
+        "description": "AI analyzes the specific cause—conceptual misunderstanding, calculation error, or interpretation mistake—and explains through conversation."
       },
       "step3": {
-        "title": "Intelligent Response",
-        "description": "GPT synthesizes an answer using retrieved context, citing sources so you can verify every claim."
+        "title": "Similar Problem Recommendations",
+        "description": "AI recommends similar problems matching the error type to help you achieve full understanding through repetition."
       },
       "features": {
-        "crossProject": "Cross-Project Search",
-        "crossProjectDesc": "Find relevant context from any project",
-        "attributeFilter": "Attribute Filtering",
-        "attributeFilterDesc": "Filter by metadata like date, author, type",
-        "hybridSearch": "Hybrid Search",
-        "hybridSearchDesc": "Combines semantic + keyword matching",
-        "realtimeSync": "Real-time Sync",
-        "realtimeSyncDesc": "New content indexed automatically"
+        "crossProject": "Subject-based Classification",
+        "crossProjectDesc": "Systematic management by Math, English, Science, etc.",
+        "attributeFilter": "Type Filtering",
+        "attributeFilterDesc": "Filter by cause: concept, calculation, interpretation",
+        "hybridSearch": "Weakness Visualization",
+        "hybridSearchDesc": "See your weak areas in charts at a glance",
+        "realtimeSync": "Real-time Analysis",
+        "realtimeSyncDesc": "AI analysis starts immediately upon registration"
       }
     },
     "socialProof": {
-      "users": "1,000+",
-      "usersLabel": "Beta Testers",
-      "documents": "50K+",
-      "documentsLabel": "Documents Processed",
-      "queries": "500K+",
-      "queriesLabel": "AI Queries Answered",
+      "users": "5,000+",
+      "usersLabel": "Students Learning",
+      "documents": "200K+",
+      "documentsLabel": "Wrong Answers Analyzed",
+      "queries": "95%",
+      "queriesLabel": "Weak Area Mastery Rate",
       "rating": "4.9/5"
     },
     "documents": {
-      "title": "Your Documents, Instantly Searchable",
-      "subtitle": "Upload your files and ask questions in natural language. AI automatically analyzes, chunks, and indexes your content for intelligent retrieval.",
+      "title": "Upload Wrong Answers for Instant AI Analysis",
+      "subtitle": "Register wrong answers via photo or text, and AI automatically analyzes the cause and recommends similar problems.",
       "upload": {
-        "title": "Drag & Drop Upload",
-        "description": "Simply drag files from your computer or click to upload. Support for PDF, Word, Excel, and text files."
+        "title": "Easy Wrong Answer Registration",
+        "description": "Register wrong answers via photo (OCR), text input, or file upload (PDF, Word) in various ways."
       },
       "chunk": {
-        "title": "Auto Chunking",
-        "description": "Documents are automatically split into optimal chunks for AI comprehension. No manual preprocessing required."
+        "title": "Auto Type Classification",
+        "description": "AI automatically identifies problem type and difficulty, and classifies by subject and category."
       },
       "search": {
-        "title": "Semantic Search",
-        "description": "Ask questions in natural language and get precise answers with source citations from your documents."
+        "title": "AI Cause Analysis",
+        "description": "AI clearly analyzes why you got it wrong and helps you understand concepts through conversation."
       }
     },
     "howItWorks": {
-      "title": "Get Started in 3 Simple Steps",
-      "subtitle": "From upload to insight in minutes. No technical setup required.",
+      "title": "Master Wrong Answers in 4 Steps",
+      "subtitle": "Start with one photo and completely overcome your weak areas.",
       "step1": {
-        "title": "Create a Project",
-        "description": "Organize your work by topic, client, or purpose. Keep everything structured and easy to find."
+        "title": "📷 Upload Wrong Answer",
+        "description": "Take a photo of the wrong problem or type it in. OCR automatically recognizes the question."
       },
       "step2": {
-        "title": "Upload Documents",
-        "description": "Drag and drop your files. AI automatically processes and indexes them for intelligent search."
+        "title": "🤖 AI Root Cause Analysis",
+        "description": "AI identifies why you got it wrong and helps you understand the concept through conversation."
       },
       "step3": {
-        "title": "Ask Anything",
-        "description": "Chat naturally and get answers from your documents. AI cites sources so you can verify every response."
+        "title": "📝 Similar Problem Practice",
+        "description": "Get recommended similar problems of the same type to achieve full understanding through repetition."
+      },
+      "step4": {
+        "title": "🏆 Mastery Record",
+        "description": "Record mastered types and check your learning achievements on the weakness dashboard."
       },
       "cta": "Try It Free Now"
     },
     "hero": {
-      "title": "Find What You Need in Seconds, Not Hours",
-      "subtitle": "Upload PDFs, Word docs, and Excel files. AI analyzes them automatically. Ask in natural language and get precise answers with source citations.",
-      "startTrial": "Start Free in 30 Seconds",
+      "title": "When did our high-achiever in middle school",
+      "titleLine2": "start struggling in high school exams?",
+      "subtitle": "Studying hard at academy but grades stay flat. The limits of 'quantity over quality' — it's time to change.",
+      "startTrial": "Try AI Wrong Answer Note Free",
       "watchDemo": "See How It Works",
       "noCreditCard": "No credit card required",
       "freeForever": "Free forever plan",
-      "demoProject": "Project: Research / Conversation: AI Trends",
-      "demoQuestion": "What are the latest trends in RAG systems?",
-      "demoAnswer": "Based on your previous conversations about vector databases and semantic search...",
-      "demoContext": "Context from 3 projects"
+      "demoSubject": "Math / Quadratic Equations",
+      "demoChatUser": "I know what discriminant means but I don't get why I got it wrong 😢",
+      "demoChatAI": "You need to calculate discriminant (D) first, then apply the quadratic formula. That ordering was the cause! Want to try 3 similar problems? 🎯",
+      "demoSimilarBtn": "Try Similar Problems"
+    },
+    "agitation": {
+      "title": "Making the same mistakes over and over —",
+      "titleLine2": "the golden window is closing.",
+      "description": "Glancing at the answer key and moving on won't work in college entrance exams. Without truly understanding why you got it wrong, the same mistakes will repeat.",
+      "stat1": "74%",
+      "stat1Label": "of students move on without knowing the cause of their wrong answers",
+      "stat2": "62%",
+      "stat2Label": "repeat the same type of mistake on follow-up tests",
+      "graphLabel": "Exam Score Trend",
+      "graphDesc": "Repetition without cause analysis"
+    },
+    "cause": {
+      "title": "There's only one real cause:",
+      "titleHighlight": "'Lack of reflection on why you got it wrong'",
+      "subtitle": "You can only conquer them when you correctly identify these three error patterns.",
+      "card1": {
+        "emoji": "🧮",
+        "title": "Calculation Error",
+        "description": "Failing to locate exactly where the arithmetic went wrong"
+      },
+      "card2": {
+        "emoji": "🧐",
+        "title": "Missing the Intent",
+        "description": "Missing the core point the question is actually asking"
+      },
+      "card3": {
+        "emoji": "📚",
+        "title": "Concept Gap",
+        "description": "Not knowing the essential formula or rule needed to solve it"
+      }
+    },
+    "solution": {
+      "badge": "AI Personalized Learning",
+      "title": "Built by a parent of a high school freshman, with love.",
+      "subtitle": "Meet your child's dedicated AI tutor — available 24/7, never tired, always patient.",
+      "feature1": "Precisely identify why each mistake was made",
+      "feature2": "Guide to full understanding via similar problems",
+      "feature3": "Track growth on a weakness dashboard",
+      "cta": "Start AI Wrong Answer Note Free"
     },
     "features": {
-      "title": "Built for Knowledge Work, Not Just Chatting",
-      "subtitle": "Transform scattered conversations into structured knowledge that grows more valuable over time",
-      "moreTitle": "More Features",
-      "explorer": {
-        "title": "Project-Based Organization",
-        "description": "Structure conversations like files in folders. Keep client work separate from personal research. Navigate your knowledge base with Windows Explorer familiarity."
+      "title": "This is how we conquer wrong answers now",
+      "subtitle": "From photo to analysis, similar problems, and dashboard — the complete wrong answer mastery cycle",
+      "feature1": {
+        "badge": "OCR Auto Scan",
+        "title": "Wrong answer analysis starts with just one snap",
+        "description": "No complex formula input needed — just take a photo with your smartphone. AI automatically recognizes and begins analyzing.",
+        "mockLabel": "Scanning exam sheet with camera...",
+        "mockStatus": "OCR complete ✓"
       },
-      "rag": {
-        "title": "Context-Aware AI",
-        "description": "Every answer draws from your entire conversation history. AI automatically finds relevant discussions from weeks or months ago across all projects."
+      "feature2": {
+        "badge": "AI Tutor",
+        "title": "An AI chatbot that guides the 'process', not just the answer",
+        "description": "Not one-sided explanations — our AI leads you to discover insights through dialogue, staying with you until you truly understand.",
+        "mockChat": "What formula should we use here? 🤔",
+        "mockReply": "Let's use the trig identity sin²θ + cos²θ = 1!"
       },
-      "search": {
-        "title": "Intelligent Memory Recall",
-        "description": "Search by meaning, not just keywords. Find that discussion about 'authentication' even when you talked about 'login flows' and 'user sessions'."
+      "feature3": {
+        "badge": "Custom Problems",
+        "title": "Tailored similar problems for complete mastery",
+        "description": "Instantly generates problems of the same type and difficulty as your wrong answer. Repeat until full understanding is achieved.",
+        "mockBtn": "Try Similar Problem →",
+        "mockCount": "3 problems ready"
       },
-      "streaming": {
-        "title": "Real-time Responses",
-        "description": "See AI thinking in real-time with WebSocket streaming. Start reading answers as they're generated, no waiting for completion."
+      "feature4": {
+        "badge": "Growth Tracking",
+        "title": "A smart dashboard that erases your weaknesses",
+        "description": "Analyze weaknesses by subject with data and manage review cycles. AI tells you what to study first.",
+        "mockChart": "Weakness type analysis",
+        "mockProgress": "Quadratic equations mastery: 78%"
       },
-      "security": {
-        "title": "Secure & Private",
-        "description": "Your conversations stay yours. Complete data isolation with secure authentication. PostgreSQL reliability, cloud convenience."
+      "ocr": {
+        "title": "OCR Auto Recognition",
+        "description": "Take a photo of your problem sheet and AI automatically recognizes the text. Register wrong answers quickly without typing."
       },
-      "multimodal": {
-        "title": "More Than Text",
-        "description": "Upload images, diagrams, and screenshots. Get AI insights on visual content alongside your text discussions."
+      "conversation": {
+        "title": "Conversational AI Tutor",
+        "description": "Not just answer checking—AI explains concepts through conversation until you truly understand. Verify your understanding with AI instantly."
       },
       "multilingual": {
         "title": "Multilingual Support",
-        "description": "Full interface support for English and Korean. Chat in your preferred language with localized UI and responses."
+        "description": "Full Korean and English interface support. Convenient for studying foreign language subjects too."
       },
-      "dragdrop": {
-        "title": "Intuitive File Management",
-        "description": "Drag and drop files and folders like Windows Explorer. Hierarchical organization with unlimited subfolders."
+      "mobile": {
+        "title": "Mobile Optimized",
+        "description": "Register and review wrong answers on your smartphone anytime, anywhere. Check your weak areas on the go."
       }
     },
     "useCases": {
-      "title": "Real Work, Real Results",
-      "subtitle": "See how professionals use AI Chat Explorer to build knowledge, not just have conversations",
-      "knowledge": {
-        "title": "Research & Learning",
-        "description": "Build a living knowledge base from your studies. Ask questions months later and get answers synthesized from all your notes and discussions.",
-        "benefit1": "Organize research by topic or project",
-        "benefit2": "AI connects insights across papers and notes",
-        "benefit3": "Instant recall of concepts you studied weeks ago",
-        "projectsLabel": "Projects",
-        "researchPapers": "Research Papers",
-        "mlSurvey": "Machine Learning Survey",
-        "ragReview": "RAG Systems Review",
-        "clientProjects": "Client Projects",
-        "courseNotes": "Course Notes"
+      "title": "Personalized Solutions for Every Learner",
+      "subtitle": "From students to parents, see how Wrong Answer AI transforms learning achievement",
+      "highSchool": {
+        "title": "High School Students",
+        "description": "Analyze college entrance exam wrong answers with AI and intensively master weak types. Break the cycle of repeating the same mistakes on the same question types.",
+        "benefit1": "Wrong answer classification and analysis by exam type",
+        "benefit2": "Auto-detection of repeated error types for intensive training",
+        "benefit3": "Mock exam score improvement tracking dashboard"
       },
-      "development": {
-        "title": "Business & Consulting",
-        "description": "Never repeat the same client conversation twice. Keep client contexts separate while building reusable expertise across projects.",
-        "benefit1": "Separate client work, preserve confidentiality",
-        "benefit2": "Reuse solutions without mixing contexts",
-        "benefit3": "Build expertise that compounds over time",
-        "demoQuery": "What pricing model did we recommend for SaaS clients?",
-        "demoLabel": "Consultant Query",
-        "demoContext": "Searching across Client A, Client B, and Best Practices projects...",
-        "demoAnswer": "Based on 5 SaaS client projects, you typically recommended tiered pricing with usage-based overages..."
+      "middleSchool": {
+        "title": "Middle School Students",
+        "description": "Organize mid-term exam wrong answers by unit and study with an AI tutor until you fully understand each concept.",
+        "benefit1": "Wrong answer archiving by unit and concept",
+        "benefit2": "Concept understanding verification through AI tutor conversation",
+        "benefit3": "Quick review of weak concepts before exams"
       },
-      "team": {
-        "title": "Creative & Content Work",
-        "description": "From brainstorming to concept development, maintain creative consistency across projects. An AI partner that remembers your style and preferences.",
-        "benefit1": "Track creative evolution over time",
-        "benefit2": "Maintain brand tone & voice consistency",
-        "benefit3": "Instantly search and reuse past ideas",
-        "teamLabel": "Project: Brand Strategy",
-        "members": "drafts",
-        "projects": "iterations",
-        "conversations": "concepts",
-        "projectLabel": "My Projects",
-        "project1": "Brand Renewal",
-        "project1Detail": "12 drafts · 34 conversations",
-        "project2": "Content Calendar",
-        "project2Detail": "8 drafts · 21 conversations"
+      "parents": {
+        "title": "Parents",
+        "description": "View your child's learning status at a glance through the dashboard. Objectively identify which subject types are weakest.",
+        "benefit1": "Weak type distribution visualization by subject",
+        "benefit2": "Track wrong answer resolution and mastery rates",
+        "benefit3": "Support for building study habits"
       }
     },
     "testimonials": {
-      "title": "Trusted by Knowledge Workers",
+      "title": "AI Wrong Answer Notes Trusted by Students and Parents",
       "rating": "4.9/5 average from beta testers",
       "alex": {
-        "name": "Alex Johnson",
-        "role": "Freelance Developer · 6 months",
-        "quote": "Being able to keep context separated per side project is amazing. It pulls accurate answers from conversations I had 3 months ago."
+        "name": "Jihoon Kim",
+        "role": "High School Senior · 3 months",
+        "quote": "Analyzing my math wrong answers with AI showed me my error patterns. My repeat mistakes definitely decreased."
       },
       "maria": {
-        "name": "Maria Chen",
-        "role": "UX Researcher · 4 months",
-        "quote": "Organizing user research data by project and searching in natural language cut my report writing time in half."
+        "name": "Subin Lee",
+        "role": "8th Grade Student · 2 months",
+        "quote": "It's convenient to just take a photo and get analysis right away, and the AI explains things so clearly I can understand even on my own."
       },
       "david": {
-        "name": "David Park",
-        "role": "Management Consultant · 8 months",
-        "quote": "I can keep client projects separate while cross-searching past solutions. Proposal writing is so much faster now."
+        "name": "Seohyun Park (Parent)",
+        "role": "Child is 9th Grade · 4 months",
+        "quote": "I love being able to see where my child is struggling through the dashboard. Now I can talk to tutors with objective data."
       }
     },
     "pricing": {
@@ -355,10 +392,10 @@
         "title": "Free",
         "price": "$0",
         "period": "/month",
-        "feature1": "3 projects",
-        "feature2": "50 AI queries/month",
+        "feature1": "50 wrong answer analyses/month",
+        "feature2": "3 subject categories",
         "feature3": "250MB storage",
-        "feature4": "Basic RAG search",
+        "feature4": "Basic AI analysis",
         "retention": "30-day data retention",
         "cta": "Get Started"
       },
@@ -368,10 +405,10 @@
         "price": "$25",
         "period": "/month",
         "yearlyPrice": "$20",
-        "feature1": "10 projects",
-        "feature2": "1,000 AI queries/month",
+        "feature1": "1,000 wrong answer analyses/month",
+        "feature2": "10 subject categories",
         "feature3": "5GB storage",
-        "feature4": "Basic RAG search",
+        "feature4": "Similar problem recommendations",
         "retention": "180-day data retention",
         "cta": "Upgrade to Basic"
       },
@@ -380,12 +417,12 @@
         "price": "$40",
         "period": "/month",
         "yearlyPrice": "$32",
-        "feature1": "Unlimited projects",
-        "feature2": "5,000 AI queries/month",
+        "feature1": "Unlimited wrong answer analyses",
+        "feature2": "Unlimited subject categories",
         "feature3": "20GB storage",
-        "feature4": "Advanced RAG with latest AI models",
-        "feature5": "Document image analysis",
-        "feature6": "Priority support",
+        "feature4": "Advanced AI cause analysis",
+        "feature5": "OCR auto recognition",
+        "feature6": "Weakness visualization dashboard",
         "retention": "1-year data retention",
         "cta": "Upgrade to Pro"
       },
@@ -394,7 +431,7 @@
         "price": "Contact Us",
         "feature1": "Everything in Pro",
         "feature2": "Custom limits",
-        "feature3": "Custom integrations",
+        "feature3": "Academy & school group use",
         "feature4": "Dedicated support",
         "feature5": "SLA guarantee",
         "retention": "Unlimited retention",
@@ -402,11 +439,11 @@
       }
     },
     "dataSecurity": {
-      "title": "Your Data, Your Control",
-      "subtitle": "Enterprise-grade security with full transparency on how your data is handled.",
+      "title": "Your Learning Data, Your Control",
+      "subtitle": "Enterprise-grade security protecting your learning data with full transparency.",
       "encryption": {
         "title": "End-to-End Encryption",
-        "description": "All data encrypted at rest and in transit. Your conversations and documents are protected with industry-standard encryption."
+        "description": "All data encrypted at rest and in transit. Your wrong answer notes and study records are protected with industry-standard encryption."
       },
       "retention": {
         "title": "Clear Retention Policies",
@@ -414,81 +451,81 @@
       },
       "isolation": {
         "title": "Complete Data Isolation",
-        "description": "Each user's data is completely separated. No cross-contamination, no shared access, no compromises on privacy."
+        "description": "Each user's learning data is completely separated. No cross-contamination, no shared access, no compromises on privacy."
       }
     },
     "faq": {
       "title": "Frequently Asked Questions",
-      "subtitle": "Everything you need to know about WiseQuery",
+      "subtitle": "Everything you need to know about Wrong Answer AI",
       "q1": {
         "question": "What are the limitations of the free plan?",
-        "answer": "The free plan includes 3 projects, 50 AI queries per month, and 250MB storage with 30-day data retention. You get full access to basic RAG search and all core features. Perfect for personal use and trying out the platform."
+        "answer": "The free plan includes 50 wrong answer analyses per month, 3 subject categories, and 250MB storage with 30-day data retention. You get full access to basic AI analysis and all core features. Perfect for personal learning trials."
       },
       "q2": {
-        "question": "What file formats are supported?",
-        "answer": "WiseQuery supports PDF, Word documents (.docx), Excel spreadsheets (.xlsx), CSV files, and plain text (.txt). All files are automatically parsed, chunked, and indexed for AI-powered search."
+        "question": "How do I register wrong answers?",
+        "answer": "You can register wrong answers via photo (OCR auto recognition), direct text input, or file upload (PDF, Word). With OCR, just take a photo and the problem is automatically recognized."
       },
       "q3": {
-        "question": "How long is my data retained?",
-        "answer": "Data retention depends on your plan: Free (30 days), Basic (180 days), Pro (1 year), Custom (unlimited). You'll receive email notifications 7 days before data archival, and archived data can be restored within a grace period."
+        "question": "How does AI analyze wrong answer causes?",
+        "answer": "AI comprehensively analyzes problem type, solution process, and error patterns. It distinguishes between conceptual misunderstanding, calculation error, and interpretation mistakes, then explains through conversation until you understand."
       },
       "q4": {
-        "question": "Can I share projects with others?",
-        "answer": "Currently, WiseQuery is designed for individual use with complete data isolation for security. Team collaboration features are on our roadmap for future releases."
+        "question": "Where do similar problems come from?",
+        "answer": "AI identifies the type and difficulty of your wrong answer and generates or recommends similar problems. Problem variations are also provided so you can practice the same concept in different ways."
       },
       "q5": {
-        "question": "Can I export my data?",
-        "answer": "Yes! You can export your conversations as JSON or text files at any time. Your data belongs to you, and we make it easy to take it with you."
+        "question": "Which subjects are supported?",
+        "answer": "All major school subjects are supported including Math, English, Korean, Science, and Social Studies. Organize by subject for systematic management, and AI provides analysis tailored to each subject's characteristics."
       },
       "q6": {
-        "question": "How is this different from ChatGPT or Claude?",
-        "answer": "General AI chatbots lose context when the conversation ends. WiseQuery permanently stores all conversations by project and uses RAG technology to automatically find relevant context from past conversations. It's a 'growing knowledge base' that provides more accurate answers over time."
+        "question": "How is this different from ChatGPT?",
+        "answer": "General AI chatbots aren't specialized for wrong answer analysis. Wrong Answer AI systematically stores error data, classifies by type, detects repeat patterns, and recommends personalized similar problems. It becomes your more precise AI tutor over time."
       },
       "q7": {
         "question": "Where are data servers located?",
-        "answer": "WiseQuery uses AWS cloud infrastructure, and all data is protected with industry-standard encryption (AES-256). Each user's data is completely isolated, and we follow GDPR compliance policies."
+        "answer": "Wrong Answer AI uses AWS cloud infrastructure, and all data is protected with industry-standard encryption (AES-256). Each user's data is completely isolated, and we comply with privacy protection laws."
       },
       "q8": {
-        "question": "Is API integration available?",
-        "answer": "Currently, WiseQuery is available through the web interface only. A REST API is under development for Pro plan users and above, with planned integrations for automation tools like Zapier and Make."
+        "question": "Can academies or schools use it as a group?",
+        "answer": "Yes! Group use by academies and schools is available through the Custom plan. We offer group features including per-student dashboard management and teacher analytics views. Please contact our sales team."
       }
     },
     "comparison": {
-      "title": "WiseQuery vs General AI Chatbots",
-      "subtitle": "Why choose WiseQuery over generic AI chatbots?",
+      "title": "Wrong Answer AI vs General AI Chatbots",
+      "subtitle": "Why choose Wrong Answer AI over generic AI chatbots?",
       "feature": "Feature",
       "generalAI": "General AI Chatbot",
       "rows": {
-        "context": "Remembers past conversation context",
-        "projectOrg": "Project-level knowledge separation",
-        "docAnalysis": "Auto document analysis (PDF, Word, Excel)",
-        "semanticSearch": "Semantic search",
-        "dataRetention": "Long-term data retention",
+        "context": "Specialized wrong answer cause analysis",
+        "projectOrg": "Systematic subject-based classification",
+        "docAnalysis": "OCR auto problem recognition",
+        "semanticSearch": "Auto similar problem recommendations",
+        "dataRetention": "Long-term study record retention",
         "privacy": "Complete data isolation"
       },
       "general": {
-        "context": "❌ Resets when conversation ends",
+        "context": "❌ Not specialized for error analysis",
         "projectOrg": "❌ Single conversation thread",
         "docAnalysis": "⚠️ Limited (file size restrictions)",
-        "semanticSearch": "❌ Keyword-based only",
+        "semanticSearch": "❌ No similar problem recommendations",
         "dataRetention": "❌ Deleted when session ends",
         "privacy": "⚠️ May be used for training"
       }
     },
     "newsletter": {
-      "label": "Get product updates and AI tips",
+      "label": "Get Wrong Answer AI updates and study tips",
       "placeholder": "Enter your email address",
       "button": "Subscribe"
     },
     "finalCta": {
-      "title": "Stop Losing Track of Where You Saw That",
-      "subtitle": "Get started now. In 2 minutes, create your first project, upload documents, and ask AI questions.",
+      "title": "Stop Making the Same Mistakes",
+      "subtitle": "Get started now. In 2 minutes, register your first wrong answer, get AI analysis, and practice with similar problems.",
       "button": "Start Free Today",
       "setupTime": "Setup in 2 minutes",
       "cancelAnytime": "Cancel anytime"
     },
     "footer": {
-      "tagline": "The AI assistant that remembers everything. Build knowledge that compounds over time.",
+      "tagline": "The AI-powered personalized learning solution that analyzes wrong answer causes and helps you master them with similar problems.",
       "product": "Product",
       "features": "Features",
       "pricing": "Pricing",
@@ -503,7 +540,7 @@
       "privacy": "Privacy",
       "terms": "Terms",
       "security": "Security",
-      "copyright": "© 2025 WiseQuery. All rights reserved."
+      "copyright": "© 2026 Wrong Answer AI. All rights reserved."
     }
   },
   "chat": {
@@ -814,7 +851,7 @@
       "title": "Upgrade Limit",
       "projectsLimitReached": "You've reached the limit of {{max}} projects on your current plan. You currently have {{current}} projects.",
       "conversationsLimitReached": "You've reached the limit of {{max}} conversations on your current plan. You currently have {{current}} conversations.",
-      "aiQueriesLimitReached": "You've reached the limit of {{max}} AI queries on your current plan. You have used {{current}} AI queries.",
+      "aiQueriesLimitReached": "You've reached the limit of {{max}} wrong answer analyses on your current plan. You have used {{current}} analyses this month.",
       "storageLimitReached": "You've reached the storage limit of {{max}} on your current plan. You are currently using {{current}}.",
       "upgradeMessage": "Upgrade your plan to unlock more features:",
       "upgradeToBasic": "Upgrade to Basic for 10 projects, unlimited conversations, and 5GB storage.",
@@ -1653,7 +1690,7 @@
       "usage": "Usage",
       "projects": "Projects",
       "conversations": "Conversations",
-      "aiQueries": "AI Queries (this month)",
+      "aiQueries": "Wrong Answer Analyses (this month)",
       "storage": "Storage",
       "upgrade": "Upgrade Plan",
       "viewPlans": "View Plans",

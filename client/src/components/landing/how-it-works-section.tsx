@@ -1,9 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
+  Camera,
   FileText,
-  FileSpreadsheet,
-  Table2,
   ArrowRight,
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
@@ -24,57 +23,42 @@ export function HowItWorksSection() {
           </p>
         </div>
 
-        {/* Supported File Formats */}
+        {/* Supported Input Formats */}
         <div className="flex flex-wrap justify-center gap-3 mb-16">
           <Badge variant="secondary" className="px-4 py-2 text-sm">
-            <FileText className="h-4 w-4 mr-2" /> PDF
+            <Camera className="h-4 w-4 mr-2" /> 사진 촬영 (OCR)
           </Badge>
           <Badge variant="secondary" className="px-4 py-2 text-sm">
-            <FileText className="h-4 w-4 mr-2" /> Word (.docx)
+            <FileText className="h-4 w-4 mr-2" /> 텍스트 직접 입력
           </Badge>
           <Badge variant="secondary" className="px-4 py-2 text-sm">
-            <FileSpreadsheet className="h-4 w-4 mr-2" /> Excel (.xlsx)
-          </Badge>
-          <Badge variant="secondary" className="px-4 py-2 text-sm">
-            <Table2 className="h-4 w-4 mr-2" /> CSV
-          </Badge>
-          <Badge variant="secondary" className="px-4 py-2 text-sm">
-            <FileText className="h-4 w-4 mr-2" /> Text (.txt)
+            <FileText className="h-4 w-4 mr-2" /> PDF / Word 업로드
           </Badge>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-          <div className="text-center space-y-4" data-testid="step-1">
-            <div className="w-16 h-16 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-2xl font-bold mx-auto">
-              1
+        {/* 4-Step Grid */}
+        <div className="grid md:grid-cols-4 gap-6 max-w-5xl mx-auto">
+          {[
+            { key: 'step1', num: 1, testId: 'step-1' },
+            { key: 'step2', num: 2, testId: 'step-2' },
+            { key: 'step3', num: 3, testId: 'step-3' },
+            { key: 'step4', num: 4, testId: 'step-4' },
+          ].map((step, idx) => (
+            <div key={step.key} className="relative">
+              <div className="text-center space-y-4" data-testid={step.testId}>
+                <div className="w-16 h-16 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-2xl font-bold mx-auto">
+                  {step.num}
+                </div>
+                <h3 className="text-lg font-semibold">{t(`landing.howItWorks.${step.key}.title`)}</h3>
+                <p className="text-muted-foreground text-sm">{t(`landing.howItWorks.${step.key}.description`)}</p>
+              </div>
+              {idx < 3 && (
+                <div className="hidden md:flex absolute top-8 -right-3 z-10">
+                  <ArrowRight className="h-6 w-6 text-muted-foreground" />
+                </div>
+              )}
             </div>
-            <h3 className="text-xl font-semibold">{t('landing.howItWorks.step1.title')}</h3>
-            <p className="text-muted-foreground">{t('landing.howItWorks.step1.description')}</p>
-          </div>
-          <div className="hidden md:flex items-center justify-center">
-            <ArrowRight className="h-8 w-8 text-muted-foreground" />
-          </div>
-          <div className="text-center space-y-4" data-testid="step-2">
-            <div className="w-16 h-16 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-2xl font-bold mx-auto">
-              2
-            </div>
-            <h3 className="text-xl font-semibold">{t('landing.howItWorks.step2.title')}</h3>
-            <p className="text-muted-foreground">{t('landing.howItWorks.step2.description')}</p>
-          </div>
-        </div>
-
-        <div className="flex justify-center mt-8">
-          <ArrowRight className="h-8 w-8 text-muted-foreground rotate-90" />
-        </div>
-
-        <div className="max-w-md mx-auto mt-8">
-          <div className="text-center space-y-4" data-testid="step-3">
-            <div className="w-16 h-16 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-2xl font-bold mx-auto">
-              3
-            </div>
-            <h3 className="text-xl font-semibold">{t('landing.howItWorks.step3.title')}</h3>
-            <p className="text-muted-foreground">{t('landing.howItWorks.step3.description')}</p>
-          </div>
+          ))}
         </div>
 
         <div className="text-center mt-12">
