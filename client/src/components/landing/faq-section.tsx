@@ -10,7 +10,7 @@ export default function FAQSection() {
   const { t } = useTranslation();
 
   return (
-    <section className="py-20 lg:py-32 bg-muted/30" data-testid="section-faq">
+    <section id="faq" className="py-20 lg:py-32 bg-muted/30" data-testid="section-faq">
       <div className="container mx-auto px-6 lg:px-12">
         <div className="text-center space-y-4 mb-16">
           <h2 className="text-4xl font-semibold" data-testid="text-faq-title">

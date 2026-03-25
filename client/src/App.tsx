@@ -13,7 +13,6 @@ import "./i18n";
 
 const Home = lazy(() => import("@/pages/home"));
 const Landing = lazy(() => import("@/pages/landing"));
-const Pricing = lazy(() => import("@/pages/pricing"));
 const Changelog = lazy(() => import("@/pages/changelog"));
 const Documentation = lazy(() => import("@/pages/documentation"));
 const About = lazy(() => import("@/pages/about"));
@@ -63,7 +62,7 @@ function Router() {
     <Suspense fallback={<PageLoader />}>
       <Switch>
         <Route path="/" component={RootRoute} />
-        <Route path="/pricing" component={Pricing} />
+        {/* Pricing removed - merged to landing page */}
         <Route path="/changelog" component={Changelog} />
         <Route path="/docs" component={Documentation} />
         <Route path="/about" component={About} />

@@ -1,272 +1,162 @@
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Switch } from "@/components/ui/switch";
-import { Check, Clock } from "lucide-react";
-import { useTranslation } from "react-i18next";
+import { Check } from "lucide-react";
 import { PrefetchLink } from "@/components/prefetch-link";
 
 export function PricingSection() {
-  const { t } = useTranslation();
-  const [isYearly, setIsYearly] = useState(false);
 
   return (
     <>
-      {/* Competitor Comparison Section */}
-      <section className="py-20 lg:py-32 bg-muted/30" data-testid="section-comparison">
-        <div className="container mx-auto px-6 lg:px-12">
-          <div className="max-w-4xl mx-auto text-center space-y-4 mb-12">
-            <h2 className="text-4xl font-semibold" data-testid="text-comparison-title">
-              {t('landing.comparison.title')}
-            </h2>
-            <p className="text-lg text-muted-foreground">
-              {t('landing.comparison.subtitle')}
-            </p>
-          </div>
-          <div className="max-w-4xl mx-auto">
-            <Card>
-              <CardContent className="p-0">
-                <div className="overflow-x-auto">
-                  <table className="w-full text-sm">
-                    <thead>
-                      <tr className="border-b">
-                        <th className="text-left p-4 font-semibold">{t('landing.comparison.feature')}</th>
-                        <th className="text-center p-4 font-semibold">WiseQuery</th>
-                        <th className="text-center p-4 font-semibold text-muted-foreground">{t('landing.comparison.generalAI')}</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {['context', 'projectOrg', 'docAnalysis', 'semanticSearch', 'dataRetention', 'privacy'].map((key) => (
-                        <tr key={key} className="border-b last:border-0">
-                          <td className="p-4 font-medium">{t(`landing.comparison.rows.${key}`)}</td>
-                          <td className="p-4 text-center">
-                            <Check className="h-5 w-5 text-green-600 mx-auto" />
-                          </td>
-                          <td className="p-4 text-center text-muted-foreground">
-                            {t(`landing.comparison.general.${key}`)}
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-      </section>
-
-      {/* Pricing Section (with annual toggle) */}
-      <section id="pricing" className="py-20 lg:py-32" data-testid="section-pricing">
+      {/* Pricing Section (Credit Packages) */}
+      <section id="pricing" className="py-24 lg:py-32 bg-slate-50 dark:bg-slate-900/30" data-testid="section-pricing">
         <div className="container mx-auto px-6 lg:px-12">
           <div className="text-center space-y-4 mb-8">
-            <h2 className="text-4xl font-semibold" data-testid="text-pricing-title">
-              {t('landing.pricing.title')}
+            <h2 className="text-4xl lg:text-5xl font-extrabold tracking-tight" data-testid="text-pricing-title">
+              필요한 만큼만 쓰는 <span className="text-primary">합리적인 종량제</span>
             </h2>
-            <p className="text-lg text-muted-foreground">
-              {t('landing.pricing.subtitle')}
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              부담스러운 월 구독 대신, 쓰고 싶은 만큼만 크레딧을 충전해서 사용하세요.
             </p>
           </div>
 
-          {/* Monthly / Yearly Toggle */}
-          <div className="flex items-center justify-center gap-4 mb-12">
-            <span className={`text-sm font-medium transition-colors ${!isYearly ? 'text-foreground' : 'text-muted-foreground'}`}>
-              {t('landing.pricing.monthly')}
-            </span>
-            <Switch checked={isYearly} onCheckedChange={setIsYearly} />
-            <span className={`text-sm font-medium transition-colors ${isYearly ? 'text-foreground' : 'text-muted-foreground'}`}>
-              {t('landing.pricing.yearly')}
-              <Badge className="ml-2 text-xs">{t('landing.pricing.savePercent')}</Badge>
-            </span>
+          {/* Welcome Bonus Banner */}
+          <div className="max-w-4xl mx-auto bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-2xl p-6 mb-12 flex flex-col sm:flex-row items-center justify-between gap-6 shadow-sm">
+            <div className="flex items-center gap-4">
+              <div className="h-12 w-12 bg-green-100 dark:bg-green-800 rounded-full flex justify-center items-center flex-shrink-0">
+                <span className="text-2xl">🎁</span>
+              </div>
+              <div>
+                <h3 className="text-lg font-bold text-green-900 dark:text-green-300 flex items-center gap-2">
+                  신규 가입 즉시 100 크레딧 무료 제공!
+                  <span className="text-xs bg-green-200 dark:bg-green-700 text-green-800 dark:text-green-100 px-2 py-0.5 rounded-full whitespace-nowrap">평생 무료 매일 3회</span>
+                </h3>
+                <p className="text-sm text-green-700 dark:text-green-400 mt-1">
+                  결제 없이도 <strong>매일 3회 AI 튜터 질문 및 오답 분석</strong>이 평생 무료로 제공되며, 첫 가입 시 제약 없이 체험할 수 있는 100 크레딧(약 1만원 상당)을 추가 증정합니다!
+                </p>
+              </div>
+            </div>
+            <PrefetchLink href="/login" className="flex-shrink-0">
+              <Button className="bg-green-600 hover:bg-green-700 text-white font-bold h-11 px-6 shadow-md">
+                무료 혜택 받기
+              </Button>
+            </PrefetchLink>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
-            {/* Free */}
-            <Card data-testid="pricing-free">
-              <CardHeader>
-                <CardTitle className="text-xl">{t('landing.pricing.free.title')}</CardTitle>
-                <div className="mt-4">
-                  <span className="text-4xl font-bold">{t('landing.pricing.free.price')}</span>
-                  <span className="text-muted-foreground">{t('landing.pricing.free.period')}</span>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-5xl mx-auto">
+            {/* Basic Package */}
+            <Card className="flex flex-col hover:border-primary/30 transition-colors shadow-sm hover:shadow-md" data-testid="pricing-basic">
+              <CardHeader className="text-center pb-8 border-b border-slate-100 dark:border-slate-800">
+                <CardTitle className="text-2xl font-bold text-muted-foreground">Starter</CardTitle>
+                <div className="mt-6 flex flex-col items-center gap-2">
+                  <div className="text-primary font-bold text-lg bg-primary/10 px-3 py-1 rounded-full">
+                    100 크레딧
+                  </div>
+                  <div className="flex items-baseline justify-center gap-1 mt-2">
+                    <span className="text-4xl font-extrabold">₩9,900</span>
+                  </div>
                 </div>
+                <div className="text-sm text-muted-foreground mt-3 font-medium">AI 오답노트를 처음 시작하는 사용자용</div>
               </CardHeader>
-              <CardContent className="space-y-4">
-                <ul className="space-y-3">
-                  <li className="flex items-start gap-2">
-                    <Check className="h-5 w-5 text-green-600 mt-0.5" />
-                    <span className="text-sm">{t('landing.pricing.free.feature1')}</span>
+              <CardContent className="space-y-6 pt-8 flex-1">
+                <ul className="space-y-4">
+                  <li className="flex items-start gap-3">
+                    <Check className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
+                    <span className="text-base font-medium">100 크레딧 충전 (유효기간 없음)</span>
                   </li>
-                  <li className="flex items-start gap-2">
-                    <Check className="h-5 w-5 text-green-600 mt-0.5" />
-                    <span className="text-sm">{t('landing.pricing.free.feature2')}</span>
+                  <li className="flex items-start gap-3">
+                    <Check className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
+                    <span className="text-base font-medium">AI 사용량(쿼리)에 비례하여 크레딧 차감</span>
                   </li>
-                  <li className="flex items-start gap-2">
-                    <Check className="h-5 w-5 text-green-600 mt-0.5" />
-                    <span className="text-sm">{t('landing.pricing.free.feature3')}</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <Check className="h-5 w-5 text-green-600 mt-0.5" />
-                    <span className="text-sm">{t('landing.pricing.free.feature4')}</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <Clock className="h-5 w-5 text-muted-foreground mt-0.5" />
-                    <span className="text-sm text-muted-foreground">{t('landing.pricing.free.retention')}</span>
+                  <li className="flex items-start gap-3">
+                    <Check className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
+                    <span className="text-base font-medium">100 크레딧은 약 100회 오답 분석 가능</span>
                   </li>
                 </ul>
               </CardContent>
               <CardFooter>
-                <PrefetchLink href="/pricing" className="w-full" data-testid="link-pricing-free">
-                  <Button variant="outline" className="w-full" data-testid="button-pricing-free">
-                    {t('landing.pricing.free.cta')}
+                <PrefetchLink href="/login" className="w-full">
+                  <Button variant="outline" className="w-full h-12 text-base font-bold border-2">
+                    충전하기
                   </Button>
                 </PrefetchLink>
               </CardFooter>
             </Card>
 
-            {/* Basic (Most Popular) */}
-            <Card className="border-primary relative" data-testid="pricing-basic">
-              <Badge className="absolute -top-3 left-1/2 -translate-x-1/2">{t('landing.pricing.basic.badge')}</Badge>
-              <CardHeader>
-                <CardTitle className="text-xl">{t('landing.pricing.basic.title')}</CardTitle>
-                <div className="mt-4">
-                  <span className="text-4xl font-bold">
-                    {isYearly ? t('landing.pricing.basic.yearlyPrice') : t('landing.pricing.basic.price')}
-                  </span>
-                  <span className="text-muted-foreground">{t('landing.pricing.basic.period')}</span>
-                  {isYearly && (
-                    <div className="text-xs text-muted-foreground mt-1">{t('landing.pricing.billedAnnually')}</div>
-                  )}
+            {/* Plus Package (Best Value) */}
+            <Card className="flex flex-col border-primary/50 relative shadow-xl transform lg:-translate-y-4 bg-primary/5" data-testid="pricing-pro">
+              <Badge className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1.5 text-sm font-bold shadow-sm border-primary bg-primary text-primary-foreground">가장 인기</Badge>
+              <CardHeader className="text-center pb-8 border-b border-primary/10">
+                <CardTitle className="text-2xl font-bold text-primary">Plus</CardTitle>
+                <div className="mt-6 flex flex-col items-center gap-2">
+                  <div className="text-primary font-bold text-base bg-primary/20 px-4 py-1.5 rounded-full whitespace-nowrap">
+                    300 크레딧 <span className="text-sm font-normal opacity-80 ml-1">+ 30 보너스</span>
+                  </div>
+                  <div className="flex items-baseline justify-center gap-1 mt-2">
+                    <span className="text-4xl font-extrabold">₩28,900</span>
+                  </div>
                 </div>
+                <div className="text-sm text-primary font-bold mt-3">오답노트를 꾸준히 활용하는 플러스 사용자용</div>
               </CardHeader>
-              <CardContent className="space-y-4">
-                <ul className="space-y-3">
-                  <li className="flex items-start gap-2">
-                    <Check className="h-5 w-5 text-green-600 mt-0.5" />
-                    <span className="text-sm">{t('landing.pricing.basic.feature1')}</span>
+              <CardContent className="space-y-6 pt-8 flex-1">
+                <ul className="space-y-4">
+                  <li className="flex items-start gap-3">
+                    <Check className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
+                    <span className="text-base font-bold">총 330 크레딧 (10% 보너스 지급)</span>
                   </li>
-                  <li className="flex items-start gap-2">
-                    <Check className="h-5 w-5 text-green-600 mt-0.5" />
-                    <span className="text-sm">{t('landing.pricing.basic.feature2')}</span>
+                  <li className="flex items-start gap-3">
+                    <Check className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
+                    <span className="text-base font-medium">학부모 안심 주간 리포트 무료 열람</span>
                   </li>
-                  <li className="flex items-start gap-2">
-                    <Check className="h-5 w-5 text-green-600 mt-0.5" />
-                    <span className="text-sm">{t('landing.pricing.basic.feature3')}</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <Check className="h-5 w-5 text-green-600 mt-0.5" />
-                    <span className="text-sm">{t('landing.pricing.basic.feature4')}</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <Clock className="h-5 w-5 text-muted-foreground mt-0.5" />
-                    <span className="text-sm text-muted-foreground">{t('landing.pricing.basic.retention')}</span>
+                  <li className="flex items-start gap-3">
+                    <Check className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
+                    <span className="text-base font-medium">AI 튜터 최우선 답변 큐 배정</span>
                   </li>
                 </ul>
               </CardContent>
               <CardFooter>
-                <PrefetchLink href="/pricing" className="w-full" data-testid="link-pricing-basic">
-                  <Button className="w-full" data-testid="button-pricing-basic">
-                    {t('landing.pricing.basic.cta')}
+                <PrefetchLink href="/login" className="w-full">
+                  <Button className="w-full h-12 text-base font-bold shadow-md hover:scale-[1.02] transition-transform">
+                    충전하기
                   </Button>
                 </PrefetchLink>
               </CardFooter>
             </Card>
 
-            {/* Pro */}
-            <Card data-testid="pricing-pro">
-              <CardHeader>
-                <CardTitle className="text-xl">{t('landing.pricing.pro.title')}</CardTitle>
-                <div className="mt-4">
-                  <span className="text-4xl font-bold">
-                    {isYearly ? t('landing.pricing.pro.yearlyPrice') : t('landing.pricing.pro.price')}
-                  </span>
-                  <span className="text-muted-foreground">{t('landing.pricing.pro.period')}</span>
-                  {isYearly && (
-                    <div className="text-xs text-muted-foreground mt-1">{t('landing.pricing.billedAnnually')}</div>
-                  )}
+            {/* Premium Package */}
+            <Card className="flex flex-col hover:border-primary/30 transition-colors shadow-sm hover:shadow-md" data-testid="pricing-premium">
+              <CardHeader className="text-center pb-8 border-b border-slate-100 dark:border-slate-800">
+                <CardTitle className="text-2xl font-bold text-muted-foreground">Premium</CardTitle>
+                <div className="mt-6 flex flex-col items-center gap-2">
+                  <div className="text-muted-foreground font-bold text-base bg-muted px-4 py-1.5 rounded-full whitespace-nowrap">
+                    500 크레딧 <span className="text-sm font-normal opacity-80 ml-1">+ 100 보너스</span>
+                  </div>
+                  <div className="flex items-baseline justify-center gap-1 mt-2">
+                    <span className="text-4xl font-extrabold">₩47,900</span>
+                  </div>
                 </div>
+                <div className="text-sm text-muted-foreground mt-3 font-medium">모든 오답을 AI로 완벽히 정복하는 헤비 사용자용</div>
               </CardHeader>
-              <CardContent className="space-y-4">
-                <ul className="space-y-3">
-                  <li className="flex items-start gap-2">
-                    <Check className="h-5 w-5 text-green-600 mt-0.5" />
-                    <span className="text-sm">{t('landing.pricing.pro.feature1')}</span>
+              <CardContent className="space-y-6 pt-8 flex-1">
+                <ul className="space-y-4">
+                  <li className="flex items-start gap-3">
+                    <Check className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
+                    <span className="text-base font-bold">총 600 크레딧 (20% 특별 보너스)</span>
                   </li>
-                  <li className="flex items-start gap-2">
-                    <Check className="h-5 w-5 text-green-600 mt-0.5" />
-                    <span className="text-sm">{t('landing.pricing.pro.feature2')}</span>
+                  <li className="flex items-start gap-3">
+                    <Check className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
+                    <span className="text-base font-medium">취약점 기반 모의고사 자동 생성권 3장</span>
                   </li>
-                  <li className="flex items-start gap-2">
-                    <Check className="h-5 w-5 text-green-600 mt-0.5" />
-                    <span className="text-sm">{t('landing.pricing.pro.feature3')}</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <Check className="h-5 w-5 text-green-600 mt-0.5" />
-                    <span className="text-sm">{t('landing.pricing.pro.feature4')}</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <Check className="h-5 w-5 text-green-600 mt-0.5" />
-                    <span className="text-sm">{t('landing.pricing.pro.feature5')}</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <Check className="h-5 w-5 text-green-600 mt-0.5" />
-                    <span className="text-sm">{t('landing.pricing.pro.feature6')}</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <Clock className="h-5 w-5 text-muted-foreground mt-0.5" />
-                    <span className="text-sm text-muted-foreground">{t('landing.pricing.pro.retention')}</span>
+                  <li className="flex items-start gap-3">
+                    <Check className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
+                    <span className="text-base font-medium">Plus 요금제의 모든 혜택 포함</span>
                   </li>
                 </ul>
               </CardContent>
               <CardFooter>
-                <PrefetchLink href="/pricing" className="w-full" data-testid="link-pricing-pro">
-                  <Button variant="outline" className="w-full" data-testid="button-pricing-pro">
-                    {t('landing.pricing.pro.cta')}
-                  </Button>
-                </PrefetchLink>
-              </CardFooter>
-            </Card>
-
-            {/* Custom */}
-            <Card data-testid="pricing-custom">
-              <CardHeader>
-                <CardTitle className="text-xl">{t('landing.pricing.custom.title')}</CardTitle>
-                <div className="mt-4">
-                  <span className="text-4xl font-bold">{t('landing.pricing.custom.price')}</span>
-                </div>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <ul className="space-y-3">
-                  <li className="flex items-start gap-2">
-                    <Check className="h-5 w-5 text-green-600 mt-0.5" />
-                    <span className="text-sm">{t('landing.pricing.custom.feature1')}</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <Check className="h-5 w-5 text-green-600 mt-0.5" />
-                    <span className="text-sm">{t('landing.pricing.custom.feature2')}</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <Check className="h-5 w-5 text-green-600 mt-0.5" />
-                    <span className="text-sm">{t('landing.pricing.custom.feature3')}</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <Check className="h-5 w-5 text-green-600 mt-0.5" />
-                    <span className="text-sm">{t('landing.pricing.custom.feature4')}</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <Check className="h-5 w-5 text-green-600 mt-0.5" />
-                    <span className="text-sm">{t('landing.pricing.custom.feature5')}</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <Clock className="h-5 w-5 text-muted-foreground mt-0.5" />
-                    <span className="text-sm text-muted-foreground">{t('landing.pricing.custom.retention')}</span>
-                  </li>
-                </ul>
-              </CardContent>
-              <CardFooter>
-                <PrefetchLink href="/contact" className="w-full" data-testid="link-pricing-custom">
-                  <Button variant="outline" className="w-full" data-testid="button-pricing-custom">
-                    {t('landing.pricing.custom.cta')}
+                <PrefetchLink href="/login" className="w-full">
+                  <Button variant="outline" className="w-full h-12 text-base font-bold border-2">
+                    충전하기
                   </Button>
                 </PrefetchLink>
               </CardFooter>
