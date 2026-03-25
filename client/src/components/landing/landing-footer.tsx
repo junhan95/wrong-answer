@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import {
   Check,
-  FolderTree,
+  BookOpen,
   ArrowRight,
   Github,
   Twitter,
@@ -71,7 +71,7 @@ export function LandingFooter() {
           <div className="grid md:grid-cols-4 gap-8 mb-8">
             <div className="space-y-4">
               <div className="flex items-center gap-2">
-                <FolderTree className="h-6 w-6" />
+                <BookOpen className="h-6 w-6" />
                 <span className="text-xl font-semibold">{t('landing.nav.appName')}</span>
               </div>
               <p className="text-sm text-muted-foreground">

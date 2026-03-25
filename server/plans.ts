@@ -11,7 +11,7 @@ export const PLAN_LIMITS = {
   [PLANS.FREE]: {
     projects: 3,
     conversations: -1,
-    aiQueries: 50,
+    aiQueries: 50,   // 오답 분석 가능 횟수 (DB 스키마 호환 유지)
     storageMB: 250,
     maxFileSizeMB: 10,
     imageGeneration: false,
@@ -35,7 +35,7 @@ export const PLAN_LIMITS = {
   [PLANS.CUSTOM]: {
     projects: -1,
     conversations: -1,
-    aiQueries: -1,
+    aiQueries: -1,   // 무제한
     storageMB: -1,
     maxFileSizeMB: -1,
     imageGeneration: true,

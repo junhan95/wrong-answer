@@ -2,12 +2,12 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
   Check,
-  FolderTree,
-  GitBranch,
-  Star,
+  BookOpen,
+  MessageCircle,
+  Sparkles,
   Users,
   FileText,
-  Sparkles,
+  Star,
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { PrefetchLink } from "@/components/prefetch-link";
@@ -18,13 +18,22 @@ export function HeroSection() {
   return (
     <>
       {/* Hero Section */}
-      <section className="relative py-20 lg:py-32" data-testid="section-hero">
-        <div className="container mx-auto px-6 lg:px-12">
+      <section className="relative py-20 lg:py-32 overflow-hidden" data-testid="section-hero">
+        {/* 배경 그라디언트 */}
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-0 left-1/4 w-96 h-96 rounded-full bg-primary/8 blur-3xl" />
+          <div className="absolute bottom-0 right-1/4 w-64 h-64 rounded-full bg-emerald-400/8 blur-3xl" />
+        </div>
+
+        <div className="container mx-auto px-6 lg:px-12 relative">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
+            {/* Left: 텍스트 */}
             <div className="space-y-8">
               <div className="space-y-4">
-                <h1 className="text-5xl lg:text-6xl font-bold tracking-tight" data-testid="text-hero-title">
+                <h1 className="text-4xl lg:text-5xl xl:text-6xl font-bold tracking-tight leading-tight" data-testid="text-hero-title">
                   {t('landing.hero.title')}
+                  <br />
+                  <span className="text-primary">{t('landing.hero.titleLine2')}</span>
                 </h1>
                 <p className="text-lg lg:text-xl text-muted-foreground max-w-xl" data-testid="text-hero-subtitle">
                   {t('landing.hero.subtitle')}
@@ -53,28 +62,49 @@ export function HeroSection() {
                 </div>
               </div>
             </div>
+
+            {/* Right: AI 챗봇 목업 */}
             <div className="relative" data-testid="container-hero-image">
-              <div className="bg-card border rounded-lg p-6 shadow-lg">
-                <div className="space-y-4">
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <FolderTree className="h-4 w-4" />
-                    <span>{t('landing.hero.demoProject')}</span>
-                  </div>
-                  <div className="space-y-3">
-                    <div className="bg-muted/50 rounded-lg p-3 text-sm">
-                      {t('landing.hero.demoQuestion')}
+              <div className="bg-card border rounded-2xl p-5 shadow-xl space-y-4">
+                {/* 헤더바 */}
+                <div className="flex items-center gap-2 pb-3 border-b">
+                  <BookOpen className="h-4 w-4 text-primary" />
+                  <span className="text-sm font-semibold">{t('landing.hero.demoSubject')}</span>
+                  <span className="ml-auto text-xs text-green-500 font-medium">● AI 분석 중</span>
+                </div>
+
+                {/* 채팅 대화 */}
+                <div className="space-y-3 min-h-[140px]">
+                  {/* 학생 질문 */}
+                  <div className="flex justify-end">
+                    <div className="bg-primary text-primary-foreground rounded-2xl rounded-tr-sm px-3.5 py-2.5 text-sm max-w-[85%]">
+                      {t('landing.hero.demoChatUser')}
                     </div>
-                    <div className="bg-primary/10 rounded-lg p-4 space-y-2">
-                      <p className="text-sm">{t('landing.hero.demoAnswer')}</p>
-                      <div className="flex gap-2 flex-wrap">
-                        <Badge variant="secondary" className="text-xs">
-                          <GitBranch className="h-3 w-3 mr-1" />
-                          {t('landing.hero.demoContext')}
-                        </Badge>
-                      </div>
+                  </div>
+
+                  {/* AI 응답 */}
+                  <div className="flex gap-2 items-end">
+                    <div className="w-7 h-7 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0">
+                      <Sparkles className="h-3.5 w-3.5 text-primary" />
+                    </div>
+                    <div className="bg-muted rounded-2xl rounded-tl-sm px-3.5 py-2.5 text-sm max-w-[85%] leading-relaxed">
+                      {t('landing.hero.demoChatAI')}
                     </div>
                   </div>
                 </div>
+
+                {/* 유사 문제 버튼 */}
+                <div className="pt-1">
+                  <button className="w-full py-2.5 rounded-xl bg-primary/10 text-primary text-sm font-semibold hover:bg-primary/20 transition-colors border border-primary/20">
+                    {t('landing.hero.demoSimilarBtn')} →
+                  </button>
+                </div>
+              </div>
+
+              {/* 플로팅 카드 */}
+              <div className="absolute -bottom-4 -left-4 bg-card border shadow-lg rounded-xl px-3 py-2 text-xs font-medium flex items-center gap-1.5">
+                <MessageCircle className="h-3.5 w-3.5 text-primary" />
+                3개 유사 문제 준비됨
               </div>
             </div>
           </div>

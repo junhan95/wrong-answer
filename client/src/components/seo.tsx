@@ -6,12 +6,12 @@ interface SEOProps {
     path?: string;
 }
 
-const BASE_TITLE = 'WiseQuery';
-const BASE_URL = 'https://wisequery.app';
-const DEFAULT_DESC = '프로젝트별로 대화를 정리하고, 어디서든 질문하세요. 고급 RAG 기술로 전체 지식 베이스에서 답변을 얻으세요.';
+const BASE_TITLE = '오답노트';
+const BASE_URL = 'https://wrong-answer.ai';
+const DEFAULT_DESC = '틀린 이유 속에 정답이 있다. AI가 오답의 원인을 분석하고, 맞춤형 유사 문제로 완전히 정복할 때까지 도와줍니다.';
 
 export function SEO({ title, description, path = '' }: SEOProps) {
-    const fullTitle = title ? `${title} | ${BASE_TITLE}` : `${BASE_TITLE} - AI 기반 지식 관리 플랫폼`;
+    const fullTitle = title ? `${title} | ${BASE_TITLE}` : `${BASE_TITLE} - AI 맞춤형 오답 분석 학습 솔루션`;
     const desc = description || DEFAULT_DESC;
     const url = `${BASE_URL}${path}`;
 

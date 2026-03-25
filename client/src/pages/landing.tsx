@@ -2,7 +2,7 @@ import { lazy, Suspense, useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { SEO } from "@/components/seo";
 import {
-  FolderTree,
+  BookOpen,
   Menu,
   X,
   Download,
@@ -14,6 +14,9 @@ import { PrefetchLink } from "@/components/prefetch-link";
 import { useSearch, useLocation } from "wouter";
 import { SectionSkeleton } from "@/components/landing/section-skeleton";
 import { HeroSection } from "@/components/landing/hero-section";
+import { AgitationSection } from "@/components/landing/agitation-section";
+import { CauseSection } from "@/components/landing/cause-section";
+import { SolutionSection } from "@/components/landing/solution-section";
 import { HowItWorksSection } from "@/components/landing/how-it-works-section";
 import { FeaturesSection } from "@/components/landing/features-section";
 import { UseCasesSection } from "@/components/landing/use-cases-section";
@@ -75,7 +78,7 @@ export default function Landing() {
       const top = (screen.height - height) / 2;
       window.open(
         window.location.origin + "/",
-        "WiseQuery",
+        "오답노트",
         `width=${width},height=${height},left=${left},top=${top},menubar=no,toolbar=no,location=no,status=no`
       );
     }
@@ -106,7 +109,7 @@ export default function Landing() {
             }}
             data-testid="link-logo-home"
           >
-            <FolderTree className="h-6 w-6" />
+            <BookOpen className="h-6 w-6" />
             <span className="text-xl font-semibold">{t('landing.nav.appName')}</span>
           </a>
           <nav className="hidden md:flex items-center gap-6">
@@ -166,6 +169,9 @@ export default function Landing() {
       </header>
 
       <HeroSection />
+      <AgitationSection />
+      <CauseSection />
+      <SolutionSection />
       <HowItWorksSection />
       <FeaturesSection />
       <UseCasesSection />
