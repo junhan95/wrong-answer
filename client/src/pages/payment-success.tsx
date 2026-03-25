@@ -71,7 +71,7 @@ export default function PaymentSuccess() {
           <p className="text-muted-foreground">{errorMessage}</p>
         </div>
         <div className="flex gap-3">
-          <Button variant="outline" onClick={() => setLocation("/pricing")}>
+          <Button variant="outline" onClick={() => setLocation("/checkout")}>
             요금제 페이지로
           </Button>
           <Button onClick={() => setLocation("/")}>

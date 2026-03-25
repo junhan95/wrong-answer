@@ -531,7 +531,7 @@ export function SettingsPanel({ onClose }: SettingsPanelProps) {
                         <div className="space-y-2">
                             <Button
                                 className="w-full"
-                                onClick={() => window.location.href = "/pricing"}
+                                onClick={() => window.location.href = "/checkout"}
                             >
                                 <Crown className="h-4 w-4 mr-2" />
                                 {plan === "free" ? t("settings.membership.upgrade") : t("settings.membership.viewPlans")}
