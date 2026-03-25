@@ -58,42 +58,87 @@ export class SubscriptionsMixin extends BaseStorage {
     }
 
     async checkAiQuota(userId: string): Promise<{ allowed: number; used: number; hasQuota: boolean }> {
-        const [sub] = await this.db.select().from(schema.subscriptions).where(eq(schema.subscriptions.userId, userId));
-        if (!sub) return { allowed: 50, used: 0, hasQuota: true };
+        const [user] = await this.db.select().from(schema.users).where(eq(schema.users.id, userId));
+        if (!user) return { allowed: 0, used: 0, hasQuota: false };
 
-        // Check if billing cycle has reset
         const now = new Date();
-        const cycleStart = new Date(sub.billingCycleStart);
-        const monthsPassed = (now.getFullYear() - cycleStart.getFullYear()) * 12 + now.getMonth() - cycleStart.getMonth();
+        const lastReset = user.lastFreeQueryResetAt ? new Date(user.lastFreeQueryResetAt) : new Date(0);
+        
+        const isSameDay = now.getFullYear() === lastReset.getFullYear() && 
+                          now.getMonth() === lastReset.getMonth() && 
+                          now.getDate() === lastReset.getDate();
 
-        if (monthsPassed > 0 || (monthsPassed === 0 && now.getDate() < cycleStart.getDate() && now.getTime() - cycleStart.getTime() > 28 * 24 * 60 * 60 * 1000)) {
-            // It's a new billing cycle, reset usage
-            await this.db.update(schema.subscriptions)
-                .set({ monthlyAiQueriesUsed: 0, billingCycleStart: now, updatedAt: now })
-                .where(eq(schema.subscriptions.userId, userId));
-            return { allowed: sub.monthlyAiQueriesAllowed, used: 0, hasQuota: sub.monthlyAiQueriesAllowed === -1 || sub.monthlyAiQueriesAllowed > 0 };
+        let dailyUsed = user.dailyFreeQueriesUsed;
+        if (!isSameDay) {
+            dailyUsed = 0;
         }
 
-        const allowed = sub.monthlyAiQueriesAllowed;
-        const used = sub.monthlyAiQueriesUsed;
-        const hasQuota = allowed === -1 || used < allowed;
+        const DAILY_FREE_LIMIT = 3;
 
-        return { allowed, used, hasQuota };
+        // 1. 무료 쿼터가 남은 경우
+        if (dailyUsed < DAILY_FREE_LIMIT) {
+            return {
+                allowed: DAILY_FREE_LIMIT + user.credits,
+                used: dailyUsed,
+                hasQuota: true
+            };
+        }
+
+        // 2. 보유 크레딧이 남은 경우
+        if (user.credits >= 1) {
+            return {
+                allowed: user.credits,
+                used: 0,
+                hasQuota: true
+            };
+        }
+
+        return { allowed: 0, used: dailyUsed, hasQuota: false };
     }
 
     async incrementAiUsage(userId: string): Promise<boolean> {
-        const [sub] = await this.db.select().from(schema.subscriptions).where(eq(schema.subscriptions.userId, userId));
-        if (!sub) return false;
+        const [user] = await this.db.select().from(schema.users).where(eq(schema.users.id, userId));
+        if (!user) return false;
 
-        if (sub.monthlyAiQueriesAllowed !== -1 && sub.monthlyAiQueriesUsed >= sub.monthlyAiQueriesAllowed) {
-            return false;
+        const now = new Date();
+        const lastReset = user.lastFreeQueryResetAt ? new Date(user.lastFreeQueryResetAt) : new Date(0);
+        
+        const isSameDay = now.getFullYear() === lastReset.getFullYear() && 
+                          now.getMonth() === lastReset.getMonth() && 
+                          now.getDate() === lastReset.getDate();
+
+        let dailyUsed = isSameDay ? user.dailyFreeQueriesUsed : 0;
+        const DAILY_FREE_LIMIT = 3;
+
+        // 1. 매일 3회 무료 우선 차감
+        if (dailyUsed < DAILY_FREE_LIMIT) {
+            await this.db.update(schema.users)
+                .set({ 
+                    dailyFreeQueriesUsed: dailyUsed + 1, 
+                    lastFreeQueryResetAt: now,
+                    updatedAt: now 
+                })
+                .where(eq(schema.users.id, userId));
+            return true;
         }
 
-        await this.db.update(schema.subscriptions)
-            .set({ monthlyAiQueriesUsed: sub.monthlyAiQueriesUsed + 1, updatedAt: new Date() })
-            .where(eq(schema.subscriptions.userId, userId));
+        // 2. 무료 소진 완료 시 보유 크레딧 차감
+        if (user.credits >= 1) {
+            await this.db.update(schema.users)
+                .set({ credits: user.credits - 1, updatedAt: now })
+                .where(eq(schema.users.id, userId));
+                
+            await this.db.insert(schema.creditTransactions)
+                .values({
+                    userId,
+                    amount: -1,
+                    reason: "ai_analysis",
+                    createdAt: now,
+                });
+            return true;
+        }
 
-        return true;
+        return false;
     }
 }
 

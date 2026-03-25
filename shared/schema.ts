@@ -51,9 +51,26 @@ export const users = pgTable("users", {
   phone: varchar("phone"),
   authProvider: varchar("auth_provider").default("oauth"),
   role: varchar("role").default("user"), // "user" | "admin"
+  credits: integer("credits").notNull().default(100), // 가입 시 기본 100크레딧 부여
+  dailyFreeQueriesUsed: integer("daily_free_queries_used").notNull().default(0), // 매일 무료 제공 횟수 (최대 3회)
+  lastFreeQueryResetAt: timestamp("last_free_query_reset_at").defaultNow(), // 마지막으로 무료 횟수가 리셋된 날짜
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });
+
+export const creditTransactions = pgTable(
+  "credit_transactions",
+  {
+    id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+    userId: varchar("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+    amount: integer("amount").notNull(), // 양수: 충전, 음수: 차감
+    reason: varchar("reason").notNull(), // ex: "signup_bonus", "ai_analysis", "topup_starter"
+    createdAt: timestamp("created_at").notNull().defaultNow(),
+  },
+  (table) => [
+    index("IDX_credit_tx_user_id").on(table.userId),
+  ],
+);
 
 export const projects = pgTable(
   "projects",
@@ -321,7 +338,16 @@ export const insertUserSchema = createInsertSchema(users).omit({
   id: true,
   createdAt: true,
   updatedAt: true,
+  lastFreeQueryResetAt: true,
 });
+
+export const insertCreditTransactionSchema = createInsertSchema(creditTransactions).omit({
+  id: true,
+  createdAt: true,
+});
+
+export type InsertCreditTransaction = z.infer<typeof insertCreditTransactionSchema>;
+export type CreditTransaction = typeof creditTransactions.$inferSelect;
 
 export type UpsertUser = typeof users.$inferInsert;
 export type User = typeof users.$inferSelect;
