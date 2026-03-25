@@ -3,7 +3,6 @@ type RouteModule = () => Promise<{ default: unknown }>;
 const routeLoaders: Record<string, RouteModule> = {
   "/": () => import("@/pages/landing"),
   "/home": () => import("@/pages/home"),
-  "/pricing": () => import("@/pages/pricing"),
   "/changelog": () => import("@/pages/changelog"),
   "/docs": () => import("@/pages/documentation"),
   "/about": () => import("@/pages/about"),
