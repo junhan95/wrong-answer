@@ -1,6 +1,13 @@
 import { BaseStorage, schema, eq, and, isNull } from "./base";
 import type { Subscription, InsertSubscription, FileChunk, InsertFileChunk } from "@shared/schema";
-import { PLAN_LIMITS } from "../plans";
+import { PLAN_LIMITS, DAILY_FREE_LIMIT } from "../plans";
+
+/** 두 Date가 같은 날(로컬 기준)인지 확인 */
+function isSameDay(a: Date, b: Date): boolean {
+  return a.getFullYear() === b.getFullYear()
+    && a.getMonth() === b.getMonth()
+    && a.getDate() === b.getDate();
+}
 
 export class SubscriptionsMixin extends BaseStorage {
     async getSubscription(userId: string): Promise<Subscription | undefined> {
@@ -63,17 +70,7 @@ export class SubscriptionsMixin extends BaseStorage {
 
         const now = new Date();
         const lastReset = user.lastFreeQueryResetAt ? new Date(user.lastFreeQueryResetAt) : new Date(0);
-        
-        const isSameDay = now.getFullYear() === lastReset.getFullYear() && 
-                          now.getMonth() === lastReset.getMonth() && 
-                          now.getDate() === lastReset.getDate();
-
-        let dailyUsed = user.dailyFreeQueriesUsed;
-        if (!isSameDay) {
-            dailyUsed = 0;
-        }
-
-        const DAILY_FREE_LIMIT = 3;
+        const dailyUsed = isSameDay(now, lastReset) ? user.dailyFreeQueriesUsed : 0;
 
         // 1. 무료 쿼터가 남은 경우
         if (dailyUsed < DAILY_FREE_LIMIT) {
@@ -102,13 +99,7 @@ export class SubscriptionsMixin extends BaseStorage {
 
         const now = new Date();
         const lastReset = user.lastFreeQueryResetAt ? new Date(user.lastFreeQueryResetAt) : new Date(0);
-        
-        const isSameDay = now.getFullYear() === lastReset.getFullYear() && 
-                          now.getMonth() === lastReset.getMonth() && 
-                          now.getDate() === lastReset.getDate();
-
-        let dailyUsed = isSameDay ? user.dailyFreeQueriesUsed : 0;
-        const DAILY_FREE_LIMIT = 3;
+        let dailyUsed = isSameDay(now, lastReset) ? user.dailyFreeQueriesUsed : 0;
 
         // 1. 매일 3회 무료 우선 차감
         if (dailyUsed < DAILY_FREE_LIMIT) {

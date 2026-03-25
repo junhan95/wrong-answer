@@ -5,6 +5,7 @@ import { type SearchResult } from "@shared/schema";
 import path from "path";
 import { promises as fs } from "fs";
 import { isAuthenticated } from "../sessionAuth";
+import { RAG_SIMILARITY_THRESHOLD, RAG_MAX_CONTEXTS } from "../plans";
 
 const router = Router();
 
@@ -23,10 +24,10 @@ router.post("/chat", isAuthenticated, async (req, res) => {
       return;
     }
 
-    // Check AI Quota
+    // Check AI Quota (일일 무료 3회 + 크레딧)
     const quota = await storage.checkAiQuota(userId);
     if (!quota.hasQuota) {
-      const err = new Error("Monthly AI Queries Quota Exceeded");
+      const err = new Error("daily_free_exhausted");
       (err as any).code = "insufficient_quota";
       throw err;
     }
@@ -148,7 +149,7 @@ FORMAT INSTRUCTIONS:
         const projectMap = new Map<string, any>();
 
         for (const msg of vectorMessages) {
-          if (msg.id === userMessage.id || msg.similarity < 0.35) continue;
+          if (msg.id === userMessage.id || msg.similarity < RAG_SIMILARITY_THRESHOLD) continue;
 
           // Batch fetch conversation (캐시 활용)
           if (!conversationMap.has(msg.conversationId)) {
@@ -180,7 +181,7 @@ FORMAT INSTRUCTIONS:
         }
 
         relevantContexts.sort((a, b) => b.similarity - a.similarity);
-        return relevantContexts.slice(0, 5);
+        return relevantContexts.slice(0, RAG_MAX_CONTEXTS);
       } catch (err) {
         console.error("RAG search error:", err);
         return [];
@@ -237,7 +238,7 @@ FORMAT INSTRUCTIONS:
     } else if (error?.code === "context_length_exceeded" || error?.code === "max_tokens") {
       errorMessage = "메시지가 너무 길어 처리할 수 없습니다. 대화를 나눠서 시도해주세요.";
     } else if (error?.code === "insufficient_quota") {
-      errorMessage = "AI 서비스 한도에 도달했습니다. 관리자에게 문의하세요.";
+      errorMessage = "오늘의 무료 분석 3회를 모두 사용했습니다. 크레딧을 충전하거나 내일 다시 시도해주세요.";
     } else if (error?.code === "invalid_api_key") {
       errorMessage = "AI 서비스 연결에 문제가 있습니다. 관리자에게 문의하세요.";
     }

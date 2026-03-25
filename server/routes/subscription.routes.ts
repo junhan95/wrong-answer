@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { isAuthenticated } from "../sessionAuth";
 import { storage } from "../storage";
-import { PLAN_LIMITS } from "../plans";
+import { PLAN_LIMITS, DAILY_FREE_LIMIT } from "../plans";
 
 const router = Router();
 
@@ -14,17 +14,21 @@ router.get("/subscription", isAuthenticated, async (req, res) => {
             return res.status(401).json({ error: "Not authenticated" });
         }
 
-        const subscription = await storage.getSubscription(userId);
+        const [subscription, projectCount, conversationCount, aiQuota, files] = await Promise.all([
+            storage.getSubscription(userId),
+            storage.getProjects(userId).then(p => p.length),
+            storage.getConversations(userId).then(c => c.length),
+            storage.checkAiQuota(userId),
+            storage.getFilesByUser(userId),
+        ]);
+
         const plan = (subscription?.plan || "free") as keyof typeof PLAN_LIMITS;
         const planLimits = PLAN_LIMITS[plan] ?? PLAN_LIMITS.free;
 
-        const projectCount = (await storage.getProjects(userId)).length;
-        const conversationCount = (await storage.getConversations(userId)).length;
-        const aiQuota = await storage.checkAiQuota(userId);
+        const storageUsedMB = files.reduce((t, f) => t + (f.size || 0), 0) / (1024 * 1024);
 
-        const files = await storage.getFilesByUser(userId);
-        const storageUsedBytes = files.reduce((total, file) => total + (file.size || 0), 0);
-        const storageUsedMB = storageUsedBytes / (1024 * 1024);
+        // 크레딧 정보 조회
+        const userRow = (req.user as any);
 
         res.json({
             subscription: subscription || { plan: "free" },
@@ -33,6 +37,8 @@ router.get("/subscription", isAuthenticated, async (req, res) => {
                 conversations: conversationCount,
                 aiQueries: aiQuota.used,
                 storageMB: Math.round(storageUsedMB * 100) / 100,
+                dailyFreeUsed: aiQuota.used,
+                credits: userRow?.credits ?? 0,
             },
             limits: {
                 projects: planLimits.projects,
@@ -40,6 +46,7 @@ router.get("/subscription", isAuthenticated, async (req, res) => {
                 aiQueries: planLimits.aiQueries,
                 storageMB: planLimits.storageMB,
                 imageGeneration: planLimits.imageGeneration,
+                dailyFreeLimit: DAILY_FREE_LIMIT,
             },
         });
     } catch (error) {
