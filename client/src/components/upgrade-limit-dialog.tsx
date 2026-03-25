@@ -34,7 +34,7 @@ export function UpgradeLimitDialog({
 
   const handleUpgrade = () => {
     onOpenChange(false);
-    setLocation("/pricing");
+    setLocation("/checkout");
   };
 
   const getUpgradeSuggestion = () => {

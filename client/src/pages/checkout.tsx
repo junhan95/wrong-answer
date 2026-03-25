@@ -12,24 +12,24 @@ const TOSS_CLIENT_KEY =
   import.meta.env.VITE_TOSS_CLIENT_KEY ||
   "test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm";
 
-const PLAN_INFO: Record<string, { name: string; priceKRW: number; features: string[] }> = {
-  basic: {
-    name: "Basic",
-    priceKRW: 25000,
-    features: ["10 프로젝트", "월 1,000 AI 쿼리", "5GB 스토리지", "180일 데이터 보존"],
+const PLAN_INFO: Record<string, { name: string; priceKRW: number; credits: number; features: string[] }> = {
+  starter: {
+    name: "Starter",
+    priceKRW: 9900,
+    credits: 100,
+    features: ["100 크레딧 충전", "유효기간 없음", "약 100회 오답 분석"],
   },
-  pro: {
-    name: "Pro",
-    priceKRW: 40000,
-    features: [
-      "무제한 프로젝트",
-      "월 5,000 AI 쿼리",
-      "20GB 스토리지",
-      "고급 RAG 검색",
-      "이미지 분석",
-      "우선 지원",
-      "1년 데이터 보존",
-    ],
+  plus: {
+    name: "Plus",
+    priceKRW: 28900,
+    credits: 330,
+    features: ["330 크레딧 (10% 보너스)", "학부모 안심 주간 리포트", "AI 튜터 최우선 답변"],
+  },
+  premium: {
+    name: "Premium",
+    priceKRW: 47900,
+    credits: 600,
+    features: ["600 크레딧 (20% 보너스)", "취약점 기반 모의고사 3장", "Plus 요금제 혜택 포함"],
   },
 };
 
@@ -56,7 +56,7 @@ export default function Checkout() {
     const params = new URLSearchParams(window.location.search);
     const p = params.get("plan") || "";
     if (!PLAN_INFO[p]) {
-      setLocation("/pricing");
+      setLocation("/");
       return;
     }
     setPlan(p);
@@ -88,7 +88,7 @@ export default function Checkout() {
       const tossPayments = await loadTossPayments(TOSS_CLIENT_KEY);
 
       // customerKey: 최소 2자 이상, 영문/숫자/특수문자(-, _, =, ., @)
-      const customerKey = `wq_user_${(user as any)?.id ?? generateRandomString()}`;
+      const customerKey = `oa_user_${(user as any)?.id ?? generateRandomString()}`;
       const widgets = tossPayments.widgets({ customerKey });
 
       await widgets.setAmount({ currency: "KRW", value: planInfo.priceKRW });
@@ -182,7 +182,7 @@ export default function Checkout() {
         <div className="container mx-auto flex h-16 items-center px-6">
           <Button
             variant="ghost"
-            onClick={() => setLocation("/pricing")}
+            onClick={() => window.history.back()}
             className="flex items-center gap-2"
           >
             <ArrowLeft className="h-4 w-4" />

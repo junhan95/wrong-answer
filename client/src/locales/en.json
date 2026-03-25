@@ -30,30 +30,6 @@
     }
   },
   "auth": {
-    "signup": {
-      "title": "Create your account",
-      "subtitle": "Start organizing your AI conversations today",
-      "email": "Email address",
-      "password": "Password",
-      "confirmPassword": "Confirm password",
-      "firstName": "First name (optional)",
-      "lastName": "Last name (optional)",
-      "createAccount": "Create account",
-      "alreadyHaveAccount": "Already have an account?",
-      "signIn": "Sign in",
-      "orContinueWith": "Or continue with",
-      "google": "Google",
-      "kakao": "Kakao",
-      "naver": "Naver",
-      "errors": {
-        "emailRequired": "Email is required",
-        "invalidEmail": "Invalid email format",
-        "passwordRequired": "Password is required",
-        "passwordTooShort": "Password must be at least 8 characters",
-        "passwordMismatch": "Passwords do not match",
-        "emailExists": "This email is already registered"
-      }
-    },
     "login": {
       "title": "Welcome back",
       "subtitle": "Sign in to your account",
@@ -63,43 +39,6 @@
       "signUp": "Sign up",
       "orContinueWith": "Or",
       "forgotPassword": "Forgot your password?"
-    },
-    "verifyEmail": {
-      "title": "Verify your email",
-      "subtitle": "We sent a verification code to {{email}}",
-      "code": "Verification code",
-      "verify": "Verify email",
-      "resendCode": "Resend code",
-      "codeSent": "Code sent!",
-      "errors": {
-        "codeRequired": "Verification code is required",
-        "invalidCode": "Invalid or expired code"
-      }
-    },
-    "forgotPassword": {
-      "title": "Reset your password",
-      "subtitle": "Enter your email to receive a reset code",
-      "email": "Email address",
-      "sendCode": "Send reset code",
-      "backToLogin": "Back to login",
-      "codeSent": "Check your email for the reset code",
-      "errors": {
-        "invalidEmail": "Please enter a valid email address",
-        "emailNotFound": "This email is not registered"
-      }
-    },
-    "resetPassword": {
-      "title": "Create new password",
-      "subtitle": "Enter the code sent to {{email}}",
-      "code": "Reset code",
-      "newPassword": "New password",
-      "confirmPassword": "Confirm password",
-      "resetPassword": "Reset password",
-      "errors": {
-        "invalidCode": "Invalid or expired reset code",
-        "passwordTooShort": "Password must be at least 8 characters",
-        "passwordMismatch": "Passwords do not match"
-      }
     }
   },
   "landing": {
@@ -112,108 +51,6 @@
       "signIn": "Sign In",
       "getStarted": "Get Started",
       "download": "Download"
-    },
-    "whatsNew": {
-      "badge": "New",
-      "title": "Latest Features",
-      "subtitle": "Powerful new capabilities to supercharge your learning",
-      "ocrUpload": {
-        "title": "OCR Auto Recognition",
-        "description": "Take a photo of your problem sheet and AI will automatically recognize the text. Register wrong answers quickly without typing.",
-        "badge": "Just Launched"
-      },
-      "similarProblems": {
-        "title": "Auto Similar Problem Recommendations",
-        "description": "AI automatically generates and recommends similar problems matching your error type. Master concepts through repeated practice."
-      },
-      "multilingual": {
-        "title": "Complete Bilingual UI",
-        "description": "Full Korean and English interface with automatic language detection. Study in your preferred language."
-      },
-      "dashboard": {
-        "title": "Weakness Visualization Dashboard",
-        "description": "Charts show your weak areas by subject. Instantly see which topics need the most attention."
-      }
-    },
-    "successStories": {
-      "title": "Real Results from Real Students",
-      "subtitle": "See how students conquered their weak areas with Wrong Answer AI",
-      "consulting": {
-        "industry": "College Prep",
-        "title": "High School Senior",
-        "metric": "30%",
-        "metricLabel": "Math Score Improvement",
-        "description": "\"AI analyzing my wrong answers showed me my error patterns. I stopped making the same mistakes and my mock exam scores improved.\"",
-        "beforeAfter": "Before: B grade | After: A grade"
-      },
-      "research": {
-        "industry": "Mid-term Prep",
-        "title": "Middle School Student",
-        "metric": "50%",
-        "metricLabel": "Repeat Error Reduction",
-        "description": "\"I stopped making the same mistakes. AI explained why I was wrong and my understanding became much clearer.\"",
-        "beforeAfter": "Before: 5 repeat errors/week | After: Under 2"
-      },
-      "product": {
-        "industry": "Parent",
-        "title": "Child's Learning Manager",
-        "metric": "40%",
-        "metricLabel": "Weak Area Mastery Rate",
-        "description": "\"I can see where my child is struggling through the dashboard. Now I can discuss with tutors using actual data.\"",
-        "beforeAfter": "Before: Vague weaknesses | After: Clear pattern identification"
-      }
-    },
-    "ragEngine": {
-      "title": "AI Wrong Answer Analysis Engine",
-      "subtitle": "Custom AI learning technology that understands WHY you got it wrong, not just that you did",
-      "howItWorks": "How It Works",
-      "step1": {
-        "title": "Error Recognition",
-        "description": "Register a wrong answer via photo or text, and AI automatically identifies the problem type and difficulty."
-      },
-      "step2": {
-        "title": "Cause Analysis",
-        "description": "AI analyzes the specific cause—conceptual misunderstanding, calculation error, or interpretation mistake—and explains through conversation."
-      },
-      "step3": {
-        "title": "Similar Problem Recommendations",
-        "description": "AI recommends similar problems matching the error type to help you achieve full understanding through repetition."
-      },
-      "features": {
-        "crossProject": "Subject-based Classification",
-        "crossProjectDesc": "Systematic management by Math, English, Science, etc.",
-        "attributeFilter": "Type Filtering",
-        "attributeFilterDesc": "Filter by cause: concept, calculation, interpretation",
-        "hybridSearch": "Weakness Visualization",
-        "hybridSearchDesc": "See your weak areas in charts at a glance",
-        "realtimeSync": "Real-time Analysis",
-        "realtimeSyncDesc": "AI analysis starts immediately upon registration"
-      }
-    },
-    "socialProof": {
-      "users": "5,000+",
-      "usersLabel": "Students Learning",
-      "documents": "200K+",
-      "documentsLabel": "Wrong Answers Analyzed",
-      "queries": "95%",
-      "queriesLabel": "Weak Area Mastery Rate",
-      "rating": "4.9/5"
-    },
-    "documents": {
-      "title": "Upload Wrong Answers for Instant AI Analysis",
-      "subtitle": "Register wrong answers via photo or text, and AI automatically analyzes the cause and recommends similar problems.",
-      "upload": {
-        "title": "Easy Wrong Answer Registration",
-        "description": "Register wrong answers via photo (OCR), text input, or file upload (PDF, Word) in various ways."
-      },
-      "chunk": {
-        "title": "Auto Type Classification",
-        "description": "AI automatically identifies problem type and difficulty, and classifies by subject and category."
-      },
-      "search": {
-        "title": "AI Cause Analysis",
-        "description": "AI clearly analyzes why you got it wrong and helps you understand concepts through conversation."
-      }
     },
     "howItWorks": {
       "title": "Master Wrong Answers in 4 Steps",
@@ -362,25 +199,6 @@
         "benefit3": "Support for building study habits"
       }
     },
-    "testimonials": {
-      "title": "AI Wrong Answer Notes Trusted by Students and Parents",
-      "rating": "4.9/5 average from beta testers",
-      "alex": {
-        "name": "Jihoon Kim",
-        "role": "High School Senior · 3 months",
-        "quote": "Analyzing my math wrong answers with AI showed me my error patterns. My repeat mistakes definitely decreased."
-      },
-      "maria": {
-        "name": "Subin Lee",
-        "role": "8th Grade Student · 2 months",
-        "quote": "It's convenient to just take a photo and get analysis right away, and the AI explains things so clearly I can understand even on my own."
-      },
-      "david": {
-        "name": "Seohyun Park (Parent)",
-        "role": "Child is 9th Grade · 4 months",
-        "quote": "I love being able to see where my child is struggling through the dashboard. Now I can talk to tutors with objective data."
-      }
-    },
     "pricing": {
       "title": "Simple, Transparent Pricing",
       "subtitle": "Choose the plan that fits your needs",
@@ -438,22 +256,6 @@
         "cta": "Contact Sales"
       }
     },
-    "dataSecurity": {
-      "title": "Your Learning Data, Your Control",
-      "subtitle": "Enterprise-grade security protecting your learning data with full transparency.",
-      "encryption": {
-        "title": "End-to-End Encryption",
-        "description": "All data encrypted at rest and in transit. Your wrong answer notes and study records are protected with industry-standard encryption."
-      },
-      "retention": {
-        "title": "Clear Retention Policies",
-        "description": "Know exactly how long your data is kept. 7-day warning before archival with easy restore options during grace period."
-      },
-      "isolation": {
-        "title": "Complete Data Isolation",
-        "description": "Each user's learning data is completely separated. No cross-contamination, no shared access, no compromises on privacy."
-      }
-    },
     "faq": {
       "title": "Frequently Asked Questions",
       "subtitle": "Everything you need to know about Wrong Answer AI",
@@ -489,33 +291,6 @@
         "question": "Can academies or schools use it as a group?",
         "answer": "Yes! Group use by academies and schools is available through the Custom plan. We offer group features including per-student dashboard management and teacher analytics views. Please contact our sales team."
       }
-    },
-    "comparison": {
-      "title": "Wrong Answer AI vs General AI Chatbots",
-      "subtitle": "Why choose Wrong Answer AI over generic AI chatbots?",
-      "feature": "Feature",
-      "generalAI": "General AI Chatbot",
-      "rows": {
-        "context": "Specialized wrong answer cause analysis",
-        "projectOrg": "Systematic subject-based classification",
-        "docAnalysis": "OCR auto problem recognition",
-        "semanticSearch": "Auto similar problem recommendations",
-        "dataRetention": "Long-term study record retention",
-        "privacy": "Complete data isolation"
-      },
-      "general": {
-        "context": "❌ Not specialized for error analysis",
-        "projectOrg": "❌ Single conversation thread",
-        "docAnalysis": "⚠️ Limited (file size restrictions)",
-        "semanticSearch": "❌ No similar problem recommendations",
-        "dataRetention": "❌ Deleted when session ends",
-        "privacy": "⚠️ May be used for training"
-      }
-    },
-    "newsletter": {
-      "label": "Get Wrong Answer AI updates and study tips",
-      "placeholder": "Enter your email address",
-      "button": "Subscribe"
     },
     "finalCta": {
       "title": "Stop Making the Same Mistakes",
@@ -881,76 +656,6 @@
       "improvement": "Improvement",
       "bugfix": "Bug Fix",
       "security": "Security"
-    },
-    "entries": {
-      "chatGptMarkdown": {
-        "title": "ChatGPT-Style Markdown Rendering",
-        "description": "Enhanced AI response formatting with ChatGPT-style markdown rendering. Features include styled headings with icons, colored list markers (bullets and numbers), inline code highlighting, blockquotes, tables, and emoji-to-icon conversion. Supports both light and dark themes."
-      },
-      "aiLatencyOptimization": {
-        "title": "AI Response Latency Optimization",
-        "description": "Reduced AI response latency by 70-80% through background embedding generation, parallel RAG search with OpenAI streaming, and N+1 query elimination. Time-to-first-token reduced to 0.5-1 second for faster conversations."
-      },
-      "passwordReset": {
-        "title": "Password Reset Functionality",
-        "description": "Added complete password reset flow for email/password users. Users can request a reset code via email, enter the code, and set a new password. Includes email validation and translated error messages."
-      },
-      "autoRagPipeline": {
-        "title": "Automatic RAG Pipeline",
-        "description": "Implemented automatic document processing pipeline. Files are now automatically parsed, chunked, and embedded upon upload. Supports PDF, Word, Excel, and text files with intelligent chunking and OpenAI Vector Store compatible attribute filtering."
-      },
-      "propertiesDialog": {
-        "title": "File & Folder Properties Dialog",
-        "description": "Added properties context menu for all files and folders. View detailed information including type, location, size, content count, and creation date in a Windows Explorer-style properties dialog."
-      },
-      "dataRetention": {
-        "title": "Tier-Based Data Retention System",
-        "description": "Implemented comprehensive data expiration and retention policies. Features graduated retention periods by subscription tier (Free: 30/60 days, Basic: 180 days, Pro: 365 days, Enterprise: unlimited), warning notifications before archival, and restore functionality."
-      },
-      "multiFileSelect": {
-        "title": "Multi-File Selection & Operations",
-        "description": "Added drag-to-select functionality in file viewer for selecting multiple files and folders. Selected items support cut, copy, paste operations across projects with full context menu integration."
-      },
-      "folderContextMenu": {
-        "title": "Enhanced Folder Context Menu",
-        "description": "Extended context menu support for folders including rename, properties, cut, copy, and delete operations. Folders are now included in drag selection and support all file operations."
-      },
-      "languageToggleFix": {
-        "title": "Language Toggle Button Fix",
-        "description": "Fixed an issue where the language selection button in the navigation bar had incorrect text width, causing display problems. Button now properly shows icon and text."
-      },
-      "customAuth": {
-        "title": "Custom Authentication System",
-        "description": "Introduced comprehensive custom authentication with email/password signup, OAuth integration (Google, Kakao, Naver), email verification via SendGrid, and password reset functionality."
-      },
-      "ragEnhancement": {
-        "title": "Enhanced RAG System",
-        "description": "Improved cross-project context retrieval with relaxed similarity thresholds and expanded context windows for more relevant AI responses."
-      },
-      "streamingFix": {
-        "title": "WebSocket Streaming Stability",
-        "description": "Fixed intermittent connection drops during AI response streaming. Implemented exponential backoff reconnection strategy."
-      },
-      "imageUpload": {
-        "title": "Image Upload Support",
-        "description": "Added ability to upload and attach images to conversations. AI can now analyze visual content alongside text discussions."
-      },
-      "securityUpdate": {
-        "title": "Security Enhancements",
-        "description": "Upgraded session management with improved cookie security and added CSRF protection for all API endpoints."
-      },
-      "i18nSupport": {
-        "title": "Multilingual Support",
-        "description": "Full internationalization with English and Korean language support. All UI components, dialogs, and error messages are now fully translated."
-      },
-      "stripeIntegration": {
-        "title": "Stripe Payment Integration",
-        "description": "Integrated Stripe for subscription management with Free, Pro, and Team plans. Includes customer portal for self-service subscription management."
-      },
-      "initialRelease": {
-        "title": "Initial Release",
-        "description": "Launched AI Chat Explorer with project-based conversation organization, RAG-powered semantic search, and Windows Explorer-style interface."
-      }
     }
   },
   "docs": {
@@ -960,116 +665,6 @@
       "title": "Need more help?",
       "description": "Can't find what you're looking for? Our support team is here to help.",
       "contactSupport": "Contact Support"
-    },
-    "sections": {
-      "gettingStarted": {
-        "title": "Getting Started",
-        "description": "Learn the basics and start your first project",
-        "articles": {
-          "quickStart": {
-            "title": "Quick Start Guide",
-            "description": "Get up and running in 5 minutes"
-          },
-          "createProject": {
-            "title": "Creating Your First Project",
-            "description": "Organize conversations by topic"
-          },
-          "firstConversation": {
-            "title": "Starting Conversations",
-            "description": "Chat with AI and build context"
-          }
-        }
-      },
-      "conversations": {
-        "title": "Conversations",
-        "description": "Master AI interactions and customization",
-        "articles": {
-          "createManage": {
-            "title": "Managing Conversations",
-            "description": "Create, rename, and organize chats"
-          },
-          "aiInstructions": {
-            "title": "Custom AI Instructions",
-            "description": "Personalize AI behavior per conversation"
-          },
-          "fileAttachments": {
-            "title": "File Attachments",
-            "description": "Upload documents and images"
-          }
-        }
-      },
-      "search": {
-        "title": "Search & RAG",
-        "description": "Discover powerful search capabilities",
-        "articles": {
-          "semanticSearch": {
-            "title": "Semantic Search",
-            "description": "Find content by meaning, not keywords"
-          },
-          "ragSystem": {
-            "title": "RAG System Explained",
-            "description": "How AI remembers your conversations"
-          },
-          "crossProject": {
-            "title": "Cross-Project Context",
-            "description": "AI insights across all your work"
-          }
-        }
-      },
-      "settings": {
-        "title": "Settings & Preferences",
-        "description": "Customize your experience",
-        "articles": {
-          "projectManagement": {
-            "title": "Project Management",
-            "description": "Organize and manage projects"
-          },
-          "exportData": {
-            "title": "Exporting Data",
-            "description": "Download your conversations"
-          },
-          "darkMode": {
-            "title": "Dark Mode",
-            "description": "Switch between light and dark themes"
-          }
-        }
-      },
-      "billing": {
-        "title": "Billing & Plans",
-        "description": "Manage your subscription",
-        "articles": {
-          "plans": {
-            "title": "Available Plans",
-            "description": "Compare Free, Pro, and Team features"
-          },
-          "upgrade": {
-            "title": "Upgrading Your Plan",
-            "description": "Unlock more features instantly"
-          },
-          "manage": {
-            "title": "Managing Subscription",
-            "description": "Update payment and billing info"
-          }
-        }
-      },
-      "security": {
-        "title": "Security & Privacy",
-        "description": "Keep your data safe",
-        "articles": {
-          "dataPrivacy": {
-            "title": "Data Privacy",
-            "description": "How we protect your information"
-          },
-          "authentication": {
-            "title": "Authentication Options",
-            "description": "Secure login methods"
-          },
-          "encryption": {
-            "title": "Data Encryption",
-            "description": "Your data is encrypted at rest and in transit"
-          }
-        }
-      }
     }
   },
   "about": {
@@ -1112,41 +707,7 @@
     "subtitle": "Insights, tutorials, and updates from the 오답노트 AI team",
     "readMore": "Read More",
     "readTime": "{{minutes}} min read",
-    "moreComingSoon": "More articles coming soon. Stay tuned!",
-    "categories": {
-      "technology": "Technology",
-      "productivity": "Productivity",
-      "aiInsights": "AI Insights",
-      "teamwork": "Teamwork",
-      "security": "Security",
-      "tutorial": "Tutorial"
-    },
-    "posts": {
-      "ragExplained": {
-        "title": "Understanding RAG: How AI Remembers Your Conversations",
-        "excerpt": "Deep dive into Retrieval-Augmented Generation and how it powers 오답노트 AI's contextual memory."
-      },
-      "productivityTips": {
-        "title": "5 Tips to Maximize Your Productivity with AI Assistants",
-        "excerpt": "Learn how to structure your conversations and projects for maximum efficiency."
-      },
-      "aiKnowledge": {
-        "title": "Building Your Personal AI Knowledge Base",
-        "excerpt": "How to organize projects and conversations to create a searchable knowledge repository."
-      },
-      "teamCollaboration": {
-        "title": "Team Collaboration with Shared AI Context",
-        "excerpt": "Discover how teams can leverage shared knowledge bases for better collaboration."
-      },
-      "securityBestPractices": {
-        "title": "Security Best Practices for AI-Powered Tools",
-        "excerpt": "Understanding data privacy and security when working with AI assistants."
-      },
-      "gettingStarted": {
-        "title": "Getting Started with 오답노트 AI: A Complete Guide",
-        "excerpt": "Step-by-step tutorial to set up your first project and start chatting with context."
-      }
-    }
+    "moreComingSoon": "More articles coming soon. Stay tuned!"
   },
   "careers": {
     "title": "Join Our Team",

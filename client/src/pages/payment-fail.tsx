@@ -23,7 +23,7 @@ export default function PaymentFail() {
         <Button variant="outline" onClick={() => history.back()}>
           다시 시도
         </Button>
-        <Button onClick={() => setLocation("/pricing")}>
+        <Button onClick={() => setLocation("/checkout")}>
           요금제 페이지로
         </Button>
       </div>

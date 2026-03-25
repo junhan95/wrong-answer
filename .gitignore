@@ -7,4 +7,5 @@ vite.config.ts.*
 *.tar.gz
 uploads/
 .local/
-push_error.log
+*.log
+.vscode/
