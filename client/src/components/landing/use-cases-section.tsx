@@ -6,8 +6,6 @@ import {
   GraduationCap,
   Star,
 } from "lucide-react";
-import { useTranslation } from "react-i18next";
-
 export function UseCasesSection() {
   return (
     <>

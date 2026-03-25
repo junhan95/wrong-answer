@@ -5,12 +5,9 @@ import {
   ArrowRight,
   Github,
 } from "lucide-react";
-import { useTranslation } from "react-i18next";
 import { PrefetchLink } from "@/components/prefetch-link";
 
 export function LandingFooter() {
-  const { t } = useTranslation();
-
   return (
     <>
       {/* Final CTA Section */}
