@@ -12,6 +12,7 @@ import { Loader2 } from "lucide-react";
 import "./i18n";
 
 const Home = lazy(() => import("@/pages/home"));
+const TutorChat = lazy(() => import("@/pages/tutor-chat"));
 const Landing = lazy(() => import("@/pages/landing"));
 const Changelog = lazy(() => import("@/pages/changelog"));
 const Documentation = lazy(() => import("@/pages/documentation"));
@@ -62,6 +63,7 @@ function Router() {
     <Suspense fallback={<PageLoader />}>
       <Switch>
         <Route path="/" component={RootRoute} />
+        <Route path="/tutor/:sessionId" component={TutorChat} />
         {/* Pricing removed - merged to landing page */}
         <Route path="/changelog" component={Changelog} />
         <Route path="/docs" component={Documentation} />

@@ -5,23 +5,15 @@ import path from "path";
 import AdmZip from "adm-zip";
 import { setupAuth, isAuthenticated } from "./sessionAuth";
 import { setupSocialAuth } from "./socialAuth";
-import { expirationScheduler } from "./scheduler";
-import { setupWebSocket } from "./routes/websocket";
 
-// Import domain routers
 import {
   authRouter,
-  projectsRouter,
-  foldersRouter,
-  conversationsRouter,
-  filesRouter,
-  searchRouter,
   subscriptionRouter,
-  adminRouter,
-  trashRouter,
   paymentRouter,
+  wrongAnswersRouter,
+  tutorRouter,
+  familyRouter,
 } from "./routes/index";
-import chatRouter from "./routes/chat.routes";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Setup Authentication (session + passport)
@@ -37,18 +29,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Register domain routers
   app.use("/api", authRouter);
-  app.use("/api", projectsRouter);
-  app.use("/api", foldersRouter);
-  app.use("/api", conversationsRouter);
-  app.use("/api", filesRouter);
-  app.use("/api", searchRouter);
   app.use("/api", subscriptionRouter);
-  app.use("/api", adminRouter);
-  app.use("/api", trashRouter);
   app.use("/api", paymentRouter);
-
-  // Chat SSE streaming
-  app.use("/api", chatRouter);
+  app.use("/api", wrongAnswersRouter);
+  app.use("/api", tutorRouter);
+  app.use("/api", familyRouter);
 
   // Chrome Extension zip download
   app.get("/api/extensions/chrome/download", async (_req, res) => {
@@ -92,12 +77,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   const httpServer = createServer(app);
-
-  // Start the expiration scheduler
-  expirationScheduler.start();
-
-  // Setup WebSocket server for chat streaming
-  setupWebSocket(httpServer);
 
   return httpServer;
 }

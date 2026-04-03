@@ -1,5 +1,7 @@
 import OpenAI from "openai";
 import { AI_MODEL, EMBEDDING_MODEL, AI_MAX_TOKENS } from "./plans";
+import fs from "fs";
+import path from "path";
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
@@ -34,6 +36,85 @@ export async function* generateChatCompletionStream(
       yield content;
     }
   }
+}
+
+export async function generateChatCompletion(
+  messages: { role: string; content: MessageContent }[],
+  model: string = AI_MODEL
+): Promise<string | null> {
+  const res = await openai.chat.completions.create({
+    model,
+    messages: messages as OpenAI.Chat.ChatCompletionMessageParam[],
+    max_tokens: AI_MAX_TOKENS,
+  });
+
+  return res.choices[0]?.message?.content || null;
+}
+
+export async function extractTextFromImage(imageBuffer: Buffer, mimeType: string = "jpeg"): Promise<{ text: string, subject?: string, topic?: string }> {
+  const imageAsBase64 = imageBuffer.toString("base64");
+  const ext = mimeType === 'jpg' ? 'jpeg' : mimeType.replace('image/', '');
+
+  const prompt = `Please extract all text and mathematical equations from this image.
+Then, answer with a JSON object containing:
+- "text": The full extracted text/equations in markdown/latex format
+- "subject": Best guess at the subject (e.g. "Math", "Science", "History")
+- "topic": Best guess at the specific topic (e.g. "Calculus", "Physics", "Thermodynamics")`;
+
+  const response = await openai.chat.completions.create({
+    model: "gpt-4o-mini", // GPT-4o-mini supports vision
+    messages: [
+      {
+        role: "user",
+        content: [
+          { type: "text", text: prompt },
+          {
+            type: "image_url",
+            image_url: {
+              url: `data:image/${ext};base64,${imageAsBase64}`
+            }
+          }
+        ]
+      }
+    ],
+    response_format: { type: "json_object" }
+  });
+
+  const content = response.choices[0]?.message?.content;
+  if (content) {
+    try {
+      return JSON.parse(content);
+    } catch {
+      return { text: content };
+    }
+  }
+  return { text: "" };
+}
+
+export async function generateTutorResponse(
+  sessionHistory: { role: "user" | "assistant" | "system", content: string }[],
+  wrongAnswerText: string | null
+): Promise<string> {
+  const systemPrompt = `You are a Socratic tutor guiding a student to solve a problem they got wrong.
+You MUST follow these rules:
+1. NEVER give the direct answer or full solution.
+2. Formulate your guidance as a sequence of small hints or probing questions.
+3. Be encouraging and concise. Only address one logical step at a time.
+4. Adapt to the phase the student is in. If they are completely lost, give them a starting hint.
+5. Ask a question at the end of every message.
+
+Here is the extracted text of the problem they got wrong (for your context):
+\`\`\`
+${wrongAnswerText || "Problem text not provided."}
+\`\`\``;
+
+  const messages = [
+    { role: "system", content: systemPrompt },
+    ...sessionHistory,
+  ];
+
+  const content = await generateChatCompletion(messages);
+  return content || "도움이 필요하신 부분을 조금 더 자세히 설명해 주실 수 있나요?";
 }
 
 export async function generateEmbedding(text: string): Promise<number[]> {

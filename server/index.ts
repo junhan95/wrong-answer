@@ -8,7 +8,6 @@ import cors from "cors";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 import { storage } from "./storage";
-import { chunkingQueue } from "./chunkingQueue";
 import { getPgVectorPool } from "./storage/base";
 
 const app = express();
@@ -132,30 +131,6 @@ app.use((req, res, next) => {
 });
 
 (async () => {
-  // Auto-migrate embeddings to pgvector format on startup
-  try {
-    await storage.migrateEmbeddingsToVector();
-  } catch (err) {
-    console.error("[Startup] migrateEmbeddingsToVector failed (non-fatal):", (err as Error).message);
-  }
-
-  // 재시작 시 'processing' 상태로 멈춘 파일들을 'pending'으로 리셋하고 청킹 큐에 재추가
-  try {
-    const pool = getPgVectorPool();
-    const result = await pool.query<{ id: string; user_id: string }>(
-      `UPDATE files SET chunking_status = 'pending'
-       WHERE chunking_status = 'processing'
-       RETURNING id, user_id`
-    );
-    if (result.rowCount && result.rowCount > 0) {
-      log(`[Startup] Reset ${result.rowCount} stuck 'processing' files to 'pending'`);
-      for (const row of result.rows) {
-        chunkingQueue.addJob(row.id, row.user_id);
-      }
-    }
-  } catch (err) {
-    console.error("[Startup] Failed to reset stuck processing files:", err);
-  }
 
   const server = await registerRoutes(app);
 

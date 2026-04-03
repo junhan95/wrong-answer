@@ -1,10 +1,6 @@
 export { default as authRouter } from "./auth.routes";
-export { default as projectsRouter } from "./projects.routes";
-export { default as foldersRouter } from "./folders.routes";
-export { default as conversationsRouter } from "./conversations.routes";
-export { default as filesRouter } from "./files.routes";
-export { default as searchRouter } from "./search.routes";
 export { default as subscriptionRouter } from "./subscription.routes";
-export { default as adminRouter } from "./admin.routes";
-export { default as trashRouter } from "./trash.routes";
 export { default as paymentRouter } from "./payment.routes";
+export { default as wrongAnswersRouter } from "./wrong-answers.routes";
+export { default as tutorRouter } from "./tutor.routes";
+export { default as familyRouter } from "./family.routes";

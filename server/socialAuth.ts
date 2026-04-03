@@ -54,7 +54,7 @@ async function findOrCreateUser(profile: OAuthProfile) {
     });
 
     // Create free plan subscription for new users
-    await storage.createSubscription({ plan: "free" }, user.id);
+    await storage.createSubscription({ plan: "free", billingCycleStart: new Date(), billingCycleEnd: null, pendingPlan: null } as any, user.id);
 
     return user;
 }
@@ -79,7 +79,7 @@ export function setupSocialAuth(app: Express) {
                         lastName: "User",
                         authProvider: "mock",
                     });
-                    await storage.createSubscription({ plan: "pro" }, user.id);
+                    await storage.createSubscription({ plan: "pro", billingCycleStart: new Date(), billingCycleEnd: null, pendingPlan: null } as any, user.id);
                 }
                 // 세션에 강제 로그인
                 req.login(user, (err: any) => {

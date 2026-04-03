@@ -60,8 +60,6 @@ router.post("/payments/toss/confirm", isAuthenticated, async (req, res) => {
     const billingEnd = new Date(billingStart.getTime() + 30 * 24 * 60 * 60 * 1000);
     await storage.updateSubscription(userId, {
       plan,
-      monthlyAiQueriesAllowed: planLimits.aiQueries,
-      monthlyAiQueriesUsed: 0,
       billingCycleStart: billingStart,
       billingCycleEnd: billingEnd,
       pendingPlan: null,

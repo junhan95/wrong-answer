@@ -4,7 +4,23 @@
       "Bash(node -e \"const fs = require\\(''fs''\\); console.log\\(fs.existsSync\\(''server/storage/users.storage.ts''\\)\\)\")",
       "mcp__209e7499-6b38-436d-b0b0-452433af62e9__list_projects",
       "mcp__209e7499-6b38-436d-b0b0-452433af62e9__execute_sql",
-      "mcp__209e7499-6b38-436d-b0b0-452433af62e9__apply_migration"
+      "mcp__209e7499-6b38-436d-b0b0-452433af62e9__apply_migration",
+      "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); faq=d.get\\(''''landing'''',{}\\).get\\(''''faq'''',{}\\); print\\(json.dumps\\(faq, ensure_ascii=False, indent=2\\)\\)\")",
+      "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); hw=d.get\\(''''landing'''',{}\\).get\\(''''howItWorks'''',{}\\); print\\(json.dumps\\(hw, ensure_ascii=False, indent=2\\)\\)\")",
+      "Bash(sed -i 's/WiseQuery/오답노트/g' \"D:/Myproject/MyApp/wrong-answer/client/src/locales/ko.json\")",
+      "Bash(sed -i 's/WiseQuery/오답노트 AI/g' \"D:/Myproject/MyApp/wrong-answer/client/src/locales/en.json\")",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(for f:*)",
+      "Bash(do)",
+      "Bash(echo \"=== $f ===\")",
+      "Read(//d/Myproject/MyApp/wrong-answer/**)",
+      "Bash(done)",
+      "WebFetch(domain:wrong-answer.onrender.com)",
+      "WebFetch(domain:wrong-answer.ai)",
+      "Bash(node -e \":*)",
+      "Bash(npx --yes @resvg/resvg-cli og-image.svg og-image.png -w 1200 -h 630)",
+      "Bash(npx --yes svg2png-cli og-image.svg --output og-image.png --width 1200 --height 630)"
     ]
   }
 }

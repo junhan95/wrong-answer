@@ -14,38 +14,20 @@ router.get("/subscription", isAuthenticated, async (req, res) => {
             return res.status(401).json({ error: "Not authenticated" });
         }
 
-        const [subscription, projectCount, conversationCount, aiQuota, files] = await Promise.all([
-            storage.getSubscription(userId),
-            storage.getProjects(userId).then(p => p.length),
-            storage.getConversations(userId).then(c => c.length),
-            storage.checkAiQuota(userId),
-            storage.getFilesByUser(userId),
-        ]);
+        const subscription = await storage.getSubscription(userId);
 
         const plan = (subscription?.plan || "free") as keyof typeof PLAN_LIMITS;
         const planLimits = PLAN_LIMITS[plan] ?? PLAN_LIMITS.free;
 
-        const storageUsedMB = files.reduce((t, f) => t + (f.size || 0), 0) / (1024 * 1024);
-
-        // 크레딧 정보 조회
+        // 크레딧 등 유저 정보 조회
         const userRow = (req.user as any);
 
         res.json({
             subscription: subscription || { plan: "free" },
             usage: {
-                projects: projectCount,
-                conversations: conversationCount,
-                aiQueries: aiQuota.used,
-                storageMB: Math.round(storageUsedMB * 100) / 100,
-                dailyFreeUsed: aiQuota.used,
                 credits: userRow?.credits ?? 0,
             },
             limits: {
-                projects: planLimits.projects,
-                conversations: planLimits.conversations,
-                aiQueries: planLimits.aiQueries,
-                storageMB: planLimits.storageMB,
-                imageGeneration: planLimits.imageGeneration,
                 dailyFreeLimit: DAILY_FREE_LIMIT,
             },
         });
@@ -82,11 +64,8 @@ router.post("/subscription/cancel", isAuthenticated, async (req, res) => {
             });
         } else {
             // No active billing cycle, apply immediately
-            const freeLimits = PLAN_LIMITS.free;
             await storage.updateSubscription(userId, {
                 plan: "free",
-                monthlyAiQueriesAllowed: freeLimits.aiQueries,
-                monthlyAiQueriesUsed: 0,
                 billingCycleStart: new Date(),
                 billingCycleEnd: null,
                 pendingPlan: null,
@@ -155,11 +134,8 @@ router.post("/subscription/downgrade", isAuthenticated, async (req, res) => {
             });
         } else {
             // No active billing cycle, apply immediately
-            const targetLimits = PLAN_LIMITS[targetPlan as keyof typeof PLAN_LIMITS];
             await storage.updateSubscription(userId, {
                 plan: targetPlan,
-                monthlyAiQueriesAllowed: targetLimits.aiQueries,
-                monthlyAiQueriesUsed: 0,
                 billingCycleStart: new Date(),
                 billingCycleEnd: null,
                 pendingPlan: null,
@@ -203,14 +179,11 @@ router.post("/subscription/promo", isAuthenticated, async (req, res) => {
             return res.status(400).json({ error: "ALREADY_HIGHER" });
         }
 
-        const planLimits = PLAN_LIMITS[promo.plan as keyof typeof PLAN_LIMITS] ?? PLAN_LIMITS.free;
         const billingStart = new Date();
         const billingEnd = new Date(billingStart.getTime() + promo.durationDays * 24 * 60 * 60 * 1000);
 
         await storage.updateSubscription(userId, {
             plan: promo.plan,
-            monthlyAiQueriesAllowed: planLimits.aiQueries,
-            monthlyAiQueriesUsed: 0,
             billingCycleStart: billingStart,
             billingCycleEnd: billingEnd,
             pendingPlan: "free",
