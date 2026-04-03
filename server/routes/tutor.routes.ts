@@ -3,12 +3,12 @@ import { storage } from "../storage";
 import { insertTutorSessionSchema, insertTutorMessageSchema, type User } from "@shared/schema";
 import { z } from "zod";
 import { generateTutorResponse } from "../openai";
+import { isAuthenticated } from "../sessionAuth";
 
 const router = Router();
 
-router.get("/tutor/sessions", async (req, res) => {
+router.get("/tutor/sessions", isAuthenticated, async (req, res) => {
     try {
-        if (!req.isAuthenticated()) return res.sendStatus(401);
         const records = await storage.getTutorSessions((req.user as User).id);
         res.json(records);
     } catch (e) {
@@ -16,9 +16,8 @@ router.get("/tutor/sessions", async (req, res) => {
     }
 });
 
-router.post("/tutor/sessions", async (req, res) => {
+router.post("/tutor/sessions", isAuthenticated, async (req, res) => {
     try {
-        if (!req.isAuthenticated()) return res.sendStatus(401);
         const parsed = insertTutorSessionSchema.parse(req.body);
         const record = await storage.createTutorSession(parsed, (req.user as User).id);
         res.json(record);
@@ -27,9 +26,8 @@ router.post("/tutor/sessions", async (req, res) => {
     }
 });
 
-router.get("/tutor/sessions/:sessionId/messages", async (req, res) => {
+router.get("/tutor/sessions/:sessionId/messages", isAuthenticated, async (req, res) => {
     try {
-        if (!req.isAuthenticated()) return res.sendStatus(401);
         // Verify session belongs to user
         const session = await storage.getTutorSessionById(req.params.sessionId, (req.user as User).id);
         if (!session) return res.status(404).json({ error: "Session not found" });
@@ -41,9 +39,8 @@ router.get("/tutor/sessions/:sessionId/messages", async (req, res) => {
     }
 });
 
-router.post("/tutor/sessions/:sessionId/messages", async (req, res) => {
+router.post("/tutor/sessions/:sessionId/messages", isAuthenticated, async (req, res) => {
     try {
-        if (!req.isAuthenticated()) return res.sendStatus(401);
         const session = await storage.getTutorSessionById(req.params.sessionId, (req.user as User).id);
         if (!session) return res.status(404).json({ error: "Session not found" });
 

@@ -5,13 +5,13 @@ import { z } from "zod";
 import { upload, uploadUrlFilename } from "../utils/upload";
 import { extractTextFromImage, generateEmbedding } from "../openai";
 import { uploadToSupabase } from "../utils/supabase";
+import { isAuthenticated } from "../sessionAuth";
 
 const router = Router();
 
 // GET /api/wrong-answers
-router.get("/wrong-answers", async (req, res) => {
+router.get("/wrong-answers", isAuthenticated, async (req, res) => {
     try {
-        if (!req.isAuthenticated()) return res.sendStatus(401);
         const records = await storage.getWrongAnswers((req.user as User).id);
         res.json(records);
     } catch (e) {
@@ -20,9 +20,8 @@ router.get("/wrong-answers", async (req, res) => {
 });
 
 // GET /api/wrong-answers/due
-router.get("/wrong-answers/due", async (req, res) => {
+router.get("/wrong-answers/due", isAuthenticated, async (req, res) => {
     try {
-        if (!req.isAuthenticated()) return res.sendStatus(401);
         const { limit } = req.query;
         const maxItems = limit ? parseInt(limit as string) : 10;
         const records = await storage.getDueReviews((req.user as User).id, maxItems);
@@ -33,9 +32,8 @@ router.get("/wrong-answers/due", async (req, res) => {
 });
 
 // POST /api/wrong-answers
-router.post("/wrong-answers", async (req, res) => {
+router.post("/wrong-answers", isAuthenticated, async (req, res) => {
     try {
-        if (!req.isAuthenticated()) return res.sendStatus(401);
         const parsed = insertWrongAnswerSchema.parse(req.body);
         const record = await storage.createWrongAnswer(parsed, (req.user as User).id);
         res.json(record);
@@ -45,26 +43,23 @@ router.post("/wrong-answers", async (req, res) => {
 });
 
 // POST /api/wrong-answers/upload
-router.post("/wrong-answers/upload", upload.single("image"), async (req, res) => {
+router.post("/wrong-answers/upload", isAuthenticated, upload.single("image"), async (req, res) => {
     try {
-        if (!req.isAuthenticated()) return res.sendStatus(401);
         if (!req.file) return res.status(400).json({ error: "No image file uploaded" });
 
         const userId = (req.user as User).id;
-        
-        let imageUrl = "";
+
         const fileBuffer = req.file.buffer;
         const filename = uploadUrlFilename(req.file);
 
         // Upload to Supabase Bucket
         const supabaseUrl = await uploadToSupabase(fileBuffer, filename, req.file.mimetype);
-        
-        if (supabaseUrl) {
-            imageUrl = supabaseUrl;
-        } else {
-            // Fallback base64 image URL (not ideal for large images, but works if Supabase fails/unconfigured)
-            imageUrl = `data:${req.file.mimetype};base64,${fileBuffer.toString("base64").slice(0, 100)}...`;
+
+        if (!supabaseUrl) {
+            return res.status(503).json({ error: "Image storage unavailable. Please try again later." });
         }
+
+        const imageUrl = supabaseUrl;
         
         // 1. Extract text via OpenAI Vision
         const { text, subject, topic } = await extractTextFromImage(fileBuffer, req.file.mimetype);
