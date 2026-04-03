@@ -9,3 +9,4 @@ uploads/
 .local/
 *.log
 .vscode/
+*.exe
