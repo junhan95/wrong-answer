@@ -26,24 +26,49 @@ Key routing rules:
 - Weekly retro → invoke retro
 - Design system, brand → invoke design-consultation
 - Visual audit, design polish → invoke design-review
+- Multiple design variants, design exploration → invoke design-shotgun
 - Architecture review → invoke plan-eng-review
+- CEO-level product review → invoke plan-ceo-review
+- Design architecture review → invoke plan-design-review
 - Save progress, checkpoint, resume → invoke checkpoint
 - Code quality, health check → invoke health
+- Learn about a codebase or topic → invoke learn
+- Browse, click, screenshot in browser → invoke browse
+- Setup deployment pipeline → invoke setup-deploy
+- Setup browser cookies → invoke setup-browser-cookies
+- Upgrade gstack → invoke gstack-upgrade
 
 ### Available Skills
 
 | Skill | Command | Purpose |
 |-------|---------|---------|
-| Browse / QA | `/browse` | Headless browser for testing |
+| Browse | `/browse` | Headless browser for testing |
 | QA + Fix | `/qa` | Test and fix bugs |
 | QA Report | `/qa-only` | Test, report only |
 | Ship | `/ship` | Run tests, push, PR |
 | Investigate | `/investigate` | Root cause debugging |
 | Review | `/review` | Pre-landing code review |
 | Design Review | `/design-review` | Visual audit + fix |
+| Design Shotgun | `/design-shotgun` | Multiple design variants at once |
+| Design Consultation | `/design-consultation` | Build design system from scratch |
+| Design HTML | `/design-html` | HTML/CSS design generation |
 | Health | `/health` | Code quality dashboard |
 | Checkpoint | `/checkpoint` | Save/resume work state |
 | Retro | `/retro` | Weekly engineering retro |
+| Office Hours | `/office-hours` | Product idea reframing |
+| Plan CEO Review | `/plan-ceo-review` | CEO-level product review |
+| Plan Eng Review | `/plan-eng-review` | Architecture & data flow review |
+| Plan Design Review | `/plan-design-review` | Design dimension review |
+| Document Release | `/document-release` | Update docs after shipping |
+| Learn | `/learn` | Explore codebase or topic |
+| Setup Deploy | `/setup-deploy` | Configure deployment pipeline |
+| Setup Browser Cookies | `/setup-browser-cookies` | Import browser cookies |
+| Careful | `/careful` | Warn before destructive commands |
+| Freeze | `/freeze` | Lock edits to one directory |
+| Guard | `/guard` | Activate careful + freeze |
+| Unfreeze | `/unfreeze` | Remove directory restrictions |
+| Canary | `/canary` | Canary deploy workflow |
+| gstack Upgrade | `/gstack-upgrade` | Update gstack to latest |
 
 ## Development Commands
 
